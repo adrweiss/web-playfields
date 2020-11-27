@@ -6,6 +6,8 @@ import Home from './Home'
 import Login from './Login'
 import Management from './Management'
 import User from './User'
+import NewUsr from './NewUsr'
+import ResetPassword from './ResetPassword'
 
 function App() {
   return (
@@ -23,6 +25,14 @@ function App() {
           <Route path="/management">
             <Header/>
             <Management/>
+          </Route>
+          <Route path="/user/newusr">
+            <Header/>
+            <NewUsr/>
+          </Route>
+          <Route path="/user/resetpw">
+            <Header/>
+            <ResetPassword/>
           </Route>
           <Route path="/user">
             <Header/>

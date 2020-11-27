@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 function Login() {
   return (
@@ -12,12 +13,17 @@ function Login() {
       <div>
         <span>PW</span>
       </div>
-      <div>
-        <span>New</span>
-      </div>
-      <div>
-        <span>Forgott</span>
-      </div>
+      <Link to="/user/newusr" className="user__link">
+        <div className="create__new__user">
+            {'Create new User'}
+        </div>
+      </Link> 
+      
+      <Link to="/user/resetpw" className="user__link">
+        <div className="create__new__user">
+            {'Reset Password'}
+        </div>
+      </Link>      
     </div>
   )
 }
