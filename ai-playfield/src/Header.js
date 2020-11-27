@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
+
 
 function Header() {
   return (
@@ -11,29 +12,26 @@ function Header() {
               {'Home'}
           </div>
         </Link> 
-        <Link to="/" className="header__link">
+      
+        <Link to="/game" className="header__link">
           <div className="header__option">
-              {'4 Wins | Tic/Tac/Toe'}
+              {'Connect Four'}
           </div>
         </Link>
-        <Link to="/" className="header__link">
+         
+        <Link to="/login" className="header__link">
           <div className="header__option">
               {"Login"}
           </div>
         </Link>
-        <Link to="/" className="header__link">
+        <Link to="/user" className="header__link">
           <div className="header__option">
-              {"rights management"}
+              {"User"}
           </div>
         </Link>
-        <Link to="/" className="header__link">
+        <Link to="/management" className="header__link">
           <div className="header__option">
-              {"side stats"}
-          </div>
-        </Link>
-        <Link to="/" className="header__link">
-          <div className="header__option">
-              {"game stats"}
+              {"Management"}
           </div>
         </Link>
       </nav>
