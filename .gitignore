@@ -1,5 +1,9 @@
 .idea
-ai-playfield/node_modules
-ai-playfield/.eslintcache
+frontend/node_modules
+frontend/.eslintcache
+frontend/package-lock.json
+.vscode
 
 backend/node_modules
+backend/package-lock.json
+backend/.eslintcache
