@@ -44,9 +44,12 @@ function Home() {
         <div className='homescreen'>
           <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
         </div>
-        <div className="homescreen">                 
-                <textarea className="input__write__post"  id="text" name="text" cols="35" rows="4" maxlength="100">Write a new Post</textarea> 	
-                <input type="submit" value="Send" />  
+        <div className="homescreen_title">
+          <textarea className="input__write__post"  id="text" name="text" cols="35" rows="1" maxlength="35">Write a Title</textarea> 	                 
+        </div>
+        <div className="homescreen">
+          <textarea className="input__write__post"  id="text" name="text" cols="35" rows="4" maxlength="140">Write a new Post</textarea> 	
+          <input type="submit" value="Send" />  
         </div>
         <div>
           {messageFlow?.length === 0 ? (
