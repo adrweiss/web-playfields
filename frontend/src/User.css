@@ -1,0 +1,87 @@
+.container__user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user__change__container {
+  margin-top: 50px;
+  border: 1px solid;
+  padding: 1px;
+  height: 580px;
+  width: 420px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.user__rights__container {
+  margin-top: 50px;
+  border: 1px solid;
+  padding: 1px;
+  height: 200px;
+  width: 420px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+.user__input__label {
+  display: flex;
+  margin-left: 85px;
+  margin-top: 15px;
+  font: 15px 'Fira Sans', sans-serif;
+}
+
+.nickname__change {
+  margin-bottom: 15px;
+}
+
+
+.change__password__section{
+  margin-top: 5px;
+  border-top: 1px solid #aaa;
+}
+.user__input__field {
+  margin-top: 5px;
+  width: 242px;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.accept__new__nickname {
+  width: 250px;
+  margin-bottom: 15px;
+}
+
+.user__input__label__pw{
+  display: flex;
+  margin-left: 85px;
+  margin-top: 5px;
+  font: 15px 'Fira Sans', sans-serif;
+}
+
+.user__input__field__pw{
+  margin-top: 5px;
+  width: 242px;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.delete__profile__Section{
+  border-top: 1px solid #aaa;
+  margin-top: 10px;
+}
+
+.delete__profile__Section__v2{
+  margin-top: 10px;
+}
+
+.accept__new__password{
+  width: 250px;
+}
+
+
+.delete__new__password {
+  margin-top: 15px;
+  width: 250px;
+}
