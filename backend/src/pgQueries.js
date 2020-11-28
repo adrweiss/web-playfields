@@ -1,7 +1,8 @@
 // PostgreSQL Database Queries
 import Client from 'pg'
-const request = Client.request
-const response = Client.response
+import express from 'express'
+const request = express.request
+const response = express.response
 
 const db_conn_info = {
   host: 'playfield-db.caz3wq73d2qn.eu-central-1.rds.amazonaws.com',
@@ -46,7 +47,7 @@ export function getUsers (request, response) {
 export function getUserById (request, response){
     const id = parseInt(request.params.id);
 
-    pgPool.query('SELECT * FROM usr WHERE id = $1', [id], (error, results)=>{
+    pgClient.query('SELECT * FROM playfield.usr WHERE id = $1', [id], (error, results)=>{
         if(error){
             throw error;
         };
@@ -57,15 +58,16 @@ export function getUserById (request, response){
 
 // POST new User
 export function createUser (request, response) {
-    const {email, pword, nickname} = request.body;
-    let tstamp = new Date().getTime();
-
-    pgPool.query('INSERT INTO usr (email, pword, tstamp, nickname) VALUES ($1, $2, $3, $4)', [email, pword, tstamp, nickname], (error, results) =>{
+    console.log(request)
+    const {email, pword} = request.body;
+    let tstamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const nickname = 'Kevin'
+    pgClient.query('INSERT INTO playfield.usr (email, pword, tstamp, nickname) VALUES ($1, $2, $3, $4)', [email, pword, tstamp, nickname], (error, results) =>{
         if(error){
             throw error;
         };
 
-        response.status(201).send('User added with ID: ${result.insertId}');
+        response.status(201).send('User successfully added');
     });
 };
 
@@ -74,8 +76,8 @@ export function updateUser (request, response) {
     const id = parseInt(request.params.id);
     const {email, pword, nickname} = request.body;
 
-    pgPool.query(
-        'UPDATE usr SET email = $1, pword = $2, nickname = $3', 
+    pgClient.query(
+        'UPDATE playfield.usr SET email = $1, pword = $2, nickname = $3', 
         [email, pword, nickname],
         (error, results) => {
             if(error){
@@ -91,7 +93,7 @@ export function updateUser (request, response) {
 export function deleteUser (request, response) {
     const id = parseInt(request.params.id);
     
-    pgPool.query('DELETE FROM usr WHERE id = $1', [id], (error, results) =>{
+    pgClient.query('DELETE FROM playfield.usr WHERE id = $1', [id], (error, results) =>{
         if(error){
             throw error;
         };
