@@ -1,0 +1,33 @@
+.create__container {
+  margin-top: 50px;
+  border: 1px solid;
+  padding: 1px;
+  height: 380px;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+  }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create__input__label {
+  display: flex;
+  margin-left: 65px;
+  margin-top: 10px;
+  font: 15px 'Fira Sans', sans-serif;
+}
+
+.create__input__field {
+  margin-top: 5px;
+  width: 160px;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.create__button {
+  width: 168px;
+}
