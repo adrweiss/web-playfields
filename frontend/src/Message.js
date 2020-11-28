@@ -1,5 +1,13 @@
-export const initalState = {
-  message: ['Hallo dies ist '], 
-  shortUser: ['A'],
-  Timestamp: '1. Dezember'
-};
+import React from 'react'
+import "."
+
+function message() {
+  return (
+    <div>
+      
+    </div>
+  )
+}
+
+
+export default message
