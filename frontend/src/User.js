@@ -32,7 +32,7 @@ function User() {
 
   return (
     <div> 
-    <div className='container'>   
+      <div className='container'>   
         <div className='user__change__container'>
           <h1>User-Self-Service-Page</h1> 
           {`Here you can change your nickname. Your current nickname is ${currentNickname}. Your nickname must be unique.`}
