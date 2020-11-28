@@ -9,7 +9,24 @@ function User() {
 
   const rights = [
     {
-      
+      "name": "1 Right",
+      "description": 'thats a text which descrips the right'
+    },
+    {
+      "name": "2 Right",
+      "description": 'thats a text which descrips the right'
+    }, 
+    {
+      "name": "3 Right",
+      "description": 'thats a text which descrips the right'
+    },
+    {
+      "name": "4 Right",
+      "description": 'thats a text which descrips the right'
+    },
+    {
+      "name": "5 Right",
+      "description": 'thats a text which descrips the right'
     }
   ]
 
