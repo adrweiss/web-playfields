@@ -1,6 +1,9 @@
 .idea
 frontend/node_modules
 frontend/.eslintcache
+frontend/package-lock.json
 .vscode
 
 backend/node_modules
+backend/package-lock.json
+
