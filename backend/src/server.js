@@ -25,10 +25,10 @@ app.use(Cors());
 app.get('/', (req, res) => res.status(200).send('Health'));
   // For PostgreSQL
 app.get('/users', getUsers)//(req, res) => {console.log('Test-1');getUsers})
-app.get('/users/:id', pgClient.getUserById)
-app.post('/users', pgClient.createUser)
-app.put('/users/:id', pgClient.updateUser)
-app.delete('/users/:id', pgClient.deleteUser)
+app.get('/users/:id', getUserById)
+app.post('/users', createUser)
+app.put('/users/:id', updateUser)
+app.delete('/users/:id', deleteUser)
 
 // Listeners
 app.listen(port, () => console.log(`listening on localhost: ${port}`));
