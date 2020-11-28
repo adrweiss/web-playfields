@@ -1,6 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 import './Login.css'
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 function Login() {
   return (
@@ -21,7 +22,11 @@ function Login() {
             minlength="8" required/>
         </div>
 
-        <button className='sign__in'>Sign in</button>
+        <div className='sign__in'>
+          <Button className='sign__in__button' variant="contained" color="primary" disableElevation>
+            Sign in 
+          </Button>
+        </div>
 
         <Link to="/user/newusr" className="user__link">
           <div className="link">
