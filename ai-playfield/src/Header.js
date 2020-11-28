@@ -7,6 +7,7 @@ function Header() {
   return (
     <div>
       <nav className="header">
+        <div className='header__Nav'>
         <Link to="/" className="header__link">
           <div className="header__option">
               {'Home'}
@@ -34,6 +35,7 @@ function Header() {
               {"Management"}
           </div>
         </Link>
+        </div>
       </nav>
     </div>
   )
