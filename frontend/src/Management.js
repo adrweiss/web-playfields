@@ -7,6 +7,8 @@ function Management() {
       <li>List with all users</li>
       <li>Delete User</li>
       <li>Show Rights</li>
+      <li>Add Rights</li>
+      <li>Remove Rights</li>
       <li>Search for User</li>
     </div>
   )
