@@ -9,6 +9,13 @@ function Home() {
         <li>Show Post</li>
         <li>Timestamp</li>
         <li>Name</li>
+
+        <div className='message'>
+          <li>User</li>
+          <li>Message</li>
+          <li>Timestampt</li>
+        </div>
+
     </div>
   )
 }
