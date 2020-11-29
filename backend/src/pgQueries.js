@@ -1,8 +1,10 @@
 // PostgreSQL Database Queries
 import Client from 'pg'
 import express from 'express'
+import bcrypt from 'bcrypt'
 const request = express.request
 const response = express.response
+const saltRounds = 10
 
 const db_conn_info = {
   host: 'playfield-db.caz3wq73d2qn.eu-central-1.rds.amazonaws.com',
@@ -10,12 +12,12 @@ const db_conn_info = {
   database: 'postgres',
   user: 'karl',
   password: 'RvUVC0gObAlQp74hgnUJ',
-  max: 1 // use up to 30 connections
+  max: 10 // use up to 30 connections
 
   // "types" - in case you want to set custom type parsers on the pool level
 };
 
-const pgClient = new Client.Client(db_conn_info)
+const pgClient = new Client.Pool(db_conn_info)
 
 pgClient.connect((err) => {
   if (err) {
@@ -29,79 +31,126 @@ pgClient.connect((err) => {
 
 // GET All users
 export function getUsers (request, response) {
-    console.log('Test0')
+    console.log('getUsers');
     pgClient.query('SELECT * FROM playfield.usr ORDER BY id ASC', (error, results)=>{
-        console.log('Test1')
         if(error){
-            console.log('Test2')
         throw error
     };
 
-    console.log('Test3');
-
     response.status(200).json(results.rows);
+    //pgClient.end();
 });
 }
 
 // GET User by id
 export function getUserById (request, response){
-    const id = parseInt(request.params.id);
+    console.log('getUsersById');
+    const {id} = request.body;
 
     pgClient.query('SELECT * FROM playfield.usr WHERE id = $1', [id], (error, results)=>{
         if(error){
             throw error;
         };
 
-        response.status(200).json(results.rows)
+        response.status(200).json(results.rows);
+       // pgClient.end();
+    });
+};
+
+// GET id by email
+export function getUserIdByEmail (request, response){
+    console.log('getUsersIdByEmail');
+    const {email} = request.body;
+
+    pgClient.query('SELECT id FROM playfield.usr WHERE email = $1', [email], (error, results)=>{
+        if(error){
+            throw error;
+        };
+
+        response.status(200).json(results.rows);
+      //  pgClient.end();
     });
 };
 
 // POST new User
 export function createUser (request, response) {
-    console.log(request)
+    console.log('createUser');
     const {email, pword} = request.body;
     let tstamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const nickname = 'Kevin'
-    pgClient.query('INSERT INTO playfield.usr (email, pword, tstamp, nickname) VALUES ($1, $2, $3, $4)', [email, pword, tstamp, nickname], (error, results) =>{
-        if(error){
-            throw error;
+    const nickname = 'Kevin';
+    bcrypt.hash(pword, saltRounds, function(err, hash){
+        if(err){
+            throw err;
         };
-
-        response.status(201).send('User successfully added');
-    });
-};
-
-// PUT updated data to User
-export function updateUser (request, response) {
-    const id = parseInt(request.params.id);
-    const {email, pword, nickname} = request.body;
-
-    pgClient.query(
-        'UPDATE playfield.usr SET email = $1, pword = $2, nickname = $3', 
-        [email, pword, nickname],
-        (error, results) => {
+        pgClient.query('INSERT INTO playfield.usr (email, pword, tstamp, nickname) VALUES ($1, $2, $3, $4)', [email, hash, tstamp, nickname], (error, results) =>{
             if(error){
                 throw error;
             };
+    
+            response.status(201).send('User successfully added');
+          //  pgClient.end();
+        });
+    })
+};
 
-            response.status(200).send('User modified with ID: ${id}');
-        }
-    );
+// PUT updated password to User
+export function updatePassword (request, response) {
+    console.log('updatePassword');
+    const {email, pword_old, pword_new} = request.body;
+
+    pgClient.query('SELECT pword FROM playfield.usr WHERE email = $1', [email], (error, results)=>{
+        if(error){
+            throw error;
+        };
+        const pword_old_hash = results.rows[0].pword;
+
+        bcrypt.compare(pword_old, pword_old_hash, function(err, result){
+            if(result){
+                bcrypt.hash(pword_new, saltRounds, function (err, hash){
+                    pgClient.query(
+                        'UPDATE playfield.usr SET pword = $1 WHERE email = $2', 
+                        [hash, email],
+                        (error, results) => {
+                            if(error){
+                                throw error;
+                            };
+                
+                            response.status(200).send('Password changed');
+                         //   pgClient.end();
+                        }
+    
+                    );
+                })
+            }
+            else
+            {
+                response.status(401).send('Password wrong');
+               // pgClient.end();
+            }          
+        })
+    });    
 };
 
 // DELETE User
 export function deleteUser (request, response) {
-    const id = parseInt(request.params.id);
+    console.log('deleteUser');
+    const {email} = request.body;
     
-    pgClient.query('DELETE FROM playfield.usr WHERE id = $1', [id], (error, results) =>{
+    pgClient.query('DELETE FROM playfield.usr WHERE email = $1', [email], (error, results) =>{
         if(error){
             throw error;
         };
 
         response.status(200).send('User deleted with ID: ${id}');
+        //pgClient.end();
         }
     );
 }
 
-
+// Close Connections
+export function closePool (){
+    console.log('closing pool ...')
+    pgClient.end();
+    console.log('closed pool!')
+}
   
