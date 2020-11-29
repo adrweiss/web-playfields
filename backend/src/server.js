@@ -46,10 +46,10 @@ app.put('/shutdown', closePool)
 //Get Page NR {pagoNo} with {size} results.
 app.get('/getPage', (req, res)=>{
     console.log("called getPage");
-    let {pageNo, size}= req.body;
+    
+    let {pageNo, size}= req.query;
     pageNo = parseInt(pageNo);
     size = parseInt(size);
-    console.log("pageNo: "+ pageNo);
     //var pageNo = parseInt(req.body.pageNo);
     //var size = parseInt(req.body.size);
     var query = {}

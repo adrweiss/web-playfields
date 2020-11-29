@@ -7,19 +7,14 @@ function Message({id, title, post, usr, timestamp}) {
 
   const deletePost = () => {
     console.log(id)
-    
-    /*
-    axios.post('/users', {
-      'title_text': title_text,
-      'post_text': post_text,
-      'usr': 'Kevin'
+    /*axios.delete('/delete', {
+      'id': id,
     })
     .then((response) => {
       console.log(response)
     }, (error) => {
       console.log(error)
-    });
-    */
+    });*/
   }
 
   return (

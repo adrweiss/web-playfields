@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
@@ -6,58 +6,51 @@ import Grid from '@material-ui/core/Grid';
 import axios from './axios';
 
 
+
 function Home() {
-  const messageFlow = [
-    {
-      "id": "1234", 
-      "title": "A-title",
-      "post":"first message ",
-      "usr":"A",
-      "timestamp":"28. November"
-      },
-      {
-      "id": "5678", 
-      "title": "B-title",
-      "post":"second message ",
-      "usr":"B",
-      "timestamp":"29. November"
-      },
-      {
-      "id": "91011", 
-      "title": "C-title",
-      "post":"third message ",
-      "usr":"C",
-      "timestamp":"30. November"
-      }
-  ]
+  const [amountPosts, setAmountPosts] = useState([]);
+  const [messageFlow, setMessageFlow] = useState([]);
 
   
+  //var messageFlow = []
+  const postPSide = 5
 
-  const numberPages = 15
+  async function fetchPosts(pageNo) {
+    console.log('Test - 1')
+    const req = await axios.get('/getPage', {params: {"pageNo": pageNo.toString(), "size": postPSide.toString()}});
+    setMessageFlow(req.data)
+    console.log(req.data)
+  }
+
+  fetchPosts(1)
   
+  async function fetchData() {
+    const req = await axios.get('/countPosts');
+    setAmountPosts(Math.ceil(req.data.count / postPSide));
+  }
+  fetchData()
+ 
   const handleChangePage = (event, newPage) => {
-    console.log(newPage)    
+    fetchPosts(newPage)
   }
 
   const sendPost = () => {
     var title_text = document.getElementById('title_text').value
     var post_text = document.getElementById('post_text').value
 
-    console.log(title_text)
-    console.log(post_text)
-
-    /*
-    axios.post('/users', {
-      'title_text': title_text,
-      'post_text': post_text,
-      'usr': 'Kevin'
+    
+    axios.post('/addPost', {
+      'title': title_text,
+      'content': post_text,
+      'ID_USR': 2
     })
     .then((response) => {
-      console.log(response)
+      fetchData()
+      //console.log(response)
     }, (error) => {
-      console.log(error)
+      //console.log(error)
     });
-    */
+    
   }
 
 
@@ -82,11 +75,11 @@ function Home() {
             <div>    
               {messageFlow?.map(item=> (
                 <Message
-                id={item.id}
+                id={item._id}
                 title={item.title}
-                post={item.post}
-                usr={item.usr}
-                timestamp={item.timestamp}
+                post={item.content}
+                usr={item.ID_USR}
+                timestamp={item.creationDate}
                 />
               ))}      
             </div>
@@ -94,9 +87,9 @@ function Home() {
         </div>
       
         <Grid container justify = "center">
-          <Pagination className="page__number" count={numberPages} variant="outlined" shape="rounded" onChange={handleChangePage}/>
+          <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage}/>
         </Grid>
-        
+          
     </div>
   )
 }

@@ -7,6 +7,8 @@ import Banner from 'react-js-banner';
 function NewUsr() {
   const [response, setResponse] = useState([]);
 
+  console.log('Test 123')
+
   const handleClick = () => {
     var username = document.getElementById('username').value
     var password_1 = document.getElementById('pass').value
