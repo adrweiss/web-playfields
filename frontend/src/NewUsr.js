@@ -1,35 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import './NewUsr.css';
 import axios from './axios';
-
+import Banner from 'react-js-banner';
 
 function NewUsr() {
+  const [response, setResponse] = useState([]);
+
   const handleClick = () => {
     var username = document.getElementById('username').value
     var password_1 = document.getElementById('pass').value
     var password_2 = document.getElementById('pass_again').value
     
     if (password_1 === password_2) {
+      
       axios.post('/users', {
           'email': username,
           'pword': password_1
         })
         .then((response) => {
-          console.log(response);
+          setResponse(0)
         }, (error) => {
-          console.log(error);
+          console.log(error)
+          setResponse(1)
         });
     } else {
-      alert('the passwords does mot match!')
+      setResponse(2)
     }
   }
 
   return (
     <div className='container'>   
-      <div className='create__container'>
+      <div className='create__container'>        
         <h1>Create New User</h1>
         
+        {response === 2 ? (
+          <Banner 
+            css={{color: "#FFF", backgroundColor: "red", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
+            title='The passwords does mot match!'
+            //visibleTime='5'
+            showBanner='true'
+          />
+          
+        ) : response === 0 ? (
+          <Banner 
+            css={{color: "#FFF", backgroundColor: "green", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
+            title='The user was successfull created!' 
+            //visibleTime='5'
+            showBanner='true'
+          />
+        ) : response === 1 ? (
+          <Banner 
+            css={{color: "#FFF", backgroundColor: "red", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
+            title='It occured a unknown error!' 
+            //visibleTime='5'
+            showBanner='true'
+          />
+        ) : (
+          <Banner 
+            showBanner='false'        
+          />
+        )}       
+
         <div>
             <label className='create__input__label'>E-Mail:</label>
             <input className='create__input__field' type="text" id="username" name="username"/>
