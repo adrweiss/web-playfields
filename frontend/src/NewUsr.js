@@ -9,6 +9,18 @@ function NewUsr() {
 
 
   const handleClick = () => {
+    //setResponse = []
+    //handlerRemoveItem('The passwords does mot match!')
+    //handlerRemoveItem('The user was successfull created!')
+    //handlerRemoveItem('It occured a unknown error!')
+    console.log(response)
+    if (response.length !== 0){
+      //setResponse(response.filter(item => item.name ===''))
+      console.log('hier')
+      console.log(response.length)
+      console.log(response)
+    }
+    
     var username = document.getElementById('username').value
     var password_1 = document.getElementById('pass').value
     var password_2 = document.getElementById('pass_again').value
@@ -21,13 +33,13 @@ function NewUsr() {
           'pword': password_1
         })
         .then((response) => {
-          setResponse('The user was successfull created!')
+          setResponse(0)
         }, (error) => {
           console.log(error)
-          setResponse('It occured a unknown error!')
+          setResponse(1)
         });
     } else {
-      setResponse('The passwords does mot match!')
+      setResponse(2)
     }
   }
 
@@ -36,40 +48,33 @@ function NewUsr() {
       <div className='create__container'>        
         <h1>Create New User</h1>
         
-        {response === 'The passwords does mot match!' ? (
+        {response === 2 ? (
           <Banner 
             css={{color: "#FFF", backgroundColor: "red", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
-            title={response} 
+            title='The passwords does mot match!'
+            //visibleTime='5'
             showBanner='true'
           />
-        ) : (
-        <Banner 
-            showBanner='false'        
-        />)}
-
-        {response === 'The user was successfull created!' ? (
+          
+        ) : response === 0 ? (
           <Banner 
             css={{color: "#FFF", backgroundColor: "green", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
-            title={response} 
+            title='The user was successfull created!' 
+            //visibleTime='5'
             showBanner='true'
           />
-        ) : (
-        <Banner 
-            showBanner='false'        
-        />)}
-        
-        {response === 'It occured a unknown error!' ? (
+        ) : response === 1 ? (
           <Banner 
             css={{color: "#FFF", backgroundColor: "red", borderRadius: '8px', fontFamily: 'Fira Sans', fontSize: 18}}
-            title={response} 
+            title='It occured a unknown error!' 
+            //visibleTime='5'
             showBanner='true'
           />
         ) : (
-        <Banner 
+          <Banner 
             showBanner='false'        
-        />)}
-
-        
+          />
+        )}       
 
         <div>
             <label className='create__input__label'>E-Mail:</label>
