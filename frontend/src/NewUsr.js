@@ -7,25 +7,11 @@ import Banner from 'react-js-banner';
 function NewUsr() {
   const [response, setResponse] = useState([]);
 
-
   const handleClick = () => {
-    //setResponse = []
-    //handlerRemoveItem('The passwords does mot match!')
-    //handlerRemoveItem('The user was successfull created!')
-    //handlerRemoveItem('It occured a unknown error!')
-    console.log(response)
-    if (response.length !== 0){
-      //setResponse(response.filter(item => item.name ===''))
-      console.log('hier')
-      console.log(response.length)
-      console.log(response)
-    }
-    
     var username = document.getElementById('username').value
     var password_1 = document.getElementById('pass').value
     var password_2 = document.getElementById('pass_again').value
     
-
     if (password_1 === password_2) {
       
       axios.post('/users', {

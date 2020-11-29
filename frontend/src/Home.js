@@ -3,6 +3,7 @@ import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
+import axios from './axios';
 
 
 function Home() {
@@ -38,6 +39,27 @@ function Home() {
     console.log(newPage)    
   }
 
+  const sendPost = () => {
+    var title_text = document.getElementById('title_text').value
+    var post_text = document.getElementById('post_text').value
+
+    console.log(title_text)
+    console.log(post_text)
+
+    /*
+    axios.post('/users', {
+      'title_text': title_text,
+      'post_text': post_text,
+      'usr': 'Kevin'
+    })
+    .then((response) => {
+      console.log(response)
+    }, (error) => {
+      console.log(error)
+    });
+    */
+  }
+
 
   return (
     <div> 
@@ -45,11 +67,11 @@ function Home() {
           <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
         </div>
         <div className="homescreen_title">
-          <textarea className="input__write__post"  id="text" name="text" cols="35" rows="1" maxlength="35">Write a Title</textarea> 	                 
+          <textarea className="input__write__post"  id="title_text" name="title_text" cols="35" rows="1" maxlength="35">Write a Title</textarea> 	                 
         </div>
         <div className="homescreen">
-          <textarea className="input__write__post"  id="text" name="text" cols="35" rows="4" maxlength="140">Write a new Post</textarea> 	
-          <input type="submit" value="Send" />  
+          <textarea className="input__write__post"  id="post_text" name="text" cols="35" rows="4" maxlength="140">Write a new Post</textarea> 	
+          <input type="submit" value="Send" onClick={sendPost}/>  
         </div>
         <div>
           {messageFlow?.length === 0 ? (
