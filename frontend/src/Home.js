@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
@@ -11,25 +11,35 @@ function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
 
-  
-  //var messageFlow = []
   const postPSide = 5
 
+  useEffect(() => {
+    async function fetchPosts() {
+      const req = await axios.get('/getPage', {params: {"pageNo": '1', "size": postPSide.toString()}});
+      setMessageFlow(req.data)
+    }
+    fetchPosts();
+  }, [])
+
+  useEffect(() => {
+    async function fetchCountPosts() {
+      const req = await axios.get('/countPosts');
+      setAmountPosts(Math.ceil(req.data.count / postPSide));
+    }
+  
+    fetchCountPosts();
+  }, [])
+
   async function fetchPosts(pageNo) {
-    console.log('Test - 1')
     const req = await axios.get('/getPage', {params: {"pageNo": pageNo.toString(), "size": postPSide.toString()}});
     setMessageFlow(req.data)
-    console.log(req.data)
   }
 
-  fetchPosts(1)
-  
-  async function fetchData() {
+  async function fetchCountPosts() {
     const req = await axios.get('/countPosts');
     setAmountPosts(Math.ceil(req.data.count / postPSide));
   }
-  fetchData()
- 
+  
   const handleChangePage = (event, newPage) => {
     fetchPosts(newPage)
   }
@@ -45,7 +55,8 @@ function Home() {
       'ID_USR': 2
     })
     .then((response) => {
-      fetchData()
+      fetchCountPosts()
+      fetchPosts('1')
       //console.log(response)
     }, (error) => {
       //console.log(error)
