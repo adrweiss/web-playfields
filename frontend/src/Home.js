@@ -67,9 +67,7 @@ function Home() {
 
   return (
     <div> 
-        <div className='homescreen'>
-          <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
-        </div>
+        <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
         <div className="homescreen_title">
           <textarea className="input__write__post"  id="title_text" name="title_text" cols="35" rows="1" maxlength="35">Write a Title</textarea> 	                 
         </div>

@@ -7,7 +7,7 @@ function ResetPassword() {
   return (
     <div className='container'>
       <div className='reset__container'>
-        <h1>Reset Password here</h1>
+        <h1>Reset Password</h1>
         
         <div>
             <label className='reset__input__label'>Username:</label>

@@ -8,7 +8,6 @@
   margin-top: 50px;
   border: 1px solid;
   padding: 1px;
-  height: 580px;
   width: 420px;
   border-radius: 10px;
   text-align: center;
@@ -39,7 +38,7 @@
 
 .change__password__section{
   margin-top: 5px;
-  border-top: 1px solid #aaa;
+  border-top: 3px solid #aaa;
 }
 .user__input__field {
   margin-top: 5px;
@@ -68,12 +67,13 @@
 }
 
 .delete__profile__Section{
-  border-top: 1px solid #aaa;
+  border-top: 3px solid #aaa;
   margin-top: 10px;
 }
 
 .delete__profile__Section__v2{
   margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .accept__new__password{

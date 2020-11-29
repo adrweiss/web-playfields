@@ -7,10 +7,8 @@ function Login() {
   return (
     <div className='container'>
       <div className='login__container'>
-        <div>
-          <h1 className='headline'>Please login</h1>       
-        </div>
-
+        <h1>Please login</h1>       
+        
         <div>
           <label className='input__label'>Username:</label>
           <input className='input__field' type="text" id="username" name="username"/>
