@@ -14,6 +14,7 @@ import {closePool} from './pgQueries.js'
 // APP Config 
 import Mongo from "mongodb";
 import bodyParser from 'body-parser';
+import { format } from 'date-fns';
 import { time } from "console";
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,13 +42,20 @@ app.put('/users', updatePassword)
 app.delete('/users', deleteUser)
 app.put('/shutdown', closePool)
 
+//For MongoDB
+//Get Page NR {pagoNo} with {size} results.
 app.get('/getPage', (req, res)=>{
-    var pageNo = parseInt(req.query.pageNo)
-    var size = parseInt(req.query.size)
+    console.log("called getPage");
+    let {pageNo, size}= req.body;
+    pageNo = parseInt(pageNo);
+    size = parseInt(size);
+    console.log("pageNo: "+ pageNo);
+    //var pageNo = parseInt(req.body.pageNo);
+    //var size = parseInt(req.body.size);
     var query = {}
     if(pageNo < 0 || pageNo === 0) {
           response = {"error" : true,"message" : "invalid page number, should start with 1"};
-          return res.json(response)
+          return res.json(response);
     }
     query.skip = size * (pageNo - 1)
     query.limit = size
@@ -57,47 +65,73 @@ app.get('/getPage', (req, res)=>{
             res.status(200).send(docs);
         });
     });
-app.get('/countPosts', (req, res)=>{
 });
+
+app.get('/countPosts', (req, res)=>{
+
     mongoClient.connect(err => {
         const collection = mongoClient.db("Posts").collection("Posts");
         collection.countDocuments(function(err, countData){
-            res.status(200).send(countData.toString());
+            let obj = new Object();
+            obj.count = countData;
+            let string = JSON.stringify(obj);
+            let json = JSON.parse(string);
+            res.status(200).send(json);
         });
     });
 });
+//Delete Post with Database ID {id}
 app.delete('/delete', (req, res)=>{
-    let id = new Mongo.ObjectID(req.query.id);
+    const {id} = req.body;
+    console.log(id);
+    if(id == undefined){
+        res.status(400).send();
+        return;
+    }
+    let mongoId = new Mongo.ObjectID(id);
     mongoClient.connect(err => {
         const collection = mongoClient.db("Posts").collection("Posts");
-        collection.deleteOne({"_id": id}, function(err, result){
+        collection.deleteOne({"_id": mongoId}, (err, collection)=>{
             if (err) {
                 res.status(500).send();
+                return;
             }
-            res.status(200).send("Successfully deleted Object");
+            if(collection.deletedCount==1){
+                res.status(200).send("Successfully deleted Object");
+            }else{
+                res.status(406).send("No Post with this Id found.")
+            }
         });
     });
 });
 
+//Get one Post with Database Id {id}
 app.get('/getOne', (req, res)=>{
-    let id = new Mongo.ObjectID(req.query.id);
+    const {id} = req.body;
+    if(id == undefined){
+        res.status(400).send();
+        return;
+    }
+    let mongoId = new Mongo.ObjectID(id);
     mongoClient.connect(err => {
         const collection = mongoClient.db("Posts").collection("Posts");
-        collection.findOne({"_id": id}, function(err, result){
+        collection.findOne({"_id": mongoId}, function(err, result){
             if (err) {
                 res.status(500).send();
+                return;
             }
             res.status(200).send(result);
         });
     });
 });
 
+//addPost {title}, {content}, {ID_USR}
 app.post('/addPost', (req, res) => {
-    let title = req.query.title;
-    let content = req.query.content;
-    let ID_USR = parseInt(req.query.ID_USR);
-    let creationDate = new Date().toString();
-    console.log("title: "+title);
+    let {title, content, ID_USR} = req.body;
+    ID_USR = parseInt(ID_USR);
+    let now = new Date();
+    let creationDate = format(now, 'dd.MM.yyy');
+    creationDate += " "+now.toLocaleTimeString()+"Uhr";
     mongoClient.connect(err => {
         console.log(creationDate);
         const collection = mongoClient.db("Posts").collection("Posts");
@@ -110,9 +144,18 @@ app.post('/addPost', (req, res) => {
 
         let string = JSON.stringify(obj);
         let json = JSON.parse(string);
-        collection.insertOne(json);
-      });
-      res.status(201).send("created");
+        collection.insertOne(json, function(err){
+            if (err){
+                console.log("Error while inserting new Post");
+                console.log(err);
+                res.status(500).send();
+                return;
+            }
+            console.log("Successfully created Post");
+            res.status(201).send("created");
+        });
+    
+    });
 });
 
 
