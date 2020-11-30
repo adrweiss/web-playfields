@@ -36,47 +36,39 @@ function User() {
       <h1>User Self Service</h1> 
       <Grid container spacing={3}>  
         <Grid item xs={12} sm={6}>
-        <h2>Change your user settings</h2>
+          <div className="container__user">
+            <h2>Change your user settings</h2>
+            
+            {`Here you can change your nickname. Your current nickname is ${currentNickname}. It is not necessary that your user is unique.`}
 
-          {`Here you can change your nickname. Your current nickname is ${currentNickname}. Your nickname must be unique.`}
-          <div>
-              <label className='user__input__label'>New nickname</label>
-              <input className='user__input__field' type="text" id="username" name="username"/>
-          </div>
+            <div className="change__nickname">
+              <label>New nickname</label>
+              <input type="text" id="username" name="username"/>
+              <Button className='accept__new__nickname' variant="contained" color="primary" disableElevation>
+                Accept 
+              </Button>
+            </div>
 
-            <Button className='accept__new__nickname' variant="contained" color="primary" disableElevation>
-              Accept 
-            </Button>
-          
-          <div className='change__password__section'>
-            {`Here you can change your current password.`}
-            <label className='user__input__label__pw'>Old password:</label>
-            <input className='user__input__field__pw' type="password" id="pass" name="password"
-              minlength="8" required/>
-          </div>
-          <div>
-            <label className='user__input__label__pw'>New Password:</label>
-            <input className='user__input__field__pw' type="password" id="pass" name="password"
-              minlength="8" required/>
-          </div>
-          
-          <div>
-            <label className='user__input__label__pw'>New Password again:</label>
-            <input className='user__input__field__pw' type="password" id="pass" name="password"
-              minlength="8" required/>
-          </div>
-          
-          <Button  variant="contained" color="primary" disableElevation>
-            Accept new password
-          </Button>
-          
+            <p>`Here you can change your current password.`</p>
 
+            <div className='change__password__section'>            
+              <label>Old password:</label>
+              <input type="password" id="pass" name="password" minlength="8" required/>
+              <label>New Password:</label>
+              <input type="password" id="pass" name="password"minlength="8" required/>
+              <label>New Password again:</label>
+              <input type="password" id="pass" name="password" minlength="8" required/>
+              <Button  variant="contained" color="primary" disableElevation>
+                Accept new password
+              </Button>
+            </div>
 
-              <Button  variant="contained" color="secondary" startIcon={<DeleteIcon />}>
-                Delete Profile
-              </Button>
-
-          
+            <div className='delete__profile'>
+              <Button  variant="contained" color="secondary" startIcon={<DeleteIcon/>}>
+                Delete Profile
+              </Button>
+            </div>
+          </div>
         </Grid>
         <Grid item xs={12} sm={6}>
           <h2>List of your roles and rights</h2>

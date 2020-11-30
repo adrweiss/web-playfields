@@ -1,87 +1,86 @@
 .container__user {
-  display: flex;
+  float: right;
+  border: 1px solid;
+  max-width: 500px;
+  border-radius: 10px;
+  padding: 15px;
   justify-content: center;
-  align-items: center;
 }
 
-.user__change__container {
-  margin-top: 50px;
-  border: 1px solid;
-  padding: 1px;
-  width: 420px;
-  border-radius: 10px;
-  text-align: center;
-}
 
-.user__rights__container {
-  margin-top: 50px;
-  border: 1px solid;
-  padding: 1px;
-  height: 200px;
-  width: 420px;
-  border-radius: 10px;
+.container__user > h2 {
   text-align: center;
 }
 
 
-.user__input__label {
-  display: flex;
-  margin-left: 85px;
-  margin-top: 15px;
-  font: 15px 'Fira Sans', sans-serif;
+.change__nickname {
+  margin: 0 auto;
+  text-align: left;
+  width: 200px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.nickname__change {
-  margin-bottom: 15px;
+
+.change__nickname > label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+.change__nickname > input {
+  margin-top: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+
+.change__nickname > Button {
+  width: 202px;
 }
 
 
 .change__password__section{
-  margin-top: 5px;
-  border-top: 3px solid #aaa;
-}
-.user__input__field {
-  margin-top: 5px;
-  width: 242px;
-  height: 20px;
+  margin: 0 auto;
+  text-align: left;
+  width: 200px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.accept__new__nickname {
-  width: 250px;
-  margin-bottom: 15px;
+
+.change__password__section > label {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.user__input__label__pw{
-  display: flex;
-  margin-left: 85px;
-  margin-top: 5px;
-  font: 15px 'Fira Sans', sans-serif;
-}
 
-.user__input__field__pw{
+.change__password__section > input {
   margin-top: 5px;
-  width: 242px;
-  height: 20px;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
-.delete__profile__Section{
-  border-top: 3px solid #aaa;
-  margin-top: 10px;
-}
 
-.delete__profile__Section__v2{
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.accept__new__password{
-  width: 250px;
+.change__password__section > Button {
+  width: 202px;
 }
 
 
-.delete__new__password {
-  margin-top: 15px;
-  width: 250px;
+.container__user > p {
+  text-align: center;
+  border-top: 1px solid black;
+}
+
+
+.delete__profile {
+  margin: 0 auto;
+  border-top: 1px solid black;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.delete__profile > Button {
+  margin-top: 20px;
+  width: 202px;
 }
