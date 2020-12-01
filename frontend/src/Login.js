@@ -17,7 +17,7 @@ function Login() {
         <div>
           <label className='input__label'>Password:</label>
           <input className='input__field' type="password" id="pass" name="password"
-            minlength="8" required/>
+             minLength="8" required/>
         </div>
 
         <div className='sign__in'>

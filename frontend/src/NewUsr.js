@@ -7,8 +7,6 @@ import Banner from 'react-js-banner';
 function NewUsr() {
   const [response, setResponse] = useState([]);
 
-  console.log('Test 123')
-
   const handleClick = () => {
     var username = document.getElementById('username').value
     var password_1 = document.getElementById('pass').value
@@ -72,13 +70,13 @@ function NewUsr() {
         <div>
           <label className='create__input__label'>Password:</label>
           <input className='create__input__field' type="password" id="pass" name="password"
-            minlength="8" required/>
+             minLength="8" required/>
         </div>
 
         <div>
           <label className='create__input__label'>Password again:</label>
           <input className='create__input__field' type="password" id="pass_again" name="password"
-            minlength="8" required/>
+             minLength="8" required/>
         </div>
         
         <Button className='create__button' variant="contained" color="primary" onClick={handleClick}>

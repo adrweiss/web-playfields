@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 
 function User() {
   const currentNickname = 'TestName'
-
+  /*
   const rights = [
     {
       "name": "1 Right",
@@ -30,7 +30,7 @@ function User() {
       "description": 'thats a text which descrips the right'
     }
   ]
-
+*/
   return (
     <div> 
       <h1>User Self Service</h1> 
@@ -53,11 +53,11 @@ function User() {
 
             <div className='change__password__section'>            
               <label>Old password:</label>
-              <input type="password" id="pass" name="password" minlength="8" required/>
+              <input type="password" id="old_pass" name="password" minLength="8" required/>
               <label>New Password:</label>
-              <input type="password" id="pass" name="password"minlength="8" required/>
+              <input type="password" id="new_pass" name="password" minLength="8" required/>
               <label>New Password again:</label>
-              <input type="password" id="pass" name="password" minlength="8" required/>
+              <input type="password" id="new_again_pass" name="password" minLength="8" required/>
               <Button  variant="contained" color="primary" disableElevation>
                 Accept new password
               </Button>
