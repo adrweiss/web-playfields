@@ -13,7 +13,6 @@ function NewUsr() {
     var password_2 = document.getElementById('pass_again').value
     
     if (password_1 === password_2) {
-      
       axios.post('/users', {
           'email': username,
           'pword': password_1
