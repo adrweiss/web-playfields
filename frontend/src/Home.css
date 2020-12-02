@@ -4,6 +4,7 @@
   justify-content: center;
 }
 
+
 .homescreen_title {
   margin-left: -49px;
   margin-bottom: 10px;
@@ -12,10 +13,12 @@
   justify-content: center;
 }
 
+
 .input__write__post {
   resize: none;
   font: 18px 'Fira Sans', sans-serif;  
 }
+
 
 .page__number {
   display: flex;

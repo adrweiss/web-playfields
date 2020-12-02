@@ -3,6 +3,7 @@ import "./Message.css";
 import Button from '@material-ui/core/Button';
 //import axios from './axios';
 
+
 function Message({id, title, post, usr, timestamp}) {
 
   const deletePost = () => {
@@ -28,10 +29,12 @@ function Message({id, title, post, usr, timestamp}) {
           <div>
             User: {usr} 
           </div>
+          
           <div>
             Date: {timestamp}
           </div>
         </div>
+
         <div className='delete_button' >
           <Button size="small" variant="contained" color="secondary" onClick={deletePost}>
             Delete

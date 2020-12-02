@@ -44,7 +44,7 @@ function User() {
             <div className="change__nickname">
               <label>New nickname</label>
               <input type="text" id="username" name="username"/>
-              <Button className='accept__new__nickname' variant="contained" color="primary" disableElevation>
+              <Button variant="contained" color="primary" disableElevation>
                 Accept 
               </Button>
             </div>

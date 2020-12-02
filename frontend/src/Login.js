@@ -1,43 +1,76 @@
-import React from 'react'
-import './Login.css'
+import React from 'react';
+import './Login.css';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import Modal from 'react-modal';
+
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+  }
+};
+
+Modal.setAppElement('body')
 
 function Login() {
+  const [modalIsOpen,setIsOpen] = React.useState(false);
+  
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal(){
+    setIsOpen(false);
+  }
+
   return (
-    <div className='container'>
-      <div className='login__container'>
-        <h1>Please login</h1>       
-        
-        <div>
-          <label className='input__label'>Username:</label>
-          <input className='input__field' type="text" id="username" name="username"/>
-        </div>
+    <div className='container__login'>
+      <h1>Please login</h1>       
+      
+      <div className='login'>
+        <label>Username:</label>
+        <input type="text" id="username" name="username"/>
+        <label>Password:</label>
+        <input type="password" id="pass" name="password" minLength="8" required/>
+        <Button variant="contained" color="primary" disableElevation>
+          Sign in 
+        </Button>
 
-        <div>
-          <label className='input__label'>Password:</label>
-          <input className='input__field' type="password" id="pass" name="password"
-             minLength="8" required/>
-        </div>
-
-        <div className='sign__in'>
-          <Button className='sign__in__button' variant="contained" color="primary" disableElevation>
-            Sign in 
+        <Link to="/user/newusr">
+          <Button className="create__new__user__link" variant="contained" color="primary" disableElevation>
+            Create new User
           </Button>
-        </div>
-
-        <Link to="/user/newusr" className="user__link">
-          <div className="link">
-              {'Create new User'}
-          </div>
         </Link> 
         
-        <Link to="/user/resetpw" className="user__link">
-          <div className="link">
-              {'Reset Password'}
-          </div>
-        </Link>      
+        <Button  variant="contained" color="primary" disableElevation onClick={openModal}>
+          Reset Password
+        </Button>
       </div>
+            
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Reset Password"
+      >
+        <div className="modal__login">
+          <h1>Reset Password</h1>
+          
+          <div className='login'>
+            <label >Username:</label>
+            <input type="text" id="username" name="username"/>
+            <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
+              Send
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

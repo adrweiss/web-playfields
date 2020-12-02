@@ -36,7 +36,7 @@
 
 
 .change__nickname > Button {
-  width: 202px;
+  width: 102%;
 }
 
 
@@ -63,7 +63,7 @@
 
 
 .change__password__section > Button {
-  width: 202px;
+  width: 102%;
 }
 
 
@@ -82,5 +82,5 @@
 
 .delete__profile > Button {
   margin-top: 20px;
-  width: 202px;
+  width: 45%;
 }
