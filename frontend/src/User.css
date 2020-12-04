@@ -1,86 +1,75 @@
 .container__user {
-  float: right;
-  border: 1px solid;
-  max-width: 500px;
-  border-radius: 10px;
-  padding: 15px;
-  justify-content: center;
+    float: right;
+    border: 1px solid;
+    max-width: 500px;
+    border-radius: 10px;
+    padding: 15px;
+    justify-content: center;
 }
 
-
-.container__user > h2 {
-  text-align: center;
+.container__user>h2 {
+    text-align: center;
 }
-
 
 .change__nickname {
-  margin: 0 auto;
-  text-align: left;
-  width: 200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin: 0 auto;
+    text-align: left;
+    width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-
-.change__nickname > label {
-  font-size: 20px;
-  font-weight: bold;
+.change__nickname>label {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-
-.change__nickname > input {
-  margin-top: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
+.change__nickname>input {
+    margin-top: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-
-.change__nickname > Button {
-  width: 102%;
+.change__nickname>Button {
+    width: 102%;
 }
 
-
-.change__password__section{
-  margin: 0 auto;
-  text-align: left;
-  width: 200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.change__password__section {
+    margin: 0 auto;
+    text-align: left;
+    width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-
-.change__password__section > label {
-  font-size: 20px;
-  font-weight: bold;
+.change__password__section>label {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-
-.change__password__section > input {
-  margin-top: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
+.change__password__section>input {
+    margin-top: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-
-.change__password__section > Button {
-  width: 102%;
+.change__password__section>Button {
+    width: 102%;
 }
 
-
-.container__user > p {
-  text-align: center;
-  border-top: 1px solid black;
+.container__user>p {
+    text-align: center;
+    border-top: 1px solid black;
 }
-
 
 .delete__profile {
-  margin: 0 auto;
-  border-top: 1px solid black;
-  margin-top: 20px;
-  text-align: center;
+    margin: 0 auto;
+    border-top: 1px solid black;
+    margin-top: 20px;
+    text-align: center;
 }
 
-.delete__profile > Button {
-  margin-top: 20px;
-  width: 45%;
+.delete__profile>Button {
+    margin-top: 20px;
+    width: 45%;
 }

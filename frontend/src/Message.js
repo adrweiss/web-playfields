@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 //import axios from './axios';
 
 
-function Message({id, title, post, usr, timestamp}) {
+function Message({ id, title, post, usr, timestamp }) {
 
   const deletePost = () => {
     console.log(id)
@@ -21,15 +21,15 @@ function Message({id, title, post, usr, timestamp}) {
   return (
     <div className='container'>
       <div className='post__container'>
-        
+
         <h3 className='post__title'>{title}</h3>
-      
+
         {post}
         <div className='user__date_container'>
           <div>
-            User: {usr} 
+            User: {usr}
           </div>
-          
+
           <div>
             Date: {timestamp}
           </div>

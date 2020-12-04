@@ -10,29 +10,29 @@ function Header() {
         <div className='header__Nav'>
           <Link to="/" className="header__link">
             <div className="header__option">
-                {'Home'}
-            </div>
-          </Link> 
-        
-          <Link to="/game" className="header__link">
-            <div className="header__option">
-                {'Connect Four'}
+              {'Home'}
             </div>
           </Link>
-          
+
+          <Link to="/game" className="header__link">
+            <div className="header__option">
+              {'Connect Four'}
+            </div>
+          </Link>
+
           <Link to="/login" className="header__link">
             <div className="header__option">
-                {"Login"}
+              {"Login"}
             </div>
           </Link>
           <Link to="/user" className="header__link">
             <div className="header__option">
-                {"User"}
+              {"User"}
             </div>
           </Link>
           <Link to="/management" className="header__link">
             <div className="header__option">
-                {"Management"}
+              {"Management"}
             </div>
           </Link>
         </div>

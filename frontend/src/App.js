@@ -15,28 +15,28 @@ function App() {
       <div className="app">
         <Switch>
           <Route path="/game">
-            <Header/>
-            <Game/>
+            <Header />
+            <Game />
           </Route>
           <Route path="/login">
-            <Header/>
-            <Login/>
+            <Header />
+            <Login />
           </Route>
           <Route path="/management">
-            <Header/>
-            <Management/>
+            <Header />
+            <Management />
           </Route>
           <Route path="/user/newusr">
-            <Header/>
-            <NewUsr/>
+            <Header />
+            <NewUsr />
           </Route>
           <Route path="/user">
-            <Header/>
-            <User/>
+            <Header />
+            <User />
           </Route>
           <Route path="/">
-            <Header/>
-            <Home/>
+            <Header />
+            <Home />
           </Route>
         </Switch>
       </div>

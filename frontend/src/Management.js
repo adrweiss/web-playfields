@@ -15,7 +15,7 @@ function Management() {
           <li>Delete User</li>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <li>Add Rights</li>
+          <li>Add Rights</li>
           <li>Shw role of the user, and show the rights</li>
           <li>Show specific right to a selected user</li>
           <li>Remove Rights</li>

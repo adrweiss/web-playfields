@@ -32,39 +32,39 @@ function User() {
   ]
 */
   return (
-    <div> 
-      <h1>User Self Service</h1> 
-      <Grid container spacing={3}>  
+    <div>
+      <h1>User Self Service</h1>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <div className="container__user">
             <h2>Change your user settings</h2>
-            
+
             {`Here you can change your nickname. Your current nickname is ${currentNickname}. It is not necessary that your user is unique.`}
 
             <div className="change__nickname">
               <label>New nickname</label>
-              <input type="text" id="username" name="username"/>
-              <Button variant="contained" color="primary" disableElevation>
-                Accept 
+              <input type="text" id="username" name="username" />
+              <Button variant="contained" color="primary" disableElevation>
+                Accept
               </Button>
             </div>
 
             <p>`Here you can change your current password.`</p>
 
-            <div className='change__password__section'>            
+            <div className='change__password__section'>
               <label>Old password:</label>
-              <input type="password" id="old_pass" name="password" minLength="8" required/>
+              <input type="password" id="old_pass" name="password" minLength="8" required />
               <label>New Password:</label>
-              <input type="password" id="new_pass" name="password" minLength="8" required/>
+              <input type="password" id="new_pass" name="password" minLength="8" required />
               <label>New Password again:</label>
-              <input type="password" id="new_again_pass" name="password" minLength="8" required/>
-              <Button  variant="contained" color="primary" disableElevation>
+              <input type="password" id="new_again_pass" name="password" minLength="8" required />
+              <Button variant="contained" color="primary" disableElevation>
                 Accept new password
               </Button>
             </div>
 
             <div className='delete__profile'>
-              <Button  variant="contained" color="secondary" startIcon={<DeleteIcon/>}>
+              <Button variant="contained" color="secondary" startIcon={<DeleteIcon />}>
                 Delete Profile
               </Button>
             </div>

@@ -1,49 +1,42 @@
 .container__login {
-  border: 1px solid;
-  width: 350px;
-  margin: 0 auto;
-  margin-top: 20px;
-  border-radius: 10px;
-  padding: 15px;
-  justify-content: center;
-  
-  }
-
+    border: 1px solid;
+    width: 350px;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 15px;
+    justify-content: center;
+}
 
 .modal__login {
-  width: 250px;
+    width: 250px;
 }
-
 
 .login {
-  margin: 0 auto;
-  text-align: left;
-  width: 200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin: 0 auto;
+    text-align: left;
+    width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-
-.login > label {
-  font-size: 20px;
-  font-weight: bold;
+.login>label {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-
-.login > input {
-  margin-top: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
+.login>input {
+    margin-top: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-
-.login > Button {
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 102%;
+.login>Button {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 102%;
 }
-
 
 .create__new__user__link {
-  width: 102%;
+    width: 102%;
 }
