@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import axios from './axios';
 
 
-
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
@@ -97,13 +96,16 @@ function Home() {
   return (
     <div> 
         <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
+
         <div className="homescreen_title">
           <textarea className="input__write__post"  id="title_text" name="title_text" cols="35" rows="1" maxLength="35" placeholder="Write a Title"/>
         </div>
+
         <div className="homescreen">
           <textarea className="input__write__post"  id="post_text" name="text" cols="35" rows="4" maxLength="140" placeholder="Write a new Post"/>
           <input type="submit" value="Send" onClick={sendPost}/>  
         </div>
+
         <div>
           {messageFlow?.length === 0 ? (
             <div className='homescreen'>
@@ -132,9 +134,7 @@ function Home() {
           <Grid container justify="center">
             <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage}/>
           </Grid> 
-        )}
-
-              
+        )}      
     </div>
   )
 }

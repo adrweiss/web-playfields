@@ -8,11 +8,13 @@
   text-align: center;
   }
 
+
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 
 .create__input__label {
   display: flex;
@@ -21,12 +23,14 @@
   font: 15px 'Fira Sans', sans-serif;
 }
 
+
 .create__input__field {
   margin-top: 5px;
   width: 160px;
   height: 20px;
   margin-bottom: 10px;
 }
+
 
 .create__button {
   width: 168px;
