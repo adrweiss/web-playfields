@@ -1,37 +1,37 @@
 .create__container {
-  margin-top: 50px;
   border: 1px solid;
-  padding: 1px;
-  height: 380px;
-  width: 300px;
+  width: 350px;
+  margin: 0 auto;
+  margin-top: 20px;
   border-radius: 10px;
-  text-align: center;
+  padding: 15px;
+  justify-content: center;
+  
   }
 
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.create__input__label {
-  display: flex;
-  margin-left: 65px;
+.create__new__user {
+  margin: 0 auto;
+  text-align: left;
+  width: 200px;
   margin-top: 10px;
-  font: 15px 'Fira Sans', sans-serif;
+  margin-bottom: 10px;
+}
+
+.create__new__user > label {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 
-.create__input__field {
+.create__new__user > input {
   margin-top: 5px;
-  width: 160px;
-  height: 20px;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
 
-.create__button {
-  width: 168px;
+.create__new__user > Button {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 102%;
 }

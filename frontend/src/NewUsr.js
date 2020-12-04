@@ -29,7 +29,7 @@ function NewUsr() {
   }
 
   return (
-    <div className='container'>   
+    
       <div className='create__container'>        
         <h1>Create New User</h1>
         
@@ -61,28 +61,19 @@ function NewUsr() {
           />
         )}       
 
-        <div>
-            <label className='create__input__label'>E-Mail:</label>
-            <input className='create__input__field' type="text" id="username" name="username"/>
-        </div>
-
-        <div>
-          <label className='create__input__label'>Password:</label>
-          <input className='create__input__field' type="password" id="pass" name="password"
-             minLength="8" required/>
-        </div>
-
-        <div>
-          <label className='create__input__label'>Password again:</label>
-          <input className='create__input__field' type="password" id="pass_again" name="password"
-             minLength="8" required/>
-        </div>
-        
-        <Button className='create__button' variant="contained" color="primary" onClick={handleClick}>
-          Create
-        </Button>
+        <div className='create__new__user'>
+          <label>E-Mail:</label>
+          <input type="text" id="username" name="username"/>
+          <label>Password:</label>
+          <input type="password" id="pass" name="password" minLength="8" required/>
+          <label>Password again:</label>
+          <input type="password" id="pass_again" name="password" minLength="8" required/>
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            Create
+          </Button>
+        </div>        
       </div>
-    </div>
+    
   )
 }
 
