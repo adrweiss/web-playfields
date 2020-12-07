@@ -2,12 +2,14 @@
     float: right;
     border: 1px solid;
     max-width: 500px;
+    height: 600px;
     border-radius: 10px;
     padding: 15px;
     justify-content: center;
 }
 
 .container__user>h2 {
+    border-bottom: 1px solid black;
     text-align: center;
 }
 
@@ -59,7 +61,6 @@
 
 .container__user>p {
     text-align: center;
-    border-top: 1px solid black;
 }
 
 .delete__profile {
@@ -72,4 +73,16 @@
 .delete__profile>Button {
     margin-top: 20px;
     width: 45%;
+}
+
+.table__container {
+    height: 600px;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid;
+}
+
+.table__container>h2 {
+    text-align: center;
+    border-bottom: 1px solid black;
 }
