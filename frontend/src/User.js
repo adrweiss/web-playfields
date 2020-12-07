@@ -3,8 +3,9 @@ import Button from '@material-ui/core/Button';
 import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
+//import Collapse from '@material-ui/core/Collapse';
 
-//import RolesRightsRow from './RolesRightsRow'
+import RolesRightsRow from './RolesRightsRow'
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 //import Paper from '@material-ui/core/Paper';
@@ -55,10 +56,6 @@ function User() {
       ]
     }
   ]
-
-  const handleCellClick = (event, name) => {
-    console.log(name)
-  }
 
   return (
     <div>
@@ -113,15 +110,7 @@ function User() {
               </TableHead>
               <TableBody>
                 {roles?.map((role) => (
-                  <TableRow 
-                   hover
-                    key={role.role_id}
-                    onClick={(event) => handleCellClick(event, role.role_id)}
-                  >
-                    <TableCell component="th" scope="row">{role.role_name}</TableCell>
-                    <TableCell align="right">{role.assignment_date}</TableCell>
-                    <TableCell align="right">{role.role_description}</TableCell>
-                  </TableRow>
+                 <RolesRightsRow key={role.role_id} role={role}/>
                 ))}
               </TableBody>
             </Table>

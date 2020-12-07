@@ -13,7 +13,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 function RolesRightsRow(props) {
   const { role } = props;
   const [open, setOpen] = React.useState(false);
-  
+
   return (
     <React.Fragment>
       <TableRow>
