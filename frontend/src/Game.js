@@ -3,7 +3,7 @@ import React from 'react'
 function Game() {
   return (
     <div>
-      <h1>This is the place for the game side. Tst</h1>
+      <h1>This is the place for the game side. Tst new one</h1>
     </div>
   )
 }
