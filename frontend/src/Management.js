@@ -13,7 +13,7 @@ function Management() {
           <li>Email, Nickname, Createion Date</li>
           <li>List with all users</li>
           <li>Delete User</li>
-          <li>1234</li>
+          <li>2345</li>
         </Grid>
         <Grid item xs={12} sm={6}>
           <li>Add Rights</li>
