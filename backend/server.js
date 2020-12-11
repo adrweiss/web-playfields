@@ -19,14 +19,52 @@ app.use(express.json());
 
 
 // DB config 
-const MongoClient = Mongo.MongoClient;
-const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
-const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
+//const MongoClient = Mongo.MongoClient;
+//const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
+//const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
+
+import { db } from './src/models/index.js'
+
+//const db = require("./src/models");
+const Role = db.role;
+
+//db.sequelize.sync({force: true}).then(() => {
+//  console.log('Drop and Resync Db');
+//  initial();
+//});
+
+db.sequelize.sync();
+  
+
+function initial() {
+  Role.create({
+    id: 1,
+    name: "user"
+  });
+ 
+  Role.create({
+    id: 2,
+    name: "moderator"
+  });
+ 
+  Role.create({
+    id: 3,
+    name: "admin"
+  });
+}
 
 
 // API Endpoints
 app.get('/', (req, res) => res.status(200).send('Health'));
 
+
+import {routsUsr} from './src/routes/user.routes.js';
+import {authRoutes} from './src/routes/auth.routes.js';
+
+routsUsr(app)
+authRoutes(app)
+
+/*
 // For PostgreSQL
 app.get('/users', getUsers)
 app.get('/usersId', getUserById)
@@ -34,7 +72,7 @@ app.get('/usersIdByEmail', getUserIdByEmail)
 app.post('/users', createUser)
 app.put('/users', updatePassword)
 app.delete('/users', deleteUser)
-
+*/
 
 
 
