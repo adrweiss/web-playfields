@@ -28,12 +28,12 @@ import { db } from './src/models/index.js'
 //const db = require("./src/models");
 const Role = db.role;
 
-//db.sequelize.sync({force: true}).then(() => {
-//  console.log('Drop and Resync Db');
-//  initial();
-//});
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Db');
+  initial();
+});
 
-db.sequelize.sync();
+//db.sequelize.sync();
   
 
 function initial() {

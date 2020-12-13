@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
   config.PASSWORD,
   {
     host: config.HOST,
+    schema: config.schema,
     dialect: config.dialect,
     operatorsAliases: false,
 

@@ -1,9 +1,9 @@
 export const config = {
-  HOST: 'localhost',
-  USER: "postgres",
+  HOST: 'playfield-db.caz3wq73d2qn.eu-central-1.rds.amazonaws.com',
+  USER: "karl",
+  PASSWORD: "RvUVC0gObAlQp74hgnUJ",
   DB: "postgres",
   dialect: "postgres",
-  schema: "playfield",
   pool: {
     max: 5,
     min: 0,
