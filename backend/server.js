@@ -30,14 +30,15 @@ app.use(express.json());
 //const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
 
 
-const Role = db.role;
+//const Role = db.role;
+//const Right = db.right;
 
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
-  roleInit(db.role);
-  //initial();
+  roleInit(db.role, db.right, db.user);
 });
 //db.sequelize.sync();
+
 
 // API Endpoints
 app.get('/', (req, res) => res.status(200).send('Health'));

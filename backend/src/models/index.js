@@ -5,8 +5,7 @@ import { User } from './user.model.js'
 import { Role } from './role.model.js'
 import { Right } from './right.model.js'
 
-
-import { initial } from './initial.load.js'
+import { initialRole, initialRight, initialUsr } from './initial.load.js'
 
 const sequelize = new Sequelize(
   config.DB,
@@ -16,8 +15,8 @@ const sequelize = new Sequelize(
     host: config.HOST,
     schema: config.schema,
     dialect: config.dialect,
-    operatorsAliases: false,
-    logging: false,
+    operatorsAliases: 0,
+    logging: 0,
     pool: {
       max: config.pool.max,
       min: config.pool.min,
@@ -58,8 +57,10 @@ db.right.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
-function roleInit(role){
-  initial(role)
+function roleInit(role, right, user){
+  initialRole(role)
+  initialRight(right)
+  initialUsr(user)
 }
 db.ROLES = ["user", "admin", "manager"];
 

@@ -19,7 +19,6 @@ export function signup (req, res) {
   })
     .then(user => {
       if (req.body.roles) {
-        console.log('hier')
         Role.findAll({
           where: {
             name: {
@@ -27,6 +26,7 @@ export function signup (req, res) {
             }
           }
         }).then(roles => {
+          console.log(roles)
           user.setRoles(roles).then(() => {
             res.send({ message: "User was registered successfully!" });
           });
