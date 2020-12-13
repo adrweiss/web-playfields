@@ -1,6 +1,13 @@
 import { config } from '../config/db.config.js'
 import Sequelize from 'sequelize';
 
+import { User } from './user.model.js'
+import { Role } from './role.model.js'
+import { Right } from './right.model.js'
+
+
+import { initial } from './initial.load.js'
+
 const sequelize = new Sequelize(
   config.DB,
   config.USER,
@@ -10,7 +17,7 @@ const sequelize = new Sequelize(
     schema: config.schema,
     dialect: config.dialect,
     operatorsAliases: false,
-
+    logging: false,
     pool: {
       max: config.pool.max,
       min: config.pool.min,
@@ -25,11 +32,9 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-import { User } from './user.model.js'
-import { Role } from './role.model.js'
-
 db.role = Role(sequelize, Sequelize);
 db.user = User(sequelize, Sequelize);
+db.right = Right(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -42,6 +47,20 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
-db.ROLES = ["user", "admin", "moderator"];
+db.role.belongsToMany(db.right, {
+  through: "roles_right",
+  foreignKey: "roleId",
+  otherKey: "rightId"
+});
+db.right.belongsToMany(db.role, {
+  through: "roles_right",
+  foreignKey: "rightId",
+  otherKey: "roleId"
+});
 
-export { db };
+function roleInit(role){
+  initial(role)
+}
+db.ROLES = ["user", "admin", "manager"];
+
+export { db, roleInit };

@@ -19,6 +19,7 @@ export function signup (req, res) {
   })
     .then(user => {
       if (req.body.roles) {
+        console.log('hier')
         Role.findAll({
           where: {
             name: {
@@ -31,6 +32,7 @@ export function signup (req, res) {
           });
         });
       } else {
+        console.log('hier2')
         // user role = 1
         user.setRoles([1]).then(() => {
           res.send({ message: "User was registered successfully!" });

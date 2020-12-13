@@ -2,7 +2,7 @@ import express from "express"
 import Cors from 'cors';
 import bodyParser from 'body-parser';
 
-import { db } from './src/models/index.js'
+import { db ,roleInit} from './src/models/index.js'
 
 import {routsUsr} from './src/routes/user.routes.js';
 import {authRoutes} from './src/routes/auth.routes.js';
@@ -34,28 +34,10 @@ const Role = db.role;
 
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
-  initial();
+  roleInit(db.role);
+  //initial();
 });
 //db.sequelize.sync();
-  
-
-function initial() {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
-  });
-}
-
 
 // API Endpoints
 app.get('/', (req, res) => res.status(200).send('Health'));
