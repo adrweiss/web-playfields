@@ -3,6 +3,8 @@ import './Login.css';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom';
+
 
 import { login } from "./services/auth.service"
 
@@ -22,6 +24,7 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const history = useHistory();
 
   const handleClick = () => {
     var username = document.getElementById('email').value
@@ -32,6 +35,7 @@ function Login() {
         console.log('successfull login')
         //props.history.push("/profile");
         //window.location.reload();
+        history.push('/user')
       },
       (error) => {
         const resMessage =
