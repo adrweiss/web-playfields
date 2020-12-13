@@ -4,13 +4,14 @@ import { authConfig } from '../config/auth.config.js'
 
 const User = db.user;
 const Role = db.role;
+const Right = db.right;
 
 const Op = db.Sequelize.Op;
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-export function signup (req, res) {
+export function signup(req, res) {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -18,36 +19,20 @@ export function signup (req, res) {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
-      if (req.body.roles) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
-          }
-        }).then(roles => {
-          console.log(roles)
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
-          });
-        });
-      } else {
-        console.log('hier2')
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: "User was registered successfully!" });
-        });
-      }
+      user.setRoles([1]).then(() => {
+        res.send({ message: "User was registered successfully!" });
+      });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };
 
-export function signin (req, res) {
+export function signin(req, res) {
   User.findOne({
     where: {
       username: req.body.username
+      //email: req.body.username
     }
   })
     .then(user => {
@@ -71,21 +56,35 @@ export function signin (req, res) {
         expiresIn: 86400 // 24 hours
       });
 
-      var authorities = [];
+      const accessRights = [];
+      const authorities = [];
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
+          authorities.push(roles[i].name);
         }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token
-        });
+
+        Right.findAll({
+          include: [
+            { model: Role, as: 'roles', where: { name: authorities } },
+          ],
+        }
+        ).then(rights => {
+          for (let i = 0; i < rights.length; i++) {
+            accessRights.push(rights[i].name)
+          }
+          res.status(200).send({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            roles: authorities,
+            rights: accessRights,
+            accessToken: token
+          });
+        })
       });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };
+

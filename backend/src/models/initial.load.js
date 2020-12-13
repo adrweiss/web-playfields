@@ -3,17 +3,17 @@ import bcrypt from 'bcrypt';
 export function initialRole(Role) {
   Role.create({
     id: 1,
-    name: "user"
+    name: "USER"
   });
 
   Role.create({
     id: 2,
-    name: "manager"
+    name: "MANAGER"
   });
 
   Role.create({
     id: 3,
-    name: "admin"
+    name: "ADMIN"
   });
   return initialRole
 }

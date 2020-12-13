@@ -63,5 +63,6 @@ function roleInit(role, right, user){
   initialUsr(user)
 }
 db.ROLES = ["user", "admin", "manager"];
+db.RIGHTS = ["admin", "READ_USER_VIEW", "READ_MANAGEMNT_VIEW"];
 
 export { db, roleInit };
