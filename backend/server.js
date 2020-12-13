@@ -1,11 +1,17 @@
 import express from "express"
 import Cors from 'cors';
-//import pgClient from './pgQueries.js'
-import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
-import Mongo from "mongodb";
 import bodyParser from 'body-parser';
-import { format } from 'date-fns';
-import { time } from "console";
+
+import { db } from './src/models/index.js'
+
+import {routsUsr} from './src/routes/user.routes.js';
+import {authRoutes} from './src/routes/auth.routes.js';
+
+//import pgClient from './pgQueries.js'
+//import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
+//import Mongo from "mongodb";
+//import { format } from 'date-fns';
+//import { time } from "console";
 
 // APP Config 
 const app = express();
@@ -23,16 +29,13 @@ app.use(express.json());
 //const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
 //const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
 
-import { db } from './src/models/index.js'
 
-//const db = require("./src/models");
 const Role = db.role;
 
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
   initial();
 });
-
 //db.sequelize.sync();
   
 
@@ -56,10 +59,6 @@ function initial() {
 
 // API Endpoints
 app.get('/', (req, res) => res.status(200).send('Health'));
-
-
-import {routsUsr} from './src/routes/user.routes.js';
-import {authRoutes} from './src/routes/auth.routes.js';
 
 routsUsr(app)
 authRoutes(app)

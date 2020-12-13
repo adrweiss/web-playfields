@@ -1,4 +1,4 @@
-export const Role = (sequelize, Sequelize) => {
+export function Role(sequelize, Sequelize){
   const Role = sequelize.define("roles", {
     id: {
       type: Sequelize.INTEGER,
@@ -8,4 +8,5 @@ export const Role = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     }
   });
+  return Role
 };

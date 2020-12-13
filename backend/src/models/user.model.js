@@ -1,4 +1,4 @@
-export const User = (sequelize, Sequelize) => {
+export function User(sequelize, Sequelize){
   const User = sequelize.define("users", {
     username: {
       type: Sequelize.STRING
@@ -10,4 +10,5 @@ export const User = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     }
   });
+  return User
 };
