@@ -14,7 +14,7 @@ export function authRoutes(app) {
     "/api/auth/signup",
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted
+      //verifySignUp.checkRolesExisted
     ],
     signup
   );
