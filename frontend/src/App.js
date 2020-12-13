@@ -26,7 +26,7 @@ function App() {
             <Header />
             <Management />
           </Route>
-          <Route path="/user/newusr">
+          <Route path="/user/register">
             <Header />
             <NewUsr />
           </Route>

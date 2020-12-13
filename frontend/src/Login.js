@@ -71,7 +71,7 @@ function Login() {
           Sign in
         </Button>
 
-        <Link to="/user/newusr">
+        <Link className='Link' to="/user/register">
           <Button className="create__new__user__link" variant="contained" color="primary" disableElevation>
             Create new User
           </Button>

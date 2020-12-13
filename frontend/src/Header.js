@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 
 
 function Header() {
+  const handleClick = () => {
+
+  }
+
   return (
     <div>
       <nav className="header">
@@ -25,7 +29,7 @@ function Header() {
               {"Login"}
             </div>
           </Link>
-          <Link to="/user" className="header__link">
+          <Link to="/user" className="header__link" hidden='true'>
             <div className="header__option">
               {"User"}
             </div>
