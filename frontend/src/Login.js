@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
 
+import { login } from "./services/auth.service"
+
 
 const customStyles = {
   content: {
@@ -21,6 +23,33 @@ Modal.setAppElement('body')
 function Login() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
+  const handleClick = () => {
+    var username = document.getElementById('email').value
+    var password = document.getElementById('password').value
+
+    login(username, password).then(
+      () => {
+        console.log('successfull login')
+        //props.history.push("/profile");
+        //window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        
+        console.log(resMessage)
+        //setLoading(false);
+        //setMessage(resMessage);
+      }
+    );
+
+
+  }
+
   function openModal() {
     setIsOpen(true);
   }
@@ -34,11 +63,11 @@ function Login() {
       <h1>Please login</h1>
 
       <div className='login'>
-        <label>Username:</label>
-        <input type="text" id="username" name="username" />
+        <label>E-Mail:</label>
+        <input type="text" id="email" name="email" />
         <label>Password:</label>
-        <input type="password" id="pass" name="password" minLength="8" required />
-        <Button variant="contained" color="primary" disableElevation>
+        <input type="password" id="password" name="password" minLength="8" required />
+        <Button variant="contained" color="primary" disableElevation onClick={handleClick}>
           Sign in
         </Button>
 

@@ -5,16 +5,17 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 
 
-//import Collapse from '@material-ui/core/Collapse';
 
-//import RolesRightsRow from './RolesRightsRow'
+
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-//import Paper from '@material-ui/core/Paper';
 import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
+
+
+import { getCurrentUser } from "./services/auth.service";
 
 
 function User() {
@@ -57,6 +58,9 @@ function User() {
     }
   ]
 
+  const currentUser = getCurrentUser();
+
+  console.log(currentUser.username)
   const currentNickname = 'TestName'
   const [role, setRole] = useState(roles[0]);
   const [size, setSize] = useState(8);
