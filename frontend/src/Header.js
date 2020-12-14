@@ -2,14 +2,28 @@ import React from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
 import { logout, getCurrentUser } from "./services/auth.service"
+import { useHistory } from 'react-router-dom';
 
 
 function Header() {
+  const currentUser = getCurrentUser();
+  const history = useHistory();
+
   const handleClick = () => {
     logout()
+    history.push('/login')
   }
 
-  const currentUser = getCurrentUser();
+  function timeout() {
+    if (currentUser != null) {
+      if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
+        logout()
+        history.push('/login')
+      }
+    }
+  }
+
+  timeout()
 
   return (
     <div>
@@ -26,31 +40,34 @@ function Header() {
               {'Connect Four'}
             </div>
           </Link>
+
           {!currentUser && (
-          <Link to="/login" className="header__link">
-            <div className="header__option">
-              {"Login"}
-            </div>
-          </Link>
-          )}
-          {currentUser && (
-            <Link to="/user" className="header__link" >
+            <Link to="/login" className="header__link">
               <div className="header__option">
-                {"User"}
+                {"Login"}
               </div>
             </Link>
           )}
+
+
+          <Link to="/user" className="header__link" >
+            <div className="header__option">
+              {"User"}
+            </div>
+          </Link>
+
           <Link to="/management" className="header__link">
             <div className="header__option">
               {"Management"}
             </div>
           </Link>
+
           {currentUser && (
-            <div onClick={handleClick} className="header__link">
+            <Link to='/login' onClick={handleClick} className="header__link">
               <div className="header__option">
                 {"Logout"}
               </div>
-            </div>
+            </Link>
           )}
         </div>
       </nav>

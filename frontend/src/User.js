@@ -60,7 +60,7 @@ function User() {
 
   const currentUser = getCurrentUser();
 
-  console.log(currentUser.username)
+  //console.log(currentUser.username)
   const currentNickname = 'TestName'
   const [role, setRole] = useState(roles[0]);
   const [size, setSize] = useState(8);

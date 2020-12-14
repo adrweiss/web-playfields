@@ -1,6 +1,8 @@
 import { db } from '../models/index.js'
 import { authConfig } from '../config/auth.config.js'
 
+//const expireInSec = 86400 // 24 hours
+const expireInSec = 600 // 24 hours
 
 const User = db.user;
 const Role = db.role;
@@ -53,9 +55,17 @@ export function signin(req, res) {
       }
 
       var token = jwt.sign({ id: user.id }, authConfig.secret, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: expireInSec
       });
 
+      var expire = Math.floor(new Date().getTime()/1000) + expireInSec
+      res.status(200).send({
+        id: user.id,
+        expire: expire,
+        accessToken: token
+      });
+
+      /*
       const accessRights = [];
       const authorities = [];
       user.getRoles().then(roles => {
@@ -80,8 +90,9 @@ export function signin(req, res) {
             rights: accessRights,
             accessToken: token
           });
+
         })
-      });
+      });*/
     })
     .catch(err => {
       res.status(500).send({ message: err.message });

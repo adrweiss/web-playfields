@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -24,6 +24,7 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
   const history = useHistory();
 
   const handleClick = () => {
@@ -33,7 +34,6 @@ function Login() {
     login(username, password).then(
       () => {
         console.log('successfull login')
-        //props.history.push("/profile");
         //window.location.reload();
         history.push('/user')
       },
@@ -44,14 +44,12 @@ function Login() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        
-        console.log(resMessage)
+
+        //console.log(resMessage)
         //setLoading(false);
-        //setMessage(resMessage);
+        setMessage(resMessage);
       }
     );
-
-
   }
 
   function openModal() {
@@ -67,6 +65,11 @@ function Login() {
       <h1>Please login</h1>
 
       <div className='login'>
+        {message && (
+          <div className="response">
+            {message}
+          </div>
+        )}
         <label>E-Mail:</label>
         <input type="text" id="email" name="email" />
         <label>Password:</label>

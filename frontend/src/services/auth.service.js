@@ -26,6 +26,7 @@ export const login = (username, password) => {
 
 export const logout = () => {
   localStorage.removeItem("user");
+  console.log('successfull logout')
 };
 
 export const getCurrentUser = () => {
