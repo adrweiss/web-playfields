@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button';
 import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -13,62 +13,42 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 
 import { getCurrentUser } from "./services/auth.service";
+import UserService from "./services/user.service";
 
 function User() {
-  const roles = [
-    {
-      "role_id": "234",
-      "role_name": "1 Role",
-      "role_description": "thats a text which descrips the role",
-      "assignment_date": "01-01-1900",
-      "rights": [
-        {
-          "right_id": "1234",
-          "right_name": "right 1",
-          "right_description": "thats a text which descrips the right"
-        },
-        {
-          "right_id": "2345",
-          "right_name": "right 2",
-          "right_description": "thats a text which descrips the right"
-        }
-      ]
-    },
-    {
-      "role_id": "123",
-      "role_name": "2 Role",
-      "role_description": "thats a text which descrips the role",
-      "assignment_date": "01-02-1900",
-      "rights": [
-        {
-          "right_id": "3456",
-          "right_name": "right 3",
-          "right_description": "thats a text which descrips the right"
-        },
-        {
-          "right_id": "4567",
-          "right_name": "right 4",
-          "right_description": "thats a text which descrips the right"
-        }
-      ]
-    }
-  ]
+  const [roles, setRoles] = useState([]);
+  const [role, setRole] = useState([]);
+  const [size, setSize] = useState(8);
+  const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const history = useHistory();
   const currentUser = getCurrentUser();
+
   var rights = []
-  
+
   if (currentUser !== null) {
     rights = currentUser.rights
   }
 
-  if(!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))){
+  if (!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
-  
-  const currentNickname = 'TestName'
-  const [role, setRole] = useState(roles[0]);
-  const [size, setSize] = useState(8);
-  const [hideRoleInfo, setHideRoleInfo] = useState(true);
+
+  useEffect(() => {
+    UserService.getRolesRights().then((response) => {
+      setRoles(response.data)
+      setRole(response.data[0])
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }, [])
 
   const handleCellClick = (event, role_id) => {
     if (role_id === role.role_id) {
@@ -91,13 +71,13 @@ function User() {
 
   return (
     <div>
-      <h1>User Self Service</h1>
+      <h1>User Self Service for <p>{currentUser.username}</p></h1>
       <Grid container spacing={3}>
         <Grid item sm={4}>
           <div className="container__user">
             <h2>Change your user settings</h2>
 
-            <p>Here you can change your nickname. Your current nickname is {currentNickname}. It is not necessary that your user is unique.</p>
+            <p>Here you can change your username. It is  necessary that your username is unique.</p>
 
             <div className="change__nickname">
               <label>New nickname</label>
@@ -106,6 +86,7 @@ function User() {
                 Accept
               </Button>
             </div>
+            <div className="middleline"></div>
 
             <p>Here you can change your current password.</p>
 
@@ -120,7 +101,7 @@ function User() {
                 Accept new password
               </Button>
             </div>
-
+            <div className="middleline"></div>
             <div className='delete__profile'>
               <Button variant="contained" color="secondary" startIcon={<DeleteIcon />}>
                 Delete Profile
