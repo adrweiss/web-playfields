@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button';
 import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -13,9 +13,11 @@ import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
+import { useHistory } from 'react-router-dom';
 
 
-import { getCurrentUser } from "./services/auth.service";
+import { getCurrentUser, getRights } from "./services/auth.service";
+
 
 
 function User() {
@@ -57,6 +59,29 @@ function User() {
       ]
     }
   ]
+  const [rights, setRights] = useState([]);
+  const history = useHistory();
+
+  useEffect(() => {
+    getRights().then(
+      (response) => {
+        setRights(response.data.rights);
+      },
+      (error) => {
+        const _content =
+          (error.response && error.response.data) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      }
+    );
+
+    if(rights.includes('READ_USER_VIEW')){
+      history.push('/game')
+
+    }
+  }, []);
 
   const currentUser = getCurrentUser();
 

@@ -20,9 +20,10 @@ export function authRoutes(app) {
   );
 
   app.post("/api/auth/signin", signin);
-
+    /*
   app.get(
     "/api/auth/right",
     [authJwt.verifyToken,
     authJwt.getRights]);
+    */
 };

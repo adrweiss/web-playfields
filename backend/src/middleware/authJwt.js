@@ -25,7 +25,7 @@ function verifyToken(req, res, next) {
     next();
   });
 };
-
+/*
 function getRights(req, res, next) {
   const accessRights = [];
   User.findAll({
@@ -50,7 +50,7 @@ function getRights(req, res, next) {
     res.status(200).send({ rights: accessRights })
   })
 }
-
+*/
 function isAdmin(req, res, next) {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -110,7 +110,6 @@ function isModeratorOrAdmin(req, res, next) {
 
 const authJwt = {
   verifyToken: verifyToken,
-  getRights: getRights,
 
   isAdmin: isAdmin,
   isModerator: isModerator,

@@ -31,7 +31,16 @@ export function signup(req, res) {
 };
 
 export function signin(req, res) {
+  const accessRights = [];
   User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+        }],
+      },
+    ],
     where: {
       username: req.body.username
       //email: req.body.username
@@ -58,44 +67,22 @@ export function signin(req, res) {
         expiresIn: expireInSec
       });
 
-      var expire = Math.floor(new Date().getTime()/1000) + expireInSec
+      var expire = Math.floor(new Date().getTime() / 1000) + expireInSec
+
+      user.roles.forEach(role => {
+        role.rights.forEach(right => {
+          accessRights.push(right.name);
+        });
+      });
+
       res.status(200).send({
         id: user.id,
         expire: expire,
+        rights: accessRights,
         accessToken: token
       });
-
-      /*
-      const accessRights = [];
-      const authorities = [];
-      user.getRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push(roles[i].name);
-        }
-
-        Right.findAll({
-          include: [
-            { model: Role, as: 'roles', where: { name: authorities } },
-          ],
-        }
-        ).then(rights => {
-          for (let i = 0; i < rights.length; i++) {
-            accessRights.push(rights[i].name)
-          }
-          res.status(200).send({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            roles: authorities,
-            rights: accessRights,
-            accessToken: token
-          });
-
-        })
-      });*/
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };
-   
