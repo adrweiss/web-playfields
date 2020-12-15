@@ -10,6 +10,8 @@ export function routsUsr(app) {
     next();
   });
 
+  
+  //to evaluate
   app.get("/api/test/all", allAccess);
   
   app.get(
@@ -29,4 +31,6 @@ export function routsUsr(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     adminBoard
   );
+
+  
 };

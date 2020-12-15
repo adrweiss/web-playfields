@@ -1,8 +1,8 @@
 import { db } from '../models/index.js'
 import { authConfig } from '../config/auth.config.js'
 
-//const expireInSec = 86400 // 24 hours
-const expireInSec = 600 // 24 hours
+const expireInSec = 86400 // 24 hours
+//const expireInSec = 600 // 24 hours
 
 const User = db.user;
 const Role = db.role;
@@ -98,4 +98,4 @@ export function signin(req, res) {
       res.status(500).send({ message: err.message });
     });
 };
-
+   

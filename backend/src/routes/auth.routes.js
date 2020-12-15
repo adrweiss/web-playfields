@@ -1,4 +1,4 @@
-import { verifySignUp } from "../middleware/index.js"
+import { verifySignUp, authJwt } from "../middleware/index.js"
 import { signup, signin } from "../controllers/auth.controller.js"
 
 export function authRoutes(app) {
@@ -20,4 +20,8 @@ export function authRoutes(app) {
   );
 
   app.post("/api/auth/signin", signin);
+
+  app.get(
+    "/api/auth/right",  
+    [authJwt.verifyToken, authJwt.getRights]);
 };

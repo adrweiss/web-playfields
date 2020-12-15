@@ -3,8 +3,10 @@ import { authConfig } from '../config/auth.config.js'
 import { db } from '../models/index.js'
 
 const User = db.user;
+const Right = db.right;
+const Role = db.role;
 
-function verifyToken (req, res, next){
+function verifyToken(req, res, next) {
   let token = req.headers["x-access-token"];
 
   if (!token) {
@@ -24,6 +26,29 @@ function verifyToken (req, res, next){
   });
 };
 
+function getRights(req, res, next) {
+  const accessRights = [];
+  User.findAll({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+        }],
+      },
+    ],
+    where: { id: [req.userId] }
+  }
+  ).then(users => {
+    users.forEach(element => {
+      element.roles.forEach(right => {
+        accessRights.push(right.name);
+      });
+    });
+    res.status(200).send({ rights: accessRights })
+  })
+}
+
 function isAdmin(req, res, next) {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -42,7 +67,7 @@ function isAdmin(req, res, next) {
   });
 };
 
-function isModerator (req, res, next) {
+function isModerator(req, res, next) {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
@@ -83,6 +108,8 @@ function isModeratorOrAdmin(req, res, next) {
 
 const authJwt = {
   verifyToken: verifyToken,
+  getRights: getRights,
+
   isAdmin: isAdmin,
   isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin
