@@ -40,9 +40,11 @@ function getRights(req, res, next) {
     where: { id: [req.userId] }
   }
   ).then(users => {
-    users.forEach(element => {
-      element.roles.forEach(right => {
-        accessRights.push(right.name);
+    users.forEach(user => {
+      user.roles.forEach(role => {
+        role.rights.forEach(right => {
+          accessRights.push(right.name);
+        })
       });
     });
     res.status(200).send({ rights: accessRights })

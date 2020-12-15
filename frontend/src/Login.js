@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
 import { useHistory } from 'react-router-dom';
-
-
 import { login } from "./services/auth.service"
 
 
@@ -34,8 +32,8 @@ function Login() {
     login(username, password).then(
       () => {
         console.log('successfull login')
-        //window.location.reload();
         history.push('/user')
+        window.location.reload();
       },
       (error) => {
         const resMessage =
