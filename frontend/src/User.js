@@ -62,7 +62,7 @@ function User() {
   }
 
   if(!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))){
-    history.push('/game')
+    history.push('/unauthorized')
   }
   
   const currentNickname = 'TestName'

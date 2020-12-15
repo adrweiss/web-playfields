@@ -7,7 +7,7 @@ import Login from './Login'
 import Management from './Management'
 import User from './User'
 import NewUsr from './NewUsr'
-
+import Unauthorized from './Unauthorized'
 
 function App() {
   return (
@@ -33,6 +33,10 @@ function App() {
           <Route path="/user">
             <Header />
             <User />
+          </Route>
+          <Route path="/unauthorized">
+            <Header />
+            <Unauthorized />
           </Route>
           <Route path="/">
             <Header />
