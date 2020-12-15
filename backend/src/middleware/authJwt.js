@@ -25,9 +25,9 @@ function verifyToken(req, res, next) {
     next();
   });
 };
-/*
-function getRights(req, res, next) {
-  const accessRights = [];
+
+// has READ_USER_VIEW right 
+function hasRUV(req, res, next) {
   User.findAll({
     include: [
       {
@@ -40,17 +40,25 @@ function getRights(req, res, next) {
     where: { id: [req.userId] }
   }
   ).then(users => {
-    users.forEach(user => {
-      user.roles.forEach(role => {
-        role.rights.forEach(right => {
-          accessRights.push(right.name);
-        })
-      });
+    for (let i = 0; i < users.length; i++) {
+      for (let j = 0; j < users[i].roles.length; j++) {
+        for (let k = 0; k < users[i].roles[j].rights.length; k++) {
+          if (users[i].roles[j].rights[k].name === 'READ_USER_VIEW' ||
+            users[i].roles[j].rights[k].name === 'ADMIN') {
+            next();
+            return;
+          }
+        }
+      }
+    }
+    res.status(403).send({
+      message: "Require rights!"
     });
-    res.status(200).send({ rights: accessRights })
+    return;
   })
-}
-*/
+};
+
+
 function isAdmin(req, res, next) {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -110,9 +118,10 @@ function isModeratorOrAdmin(req, res, next) {
 
 const authJwt = {
   verifyToken: verifyToken,
-
+  hasRUV: hasRUV,
   isAdmin: isAdmin,
   isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin
+
 };
 export { authJwt };

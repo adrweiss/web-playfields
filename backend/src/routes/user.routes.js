@@ -1,5 +1,5 @@
 import { authJwt } from "../middleware/index.js";
-import {allAccess, userBoard, moderatorBoard, adminBoard} from "../controllers/user.controller.js";
+import {allAccess, userBoard, moderatorBoard, adminBoard, getRights} from "../controllers/user.controller.js";
 
 export function routsUsr(app) {
   app.use(function(req, res, next) {
@@ -32,5 +32,9 @@ export function routsUsr(app) {
     adminBoard
   );
 
-  
+  app.get(
+    "/api/usr/rights",
+    [authJwt.verifyToken,
+    authJwt.hasRUV],
+    getRights);
 };
