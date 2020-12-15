@@ -24,10 +24,11 @@ export const login = (username, password) => {
       return response.data;
     });
 };
-
+/*
 export const getRights = () => {
   return axios.get("auth/right", { headers: authHeader() })
 }
+*/
 
 export const logout = () => {
   localStorage.removeItem("user");

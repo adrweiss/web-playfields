@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button';
 import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
-
-
-
+import { useHistory } from 'react-router-dom';
 
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,12 +11,8 @@ import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
-import { useHistory } from 'react-router-dom';
 
-
-import { getCurrentUser, getRights } from "./services/auth.service";
-
-
+import { getCurrentUser } from "./services/auth.service";
 
 function User() {
   const roles = [
@@ -59,40 +53,22 @@ function User() {
       ]
     }
   ]
-  const [rights, setRights] = useState([]);
   const history = useHistory();
-
-  useEffect(() => {
-    getRights().then(
-      (response) => {
-        setRights(response.data.rights);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-
-        console.log(_content);
-      }
-    );
-
-    if(rights.includes('READ_USER_VIEW')){
-      history.push('/game')
-
-    }
-  }, []);
-
   const currentUser = getCurrentUser();
+  var rights = []
+  
+  if (currentUser !== null) {
+    rights = currentUser.rights
+  }
 
-  //console.log(currentUser.username)
+  if(!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))){
+    history.push('/game')
+  }
+  
   const currentNickname = 'TestName'
   const [role, setRole] = useState(roles[0]);
   const [size, setSize] = useState(8);
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
-
-
-  //useEffect(() => { setHideRoleInfo(false) }, [])
 
   const handleCellClick = (event, role_id) => {
     if (role_id === role.role_id) {

@@ -1,36 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Header.css';
 import { Link } from 'react-router-dom';
 import { logout, getCurrentUser } from "./services/auth.service"
 import { useHistory } from 'react-router-dom';
-import { getRights } from "./services/auth.service"
+
 
 
 function Header() {
-  const [rights, setRights] = useState([]);
   const currentUser = getCurrentUser();
   const history = useHistory();
+  var rights = []
 
-  useEffect(() => {
-    getRights().then(
-      (response) => {
-        setRights(response.data.rights);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
+  if (currentUser !== null) {
+    rights = currentUser.rights
+  }
 
-        console.log(_content);
-      }
-    );
-  }, []);
-  
   const handleClick = () => {
     logout()
     history.push('/login')
-    window.location.reload();
   }
 
   function timeout() {
@@ -38,7 +25,6 @@ function Header() {
       if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
         logout()
         history.push('/login')
-        window.location.reload();
       }
     }
   }

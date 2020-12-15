@@ -33,7 +33,6 @@ function Login() {
       () => {
         console.log('successfull login')
         history.push('/user')
-        window.location.reload();
       },
       (error) => {
         const resMessage =
