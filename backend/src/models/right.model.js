@@ -6,7 +6,10 @@ export function Right(sequelize, Sequelize){
     },
     name: {
       type: Sequelize.STRING
-    }
+    },
+    description: {
+      type: Sequelize.STRING
+    },
   });
   return Right
 };

@@ -21,8 +21,7 @@ export const moderatorBoard = (req, res) => {
 };
 
 export const getRights = (req, res, next) => {
-  const accessRights = [];
-  User.findAll({
+  User.findOne({
     include: [
       {
         model: Role, as: 'roles',
@@ -33,14 +32,30 @@ export const getRights = (req, res, next) => {
     ],
     where: { id: [req.userId] }
   }
-  ).then(users => {
-    users.forEach(user => {
-      user.roles.forEach(role => {
-        role.rights.forEach(right => {
-          accessRights.push(right.name);
-        })
-      });
-    });
-    res.status(200).send({ rights: accessRights })
+  ).then(user => {
+    const resObj = user.roles.map(role => {
+      return Object.assign(
+        {},
+        {
+          role_id: role.id,
+          role_name: role.name,
+          role_description: role.description,
+          assignment_date: role.user_roles.createdAt,
+          rights: role.rights.map(right => {
+
+            return Object.assign(
+              {},
+              {
+                right_id: right.id,
+                right_name: right.name,
+                right_description: right.description
+              }
+            )
+          })
+        }
+      )
+    })
+    
+    res.status(200).send(resObj)
   })
 }
