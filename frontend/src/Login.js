@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom';
+import { login } from "./services/auth.service"
 
 
 const customStyles = {
@@ -20,6 +22,32 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const history = useHistory();
+
+  const handleClick = () => {
+    var username = document.getElementById('email').value
+    var password = document.getElementById('password').value
+
+    login(username, password).then(
+      () => {
+        console.log('successfull login')
+        history.push('/user')
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        //console.log(resMessage)
+        //setLoading(false);
+        setMessage(resMessage);
+      }
+    );
+  }
 
   function openModal() {
     setIsOpen(true);
@@ -34,15 +62,20 @@ function Login() {
       <h1>Please login</h1>
 
       <div className='login'>
-        <label>Username:</label>
-        <input type="text" id="username" name="username" />
+        {message && (
+          <div className="response">
+            {message}
+          </div>
+        )}
+        <label>E-Mail:</label>
+        <input type="text" id="email" name="email" />
         <label>Password:</label>
-        <input type="password" id="pass" name="password" minLength="8" required />
-        <Button variant="contained" color="primary" disableElevation>
+        <input type="password" id="password" name="password" minLength="8" required />
+        <Button variant="contained" color="primary" disableElevation onClick={handleClick}>
           Sign in
         </Button>
 
-        <Link to="/user/newusr">
+        <Link className='Link' to="/user/register">
           <Button className="create__new__user__link" variant="contained" color="primary" disableElevation>
             Create new User
           </Button>
