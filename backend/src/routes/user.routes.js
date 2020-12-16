@@ -1,4 +1,4 @@
-import { authJwt } from "../middleware/index.js";
+import { verifySignUp, authJwt } from "../middleware/index.js";
 import userFunctions from "../controllers/user.controller.js";
 
 export function routsUsr(app) {
@@ -10,10 +10,18 @@ export function routsUsr(app) {
     next();
   });
 
+  app.put(
+    "/api/usr/mgt/chgUN",
+    [authJwt.verifyToken,
+    authJwt.hasWOUS,
+    verifySignUp.checkDuplicateUsername,],
+    userFunctions.changeUserName);
+
+
   app.delete(
     "/api/usr/mgt",
-    [authJwt.verifyToken, 
-    authJwt.hasWOUS],
+    [authJwt.verifyToken,
+    authJwt.hasWOUS,],
     userFunctions.deleteUsr);
 
   app.get(

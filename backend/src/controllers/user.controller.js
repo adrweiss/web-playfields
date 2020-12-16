@@ -58,9 +58,25 @@ export const getRights = (req, res, next) => {
   })
 }
 
+export const changeUserName = (req, res, next) => {
+  User.findByPk(req.userId).then(user => {
+    // Check if record exists in db
+    if (user) {
+      user.update({
+        username: req.body.username
+      })
+    }else{
+      res.status(400).send({ message: 'No user in database available.' });
+    }
+  })
+
+  res.status(200).send({ message: 'Username change was succesfull.' });
+}
+
 const userFunctions = {
   deleteUsr,
   getRights,
+  changeUserName,
 };
 
 export default userFunctions;
