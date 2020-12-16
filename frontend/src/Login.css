@@ -37,6 +37,10 @@
     width: 102%;
 }
 
+.Link {
+    text-decoration: none;
+}
+
 .create__new__user__link {
     width: 102%;
 }
