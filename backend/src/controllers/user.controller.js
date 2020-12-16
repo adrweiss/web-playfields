@@ -75,21 +75,26 @@ export const changeUserName = (req, res, next) => {
 }
 
 export const changeUserPassword = (req, res, next) => {
-  console.log(req.body)
-  if (req.body.password_new) {
-    res.status(200).send({ message: "Password change was successful" });
-    User.findByPk(req.userId).then(user => {
-      // Check if record exists in db
-      if (user) {
+
+
+
+
+  User.findByPk(req.userId).then(user => {
+    // Check if record exists in db
+    if (user) {
+      if (typeof req.body.password_new === 'string') {
         user.update({
           password: bcrypt.hashSync(req.body.password_new, 8)
         })
+        
+        res.status(200).send({ message: 'Password change was successfull.' });
       } else {
-        res.status(400).send({ message: 'No user in database available.' });
+        res.status(400).send({ message: 'No new Password was provided.' });
       }
-    })
-  }
-  res.status(400).send({ message: 'No new password sent.' });
+    } else {
+      res.status(400).send({ message: 'No user in database available.' });
+    }
+  })
 }
 
 const userFunctions = {
