@@ -17,7 +17,11 @@ const getAdminBoard = () => {
   return axios.get("test/admin", { headers: authHeader() });
 };
 
-export default {
+/*const getRolesRights = () => {
+  return axios.get("/usr/rights", { headers: authHeader() });
+};*/
+
+export default { 
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
