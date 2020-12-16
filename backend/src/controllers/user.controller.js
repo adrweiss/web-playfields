@@ -70,7 +70,7 @@ export const changeUserName = (req, res, next) => {
     }
   })
 
-  res.status(200).send({ message: 'Username change was succesfull.' });
+  res.status(200).send({ username: req.body.username });
 }
 
 const userFunctions = {
