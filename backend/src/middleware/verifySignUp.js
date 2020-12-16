@@ -1,5 +1,7 @@
 import { db } from '../models/index.js'
-const ROLES = db.ROLES;
+import bcrypt from 'bcrypt';
+
+//const ROLES = db.ROLES;
 const User = db.user;
 
 /*
@@ -72,6 +74,7 @@ function checkDuplicateEmail(req, res, next) {
   });
 };
 
+/*
 function checkRolesExisted(req, res, next) {
   if (req.body.roles) {
     for (let i = 0; i < req.body.roles.length; i++) {
@@ -86,11 +89,31 @@ function checkRolesExisted(req, res, next) {
 
   next();
 };
+*/
+
+function checkPassword(req, res, next) {
+  // Email
+  User.findByPk(req.userId).then(user => {
+    
+    var passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid Password!"
+      });
+    }
+    next();
+  });
+};
 
 const verifySignUp = {
   //checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
   checkDuplicateUsername: checkDuplicateUsername,
   checkDuplicateEmail: checkDuplicateEmail,
+  checkPassword: checkPassword,
   //checkRolesExisted: checkRolesExisted
 };
 

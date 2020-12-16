@@ -1,4 +1,5 @@
 import { db } from '../models/index.js'
+import bcrypt from 'bcrypt';
 
 const User = db.user;
 const Right = db.right;
@@ -65,7 +66,7 @@ export const changeUserName = (req, res, next) => {
       user.update({
         username: req.body.username
       })
-    }else{
+    } else {
       res.status(400).send({ message: 'No user in database available.' });
     }
   })
@@ -73,10 +74,29 @@ export const changeUserName = (req, res, next) => {
   res.status(200).send({ username: req.body.username });
 }
 
+export const changeUserPassword = (req, res, next) => {
+  console.log(req.body)
+  if (req.body.password_new) {
+    res.status(200).send({ message: "Password change was successful" });
+    User.findByPk(req.userId).then(user => {
+      // Check if record exists in db
+      if (user) {
+        user.update({
+          password: bcrypt.hashSync(req.body.password_new, 8)
+        })
+      } else {
+        res.status(400).send({ message: 'No user in database available.' });
+      }
+    })
+  }
+  res.status(400).send({ message: 'No new password sent.' });
+}
+
 const userFunctions = {
   deleteUsr,
   getRights,
   changeUserName,
+  changeUserPassword,
 };
 
 export default userFunctions;

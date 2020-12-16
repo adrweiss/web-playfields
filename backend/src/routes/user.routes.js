@@ -17,6 +17,12 @@ export function routsUsr(app) {
     verifySignUp.checkDuplicateUsername,],
     userFunctions.changeUserName);
 
+  app.put(
+    "/api/usr/mgt/chgPW",
+    [authJwt.verifyToken,
+    authJwt.hasWOUS,
+    verifySignUp.checkPassword,],
+    userFunctions.changeUserPassword)
 
   app.delete(
     "/api/usr/mgt",

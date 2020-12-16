@@ -85,4 +85,5 @@ const authJwt = {
   hasRUV: hasRUV,
   hasWOUS: hasWOUS,
 };
+
 export { authJwt };
