@@ -4,6 +4,19 @@ const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
+export const deleteUsr = (req, res, next) => {
+  User.destroy({
+    where: {
+      id: req.userId
+    }
+  }).then(count => {
+    if (!count) {
+      return res.status(404).send({ error: 'No user' });
+    }
+    res.status(204).send();
+  });
+}
+
 
 export const getRights = (req, res, next) => {
   User.findOne({
@@ -44,3 +57,10 @@ export const getRights = (req, res, next) => {
     res.status(200).send(resObj)
   })
 }
+
+const userFunctions = {
+  deleteUsr,
+  getRights,
+};
+
+export default userFunctions;

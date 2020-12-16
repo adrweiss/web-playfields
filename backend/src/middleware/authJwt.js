@@ -34,94 +34,55 @@ function hasRUV(req, res, next) {
         model: Role, as: 'roles',
         include: [{
           model: Right, as: 'rights',
+          where: { name: ['ADMIN', 'READ_USER_VIEW'] }
         }],
       },
     ],
     where: { id: [req.userId] }
   }
   ).then(users => {
-    for (let i = 0; i < users.length; i++) {
-      for (let j = 0; j < users[i].roles.length; j++) {
-        for (let k = 0; k < users[i].roles[j].rights.length; k++) {
-          if (users[i].roles[j].rights[k].name === 'READ_USER_VIEW' ||
-            users[i].roles[j].rights[k].name === 'ADMIN') {
-            next();
-            return;
-          }
-        }
-      }
+    if (users === null) {
+      res.status(403).send({
+        message: "Require rights!"
+      });
+      return;
+    } else {
+      next();
+      return;
     }
-    res.status(403).send({
-      message: "Require rights!"
-    });
-    return;
   })
 };
 
-
-function isAdmin(req, res, next) {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
-
+// has WRITE_OWN_USR_SETTINGS right 
+function hasWOUS(req, res, next) {
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+          where: { name: ['ADMIN', 'WRITE_OWN_USR_SETTINGS'] }
+        }],
+      },
+    ],
+    where: { id: [req.userId] }
+  }
+  ).then(users => {
+    if (users === null) {
       res.status(403).send({
-        message: "Require Admin Role!"
+        message: "Require rights!"
       });
       return;
-    });
-  });
-};
-
-function isModerator(req, res, next) {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Require Moderator Role!"
-      });
-    });
-  });
-};
-
-function isModeratorOrAdmin(req, res, next) {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "moderator") {
-          next();
-          return;
-        }
-
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Require Moderator or Admin Role!"
-      });
-    });
-  });
-};
+    } else {
+      next();
+      return;
+    }
+  })
+}
 
 const authJwt = {
   verifyToken: verifyToken,
   hasRUV: hasRUV,
-  isAdmin: isAdmin,
-  isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin
-
+  hasWOUS: hasWOUS,
 };
 export { authJwt };

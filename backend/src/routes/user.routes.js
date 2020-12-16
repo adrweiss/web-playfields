@@ -1,5 +1,5 @@
 import { authJwt } from "../middleware/index.js";
-import { getRights } from "../controllers/user.controller.js";
+import userFunctions from "../controllers/user.controller.js";
 
 export function routsUsr(app) {
   app.use(function (req, res, next) {
@@ -10,9 +10,15 @@ export function routsUsr(app) {
     next();
   });
 
+  app.delete(
+    "/api/usr/mgt",
+    [authJwt.verifyToken, 
+    authJwt.hasWOUS],
+    userFunctions.deleteUsr);
+
   app.get(
     "/api/usr/rights",
     [authJwt.verifyToken,
     authJwt.hasRUV],
-    getRights);
+    userFunctions.getRights);
 };
