@@ -2,6 +2,7 @@ export function Right(sequelize, Sequelize){
   const Right = sequelize.define("right", {
     id: {
       type: Sequelize.INTEGER,
+      autoIncrement: true,
       primaryKey: true
     },
     name: {

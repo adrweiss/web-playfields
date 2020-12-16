@@ -5,6 +5,8 @@ const getRolesRights = () => {
   return axios.get("/usr/rights", { headers: authHeader() });
 };
 
-export default { 
-  getRolesRights,
-};
+const UserService = {
+  getRolesRights
+}
+
+export default UserService;

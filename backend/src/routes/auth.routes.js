@@ -1,4 +1,4 @@
-import { verifySignUp, authJwt } from "../middleware/index.js"
+import { verifySignUp } from "../middleware/index.js"
 import { signup, signin } from "../controllers/auth.controller.js"
 
 export function authRoutes(app) {
@@ -12,8 +12,10 @@ export function authRoutes(app) {
 
   app.post(
     "/api/auth/signup",
-    [
-      verifySignUp.checkDuplicateUsernameOrEmail,
+    [ 
+      verifySignUp.checkDuplicateUsername,
+      verifySignUp.checkDuplicateEmail,
+      //verifySignUp.checkDuplicateUsernameOrEmail,
       //verifySignUp.checkRolesExisted
     ],
     signup

@@ -23,7 +23,6 @@ export function initialRole(Role) {
 
 export function initialRight(Right) {
   Right.create({
-    id: 1,
     name: "ADMIN", 
     description: "Its a admin right, everything is allowed.",
   }).then(right => {
@@ -31,7 +30,6 @@ export function initialRight(Right) {
   });
 
   Right.create({
-    id: 2,
     name: "READ_USER_VIEW",
     description: "Read access to the personal userpage.",
   }).then(right => {
@@ -39,7 +37,13 @@ export function initialRight(Right) {
   });
 
   Right.create({
-    id: 3,
+    name: "WRITE_OWN_USR_SETTINGS",
+    description: "Change your own user settings.",
+  }).then(right => {
+    right.setRoles([1])
+  });
+
+  Right.create({
     name: "READ_MANAGEMNT_VIEW",
     description: "Read access to the management overview.",
   }).then(right => {
@@ -47,6 +51,9 @@ export function initialRight(Right) {
   });
   return initialRight
 }
+
+
+
 
 export function initialUsr(User) {
   User.create({
@@ -60,6 +67,14 @@ export function initialUsr(User) {
   User.create({
     username: "usr",
     email: "usr@ai.de",
+    password: bcrypt.hashSync("test1234", 8)
+  }).then(user => {
+    user.setRoles([1])
+  })
+
+  User.create({
+    username: "usr2",
+    email: "usr2@ai.de",
     password: bcrypt.hashSync("test1234", 8)
   }).then(user => {
     user.setRoles([1])
