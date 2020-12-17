@@ -77,6 +77,7 @@ export function signin(req, res) {
 
       res.status(200).send({
         id: user.id,
+        username: user.username,
         expire: expire,
         rights: accessRights,
         accessToken: token
