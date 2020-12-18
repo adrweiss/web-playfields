@@ -61,8 +61,10 @@ function Header() {
               {"User"}
             </div>
           </Link>
-
+          {/*
           <Link to="/management" className="header__link" hidden={!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))}>
+          */}
+          <Link to="/management" className="header__link">
             <div>
               {"Management"}
             </div>
