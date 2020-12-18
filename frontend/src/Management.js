@@ -7,7 +7,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-
+import UserOverview from './management/User.Overview'
 
 function Management() {
   const [open, setOpen] = useState(false);
@@ -64,9 +64,8 @@ function Management() {
                 <Paper>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      <MenuItem onClick={handleClose}>My account</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem onClick={handleClose}>Log-In</MenuItem>
+                      <MenuItem onClick={handleClose}>Delete</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
@@ -75,9 +74,7 @@ function Management() {
           </Popper>
         </Grid>
         <Grid item sm={10}>
-          <div>
-         {"test"}
-          </div>
+         <UserOverview />
         </Grid>
       </Grid>
     </div>

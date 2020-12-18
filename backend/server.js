@@ -2,10 +2,10 @@ import express from "express"
 import Cors from 'cors';
 import bodyParser from 'body-parser';
 
-import { db ,roleInit} from './src/models/index.js'
+import { db, roleInit } from './src/models/index.js'
 
-import {routsUsr} from './src/routes/user.routes.js';
-import {authRoutes} from './src/routes/auth.routes.js';
+import { routsUsr } from './src/routes/user.routes.js';
+import { authRoutes } from './src/routes/auth.routes.js';
 
 //import pgClient from './pgQueries.js'
 //import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
@@ -33,9 +33,9 @@ app.use(express.json());
 //const Role = db.role;
 //const Right = db.right;
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  roleInit(db.role, db.right, db.user);
+db.sequelize.sync({ force: true }).then(() => {
+    console.log('Drop and Resync Db');
+    roleInit(db.role, db.right, db.user);
 });
 //db.sequelize.sync();
 
