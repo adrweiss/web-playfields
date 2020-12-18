@@ -49,6 +49,41 @@ export function initialRight(Right) {
   }).then(right => {
     right.setRoles([2])
   });
+
+  Right.create({
+    name: "READ_USER_MANAGEMENT",
+    description: "Get read access to the user overview.",
+  }).then(right => {
+    right.setRoles([2])
+  });
+
+  Right.create({
+    name: "READ_ROLE_MANAGEMENT",
+    description: "Get read access to the role overview.",
+  }).then(right => {
+    right.setRoles([2])
+  });
+  
+  Right.create({
+    name: "READ_VIEW_LOGIN",
+    description: "Get access the Login logs.",
+  }).then(right => {
+    right.setRoles([2])
+  });
+
+  Right.create({
+    name: "READ_VIEW_DELETE",
+    description: "Get access the deleted accounts logs.",
+  }).then(right => {
+    right.setRoles([2])
+  });
+
+  Right.create({
+    name: "EDIT_ROLE",
+    description: "Changes roles (role name, role description, related rights) and delete roles.",
+  }).then(right => {
+    right.setRoles([2])
+  });
   return initialRight
 }
 
