@@ -80,6 +80,10 @@ function hasWOUS(req, res, next) {
   })
 }
 
+
+//READ_ROLE_MANAGEMENT
+//EDIT_ROLE
+
 const authJwt = {
   verifyToken: verifyToken,
   hasRUV: hasRUV,
