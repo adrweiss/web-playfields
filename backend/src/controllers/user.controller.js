@@ -14,7 +14,7 @@ const deleteUsr = (req, res, next) => {
     if (!count) {
       return res.status(404).send({ error: 'No user' });
     }
-    res.status(204).send();
+    res.status(200).send({message: "User was deleted successfull."});
   });
 }
 
@@ -32,30 +32,33 @@ const getRights = (req, res, next) => {
     where: { id: [req.userId] }
   }
   ).then(user => {
-    const resObj = user.roles.map(role => {
-      return Object.assign(
-        {},
-        {
-          role_id: role.id,
-          role_name: role.name,
-          role_description: role.description,
-          assignment_date: role.user_roles.createdAt,
-          rights: role.rights.map(right => {
+    if (user) {
+      const resObj = user.roles.map(role => {
+        return Object.assign(
+          {},
+          {
+            role_id: role.id,
+            role_name: role.name,
+            role_description: role.description,
+            assignment_date: role.user_roles.createdAt,
+            rights: role.rights.map(right => {
 
-            return Object.assign(
-              {},
-              {
-                right_id: right.id,
-                right_name: right.name,
-                right_description: right.description
-              }
-            )
-          })
-        }
-      )
-    })
-
-    res.status(200).send(resObj)
+              return Object.assign(
+                {},
+                {
+                  right_id: right.id,
+                  right_name: right.name,
+                  right_description: right.description
+                }
+              )
+            })
+          }
+        )
+      })
+      res.status(200).send(resObj)
+    } else {
+      res.status(400).send({ message: 'No user in database available.' });
+    }
   })
 }
 
@@ -71,7 +74,7 @@ const changeUserName = (req, res, next) => {
     }
   })
 
-  res.status(200).send({ username: req.body.username });
+  res.status(200).send({ message: 'Username change was successfull.' });
 }
 
 const changeUserPassword = (req, res, next) => {

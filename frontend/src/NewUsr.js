@@ -31,7 +31,9 @@ function NewUsr() {
             error.toString();
           setMessage(resMessage);
         }
-      );
+      )
+    } else {
+      setMessage('The passwords does not match.');
     }
   }
 
