@@ -63,25 +63,34 @@ const addNewRole = (req, res, next) => {
     description: req.body.description
   }).then(role => {
     Right.findAll({
-      where: {id: req.body.rights}
+      where: { id: req.body.rights }
     }).then(right => {
       if (role) {
         role.setRights(right)
         res.status(200).send({ message: 'New Role is created.' });
-        return 
+        return
       } else {
         res.status(400).send({ message: 'Assigned roles were not found.' });
-        return 
-      }      
+        return
+      }
     })
   });
 }
 
 const changeRole = (req, res, next) => {
-  res.status(200).send({ message: 'Change existng role Endpoint' });
+  Role.findByPk(req.body.id).then(role => {
+    if (role) {
+      role.update({
+        name: req.body.name,
+        description: req.body.description,
+      })
+      role.setRights(req.body.rights)
+      res.status(200).send({ message: 'Change existng role successfull.' });  
+    } else {
+      res.status(400).send({ message: 'Something went wrong.' });
+    }
+  })
 }
-
-
 
 const mgtRolesFunctions = {
   getRoleAndRight,
