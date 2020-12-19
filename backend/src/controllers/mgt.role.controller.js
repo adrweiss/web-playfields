@@ -1,3 +1,8 @@
+import { db } from '../models/index.js'
+
+const Right = db.right;
+const Role = db.role;
+
 const getRoleAndRight = (req, res, next) => {
   res.status(200).send({message: 'Get role and rights Endpoint'});
 }
