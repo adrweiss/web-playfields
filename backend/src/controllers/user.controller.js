@@ -19,7 +19,7 @@ const deleteUsr = (req, res, next) => {
 }
 
 
-const getRights = (req, res, next) => {
+const getRoles = (req, res, next) => {
   User.findOne({
     include: [
       {
@@ -96,9 +96,37 @@ const changeUserPassword = (req, res, next) => {
   })
 }
 
+const getRights = (req, res, next) => {
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+        }],
+      },
+    ],
+    where: { id: [req.userId] }
+  }
+  ).then(user => {
+    const accessRights = [];
+    if (user) {
+      user.roles.forEach(role => {
+        role.rights.forEach(right => {
+          accessRights.push(right.name);
+        });
+      });
+      res.status(200).send(accessRights)
+    } else {
+      res.status(400).send({ message: 'No user in database available.' });
+    }
+  })
+}
+
 const userFunctions = {
   deleteUsr,
   getRights,
+  getRoles,
   changeUserName,
   changeUserPassword,
 };

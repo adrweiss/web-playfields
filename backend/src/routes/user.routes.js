@@ -34,9 +34,16 @@ export function routsUsr(app) {
     userFunctions.deleteUsr);
 
   app.get(
-    "/api/usr/rights",
+    "/api/usr/roles",
     [authJwt.verifyToken,
     authJwt.getReadUsrView,
     authJwt.hasRights,],
+    userFunctions.getRoles);
+
+  app.get(
+    "/api/usr/rights",
+    [authJwt.verifyToken,],
     userFunctions.getRights);
+
+  // get rights.
 };

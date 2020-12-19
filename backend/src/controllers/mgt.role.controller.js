@@ -52,7 +52,16 @@ const changeRole = (req, res, next) => {
 }
 
 const deleteRole = (req, res, next) => {
-  res.status(200).send({ message: 'Delte existing role Endpoint' });
+  Role.destroy({
+    where: {
+      id: req.body.roleid
+    }
+  }).then(count => {
+    if (!count) {
+      return res.status(404).send({ error: 'No Role' });
+    }
+    res.status(200).send({message: "Role was deleted successfully."});
+  });
 }
 
 const mgtRolesFunctions = {

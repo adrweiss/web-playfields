@@ -18,6 +18,7 @@ export function initialRole(Role) {
     name: "ADMIN",
     description: "Role for the system admin."
   });
+  
   return initialRole
 }
 
