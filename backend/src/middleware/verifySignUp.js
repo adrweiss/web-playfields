@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 //const ROLES = db.ROLES;
 const User = db.user;
+const Role = db.role;
 
 /*
 function checkDuplicateUsernameOrEmail (req, res, next) {
@@ -74,6 +75,29 @@ function checkDuplicateEmail(req, res, next) {
   });
 };
 
+function checkDuplicateRoleName(req, res, next) {
+  // Role name
+  Role.findOne({
+    where: {
+      name: req.body.name
+    }
+  }).then(role => {
+    if (role && req.body.id === role.id){
+      next();
+      return;
+    }
+    if (role) {
+      res.status(400).send({
+        message: "Failed! Role name is already in use!"
+      });
+      return;
+    }
+
+    next();
+  });
+};
+
+
 /*
 function checkRolesExisted(req, res, next) {
   if (req.body.roles) {
@@ -111,9 +135,10 @@ function checkPassword(req, res, next) {
 
 const verifySignUp = {
   //checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
-  checkDuplicateUsername: checkDuplicateUsername,
-  checkDuplicateEmail: checkDuplicateEmail,
-  checkPassword: checkPassword,
+  checkDuplicateUsername,
+  checkDuplicateEmail,
+  checkPassword,
+  checkDuplicateRoleName,
   //checkRolesExisted: checkRolesExisted
 };
 
