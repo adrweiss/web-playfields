@@ -1,4 +1,4 @@
-import { authJwt } from "../middleware/index.js";
+import { authJwt, verifySignUp } from "../middleware/index.js";
 import mgtRolesFunctions from "../controllers/mgt.role.controller.js";
 
 export function routsMgtRoles(app) {
@@ -23,7 +23,8 @@ export function routsMgtRoles(app) {
     "/api/mgt/role",
     [authJwt.verifyToken,
     authJwt.getEditRole,
-    authJwt.hasRights,],
+    authJwt.hasRights,
+    verifySignUp.checkDuplicateRoleName,],
     mgtRolesFunctions.addNewRole
   );
 

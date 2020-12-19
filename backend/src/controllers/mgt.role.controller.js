@@ -5,9 +5,10 @@ const Role = db.role;
 
 const getRoleAndRight = (req, res, next) => {
   Role.findAll({
-    include: [{ 
-      model: Right, as: 'rights', 
-      attributes: ['id', 'name', 'description'],}],
+    include: [{
+      model: Right, as: 'rights',
+      attributes: ['id', 'name', 'description'],
+    }],
     attributes: ['id', 'name', 'description', 'createdAt']
   }).then(roles => {
     if (roles) {
@@ -29,7 +30,7 @@ const getRoleAndRight = (req, res, next) => {
                   right_name: right.name,
                   right_description: right.description,
                   right_assigned_to: right.roles_right.createdAt
-                  
+
                 }
               )
             })
@@ -43,14 +44,6 @@ const getRoleAndRight = (req, res, next) => {
   })
 }
 
-const addNewRole = (req, res, next) => {
-  res.status(200).send({ message: 'Add new role Endpoint' });
-}
-
-const changeRole = (req, res, next) => {
-  res.status(200).send({ message: 'Change existng role Endpoint' });
-}
-
 const deleteRole = (req, res, next) => {
   Role.destroy({
     where: {
@@ -60,9 +53,35 @@ const deleteRole = (req, res, next) => {
     if (!count) {
       return res.status(404).send({ error: 'No Role' });
     }
-    res.status(200).send({message: "Role was deleted successfully."});
+    res.status(200).send({ message: "Role was deleted successfully." });
   });
 }
+
+const addNewRole = (req, res, next) => {
+  Role.create({
+    name: req.body.name,
+    description: req.body.description
+  }).then(role => {
+    Right.findAll({
+      where: {id: req.body.rights}
+    }).then(right => {
+      if (role) {
+        role.setRights(right)
+        res.status(200).send({ message: 'New Role is created.' });
+        return 
+      } else {
+        res.status(400).send({ message: 'Assigned roles were not found.' });
+        return 
+      }      
+    })
+  });
+}
+
+const changeRole = (req, res, next) => {
+  res.status(200).send({ message: 'Change existng role Endpoint' });
+}
+
+
 
 const mgtRolesFunctions = {
   getRoleAndRight,
