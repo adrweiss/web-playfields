@@ -51,7 +51,7 @@ const deleteRole = (req, res, next) => {
     }
   }).then(count => {
     if (!count) {
-      return res.status(404).send({ error: 'No Role' });
+      return res.status(404).send({ error: 'Role not found.' });
     }
     res.status(200).send({ message: "Role was deleted successfully." });
   });
@@ -65,14 +65,11 @@ const addNewRole = (req, res, next) => {
     Right.findAll({
       where: { id: req.body.rights }
     }).then(right => {
-      if (role) {
-        role.setRights(right)
+      role.setRights(right).then(() => {
         res.status(200).send({ message: 'New Role is created.' });
-        return
-      } else {
-        res.status(400).send({ message: 'Assigned roles were not found.' });
-        return
-      }
+      }).catch(error =>
+        res.status(400).send({ error: 'Rights are not available.' })
+      )
     })
   });
 }
@@ -84,10 +81,14 @@ const changeRole = (req, res, next) => {
         name: req.body.name,
         description: req.body.description,
       })
-      role.setRights(req.body.rights)
-      res.status(200).send({ message: 'Change existng role successfull.' });  
+
+      role.setRights(req.body.rights).then(() => {
+        res.status(200).send({ message: 'Change existing role successfull.' })
+      }).catch(error =>
+        res.status(400).send({ error: 'Rights are not available.' })
+      )
     } else {
-      res.status(400).send({ message: 'Something went wrong.' });
+      res.status(400).send({ error: 'Role not found.' });
     }
   })
 }

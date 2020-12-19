@@ -82,6 +82,10 @@ function checkDuplicateRoleName(req, res, next) {
       name: req.body.name
     }
   }).then(role => {
+    if (role && req.body.id === role.id){
+      next();
+      return;
+    }
     if (role) {
       res.status(400).send({
         message: "Failed! Role name is already in use!"
