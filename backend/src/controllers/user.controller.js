@@ -5,7 +5,7 @@ const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
-export const deleteUsr = (req, res, next) => {
+const deleteUsr = (req, res, next) => {
   User.destroy({
     where: {
       id: req.userId
@@ -19,7 +19,7 @@ export const deleteUsr = (req, res, next) => {
 }
 
 
-export const getRights = (req, res, next) => {
+const getRoles = (req, res, next) => {
   User.findOne({
     include: [
       {
@@ -62,8 +62,7 @@ export const getRights = (req, res, next) => {
   })
 }
 
-
-export const changeUserName = (req, res, next) => {
+const changeUserName = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     // Check if record exists in db
     if (user) {
@@ -78,7 +77,7 @@ export const changeUserName = (req, res, next) => {
   res.status(200).send({ message: 'Username change was successfull.' });
 }
 
-export const changeUserPassword = (req, res, next) => {
+const changeUserPassword = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     // Check if record exists in db
     if (user) {
@@ -97,9 +96,37 @@ export const changeUserPassword = (req, res, next) => {
   })
 }
 
+const getRights = (req, res, next) => {
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+        }],
+      },
+    ],
+    where: { id: [req.userId] }
+  }
+  ).then(user => {
+    const accessRights = [];
+    if (user) {
+      user.roles.forEach(role => {
+        role.rights.forEach(right => {
+          accessRights.push(right.name);
+        });
+      });
+      res.status(200).send(accessRights)
+    } else {
+      res.status(400).send({ message: 'No user in database available.' });
+    }
+  })
+}
+
 const userFunctions = {
   deleteUsr,
   getRights,
+  getRoles,
   changeUserName,
   changeUserPassword,
 };
