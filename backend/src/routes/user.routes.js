@@ -13,26 +13,30 @@ export function routsUsr(app) {
   app.put(
     "/api/usr/mgt/chgUN",
     [authJwt.verifyToken,
-    authJwt.hasWOUS,
+    authJwt.getWriteOwnUsrSettings,
+    authJwt.hasRights,
     verifySignUp.checkDuplicateUsername,],
     userFunctions.changeUserName);
 
   app.put(
     "/api/usr/mgt/chgPW",
     [authJwt.verifyToken,
-    authJwt.hasWOUS,
+    authJwt.getWriteOwnUsrSettings,
+    authJwt.hasRights,
     verifySignUp.checkPassword,],
     userFunctions.changeUserPassword)
 
   app.delete(
     "/api/usr/mgt",
     [authJwt.verifyToken,
-    authJwt.hasWOUS,],
+    authJwt.getWriteOwnUsrSettings,
+    authJwt.hasRights,],
     userFunctions.deleteUsr);
 
   app.get(
     "/api/usr/rights",
     [authJwt.verifyToken,
-    authJwt.hasRUV],
+    authJwt.getReadUsrView,
+    authJwt.hasRights,],
     userFunctions.getRights);
 };

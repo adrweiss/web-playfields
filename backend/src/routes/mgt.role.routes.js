@@ -10,27 +10,36 @@ export function routsMgtRoles(app) {
     next();
   });
 
+
   app.get(
     "/api/mgt/role",
-    [],
+    [authJwt.verifyToken,
+    authJwt.getReadRoleManagement,
+    authJwt.hasRights,],
     mgtRolesFunctions.getRoleAndRight,
   );
 
   app.post(
     "/api/mgt/role",
-    [],
+    [authJwt.verifyToken,
+    authJwt.getEditRole,
+    authJwt.hasRights,],
     mgtRolesFunctions.addNewRole
   );
 
   app.put(
     "/api/mgt/role",
-    [],
+    [authJwt.verifyToken,
+    authJwt.getEditRole,
+    authJwt.hasRights,],
     mgtRolesFunctions.changeRole
   );
 
   app.delete(
     "/api/mgt/role",
-    [],
+    [authJwt.verifyToken,
+    authJwt.getEditRole,
+    authJwt.hasRights,],
     mgtRolesFunctions.deleteRole
   );
 };

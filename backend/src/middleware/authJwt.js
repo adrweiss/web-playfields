@@ -26,42 +26,15 @@ function verifyToken(req, res, next) {
   });
 };
 
-// has READ_USER_VIEW right 
-function hasRUV(req, res, next) {
-  User.findAll({
-    include: [
-      {
-        model: Role, as: 'roles',
-        include: [{
-          model: Right, as: 'rights',
-          where: { name: ['ADMIN', 'READ_USER_VIEW'] }
-        }],
-      },
-    ],
-    where: { id: [req.userId] }
-  }
-  ).then(users => {
-    if (users === null) {
-      res.status(403).send({
-        message: "Require rights!"
-      });
-      return;
-    } else {
-      next();
-      return;
-    }
-  })
-};
-
-// has WRITE_OWN_USR_SETTINGS right 
-function hasWOUS(req, res, next) {
+// default function to check necessary rights
+function hasRights(req, res, next) {
   User.findOne({
     include: [
       {
         model: Role, as: 'roles',
         include: [{
           model: Right, as: 'rights',
-          where: { name: ['ADMIN', 'WRITE_OWN_USR_SETTINGS'] }
+          where: { name: req.right }
         }],
       },
     ],
@@ -80,14 +53,37 @@ function hasWOUS(req, res, next) {
   })
 }
 
-
 //READ_ROLE_MANAGEMENT
+function getReadRoleManagement(req, res, next) {
+  req.right = ['READ_ROLE_MANAGEMENT', 'ADMIN'];
+  next();
+}
+
 //EDIT_ROLE
+function getEditRole(req, res, next) {
+  req.right = ['EDIT_ROLE', 'ADMIN'];
+  next();
+}
+
+//WRITE_OWN_USR_SETTINGS
+function getWriteOwnUsrSettings(req, res, next) {
+  req.right = ['WRITE_OWN_USR_SETTINGS', 'ADMIN'];
+  next();
+}
+
+//READ_USER_VIEW
+function getReadUsrView(req, res, next) {
+  req.right = ['READ_USER_VIEW', 'ADMIN'];
+  next();
+}
 
 const authJwt = {
-  verifyToken: verifyToken,
-  hasRUV: hasRUV,
-  hasWOUS: hasWOUS,
+  verifyToken,
+  hasRights,
+  getReadRoleManagement,
+  getEditRole,
+  getWriteOwnUsrSettings,
+  getReadUsrView,
 };
 
 export { authJwt };
