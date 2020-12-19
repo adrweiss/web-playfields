@@ -5,7 +5,7 @@ const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
-export const deleteUsr = (req, res, next) => {
+const deleteUsr = (req, res, next) => {
   User.destroy({
     where: {
       id: req.userId
@@ -19,7 +19,7 @@ export const deleteUsr = (req, res, next) => {
 }
 
 
-export const getRights = (req, res, next) => {
+const getRights = (req, res, next) => {
   User.findOne({
     include: [
       {
@@ -59,7 +59,7 @@ export const getRights = (req, res, next) => {
   })
 }
 
-export const changeUserName = (req, res, next) => {
+const changeUserName = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     // Check if record exists in db
     if (user) {
@@ -74,11 +74,7 @@ export const changeUserName = (req, res, next) => {
   res.status(200).send({ username: req.body.username });
 }
 
-export const changeUserPassword = (req, res, next) => {
-
-
-
-
+const changeUserPassword = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     // Check if record exists in db
     if (user) {
@@ -86,7 +82,7 @@ export const changeUserPassword = (req, res, next) => {
         user.update({
           password: bcrypt.hashSync(req.body.password_new, 8)
         })
-        
+
         res.status(200).send({ message: 'Password change was successfull.' });
       } else {
         res.status(400).send({ message: 'No new Password was provided.' });
