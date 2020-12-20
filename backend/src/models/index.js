@@ -59,10 +59,11 @@ db.right.belongsToMany(db.role, {
 
 function roleInit(role, right, user){
   initialRole(role)
-  initialRight(right)
+  initialRight(right, role)
   initialUsr(user)
 }
-db.ROLES = ["user", "admin", "manager"];
-db.RIGHTS = ["admin", "READ_USER_VIEW", "READ_MANAGEMNT_VIEW"];
+
+//db.ROLES = ["user", "admin", "manager"];
+//db.RIGHTS = ["admin", "READ_USER_VIEW", "READ_MANAGEMNT_VIEW"];
 
 export { db, roleInit };
