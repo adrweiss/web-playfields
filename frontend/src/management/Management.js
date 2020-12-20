@@ -7,11 +7,26 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import UserOverview from './management/User.Overview'
+import { useHistory } from 'react-router-dom';
+import UserOverview from './User.Overview';
+import RolesOverview from './Roles.Overview';
+import { getCurrentUser } from "../services/auth.service";
 
 function Management() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const history = useHistory();
+  const currentUser = getCurrentUser();
+
+  var rights = []
+
+  if (currentUser !== null) {
+    rights = currentUser.rights
+  }
+
+  if (!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))) {
+    history.push('/unauthorized')
+  } 
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

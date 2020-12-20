@@ -24,7 +24,6 @@ function User() {
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const history = useHistory();
   const currentUser = getCurrentUser();
-  const [currUsername, setCurrUsername] = useState(currentUser.username);
 
   var rights = []
   var sizeRightSection = 6
@@ -36,6 +35,8 @@ function User() {
   if (!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
+
+  const [currUsername, setCurrUsername] = useState(currentUser.username);
 
   if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
     sizeRightSection = 4
@@ -109,7 +110,7 @@ function User() {
 
   const handleClickChangeUsername = () => {
     var username = document.getElementById('username').value
-     
+
     UserService.changeUsername(username).then((response) => {
       setMessageUN(response.data.message);
       currentUser.username = username;
