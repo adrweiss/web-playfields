@@ -6,10 +6,7 @@ import { db, roleInit } from './src/models/index.js'
 
 import { routsUsr } from './src/routes/user.routes.js';
 import { authRoutes } from './src/routes/auth.routes.js';
-<<<<<<< HEAD
-=======
 import { routsMgtRoles } from './src/routes/mgt.role.routes.js';
->>>>>>> frontend-dev
 
 //import pgClient from './pgQueries.js'
 //import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
@@ -33,13 +30,6 @@ app.use(express.json());
 //const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
 //const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
 
-<<<<<<< HEAD
-
-//const Role = db.role;
-//const Right = db.right;
-
-=======
->>>>>>> frontend-dev
 db.sequelize.sync({ force: true }).then(() => {
     console.log('Drop and Resync Db');
     roleInit(db.role, db.right, db.user);
