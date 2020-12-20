@@ -47,7 +47,7 @@ const getRoleAndRight = (req, res, next) => {
 const deleteRole = (req, res, next) => {
   Role.destroy({
     where: {
-      id: req.body.roleid
+      id: req.body.id
     }
   }).then(count => {
     if (!count) {
