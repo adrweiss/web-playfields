@@ -3,8 +3,19 @@ import { db } from '../models/index.js'
 const Right = db.right;
 const Role = db.role;
 
+const Op = db.Sequelize.Op;
+
+
 const getRoleAndRight = (req, res, next) => {
+  var allData = 'ADMIN'
+  if (req.isAdmin) {
+    allData = ''
+  }
+  
   Role.findAll({
+    where: { 
+       [Op.not]:  {name: allData}
+    },
     include: [{
       model: Right, as: 'rights',
       attributes: ['id', 'name', 'description'],

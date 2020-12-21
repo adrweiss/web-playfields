@@ -34,14 +34,22 @@ function Row(props) {
   const { role } = props;
   const [open, setOpen] = useState(false);
   const [modalIsOpenEditRole, setmodalIsOpenEditRole] = useState(false);
+  const [modalAdmin, setmodalAdmin] = useState(false);
 
   const modalEditRole = () => {
-    console.log(role)
-    setOpen(false)
-    setmodalIsOpenEditRole(!modalIsOpenEditRole);
+    if (role.role_name !== 'ADMIN') {
+      setOpen(false)
+      setmodalIsOpenEditRole(!modalIsOpenEditRole);
+    } else {
+      setmodalAdmin(!modalAdmin)
+    }
   }
 
-  
+  function closeModalAdmin() {
+    setmodalAdmin(false)
+  }
+
+
   return (
     <React.Fragment>
       <TableRow hover>
@@ -92,8 +100,19 @@ function Row(props) {
           <div>
             Test
             {role.role_name}
+            {role.role_description}
             Delete Button
           </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalAdmin}
+        onRequestClose={closeModalAdmin}
+        style={customStyles}
+        contentLabel="EDIT_ADMIN"
+      >
+        <div>
+          <h3>Its not allowed to change the ADMIN Role.</h3>
         </div>
       </Modal>
     </React.Fragment>
