@@ -41,9 +41,7 @@ function Login() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        //console.log(resMessage)
-        //setLoading(false);
+          
         setMessage(resMessage);
       }
     );

@@ -29,7 +29,7 @@ function Header() {
         logout()
         history.push('/login')
       }
-      console.log('test')
+      
       UserService.getRights().then(response => {
         if (currentUser.righs !== response.data.rights){
           localStorage.setItem("user", JSON.stringify(currentUser));
@@ -37,7 +37,7 @@ function Header() {
         }
       })
     }
-  }, 10000);
+  }, 300000);
 
   
 
