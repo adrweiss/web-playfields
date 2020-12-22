@@ -129,8 +129,9 @@ function RolesOverview() {
   const [allRightsforModel, setAllRightsforModel] = useState([]);
   const [modalIsOpenCreateRole, setIsOpenCreateRole] = useState(false);
   const [rightsForNewRole, setRightsForNewRole] = useState([]);
-
-
+  const [roleName, setroleName] = useState("");
+  const [roleDescription, setRoleDescription] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
@@ -156,18 +157,22 @@ function RolesOverview() {
           }
         })
       })
-      setAllRights(accessRights)
+      const unique = [...new Map(accessRights.map(item => [item['right_id'], item])).values()]
+      setAllRights(unique)
     }
   }, [])
 
 
   function openModalCreateRole() {
     setAllRightsforModel(allRights)
+    setroleName("")
+    setRoleDescription("")
     setIsOpenCreateRole(true);
   }
 
   function closeModalCreateRole() {
     setAllRightsforModel([])
+    setRightsForNewRole([])
     setIsOpenCreateRole(false);
   }
 
@@ -181,9 +186,55 @@ function RolesOverview() {
     setAllRightsforModel([...allRightsforModel, allRights.find(element => element.right_id === right_id)]);
   }
 
+  const createNewRole = () => {
+    const accessRights = [];
+    rightsForNewRole.forEach(right => {
+      accessRights.push(right.right_id);
+    })
+
+    var name =  roleName.value.toUpperCase().replace(' ', '_')
+    var description = roleDescription.value
+    
+    setAllRightsforModel([])
+    setRightsForNewRole([])
+    setIsOpenCreateRole(false);
+
+    ManagementRoleService.createRole(name, description, accessRights).then((response) => {
+      setMessage(response.data.message);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(_content);
+      })
+
+      ManagementRoleService.getRoles().then((response) => {
+        setRoles(response.data)
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+  
+          console.log(_content);
+        })
+  }
+
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
+      {message && (
+          <div className="response">
+            {message}
+          </div>
+        )}
       <TableContainer>
         <Table>
           <TableHead>
@@ -223,11 +274,13 @@ function RolesOverview() {
               className='input__field__name'
               label="Role Name"
               margin="normal"
+              inputRef={element => setroleName(element)} 
               variant="outlined" />
 
             <TextField className='input__field__desciption'
               label="Role Description"
               margin="normal"
+              inputRef={element => setRoleDescription(element)} 
               variant="outlined" />
 
             {rightsForNewRole.length !== 0 && (
@@ -277,7 +330,7 @@ function RolesOverview() {
                 />
               )}
             />
-            <Button variant="contained" color="primary" disableElevation onClick={closeModalCreateRole}>
+            <Button variant="contained" color="primary" disableElevation onClick={createNewRole}>
               Creaet New Role
             </Button>
           </div>

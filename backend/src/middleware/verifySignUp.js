@@ -93,7 +93,7 @@ function checkDuplicateRoleName(req, res, next) {
     }
     if (role) {
       res.status(400).send({
-        error: "Failed! Role name is already in use!"
+        message: "Failed! Role name is already in use!"
       });
       return;
     }
