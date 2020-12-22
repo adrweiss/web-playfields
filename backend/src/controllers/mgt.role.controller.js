@@ -5,6 +5,29 @@ const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
+const getRights = (req, res, next) => {
+  Right.findAll({
+    where: {
+      [Op.not]: { name: "ADMIN" }
+    }
+  }).then(rights => {
+    if (rights) {
+      const resObj = rights.map(right => {
+
+        return Object.assign(
+          {},
+          {
+            right_id: right.id,
+            right_name: right.name,
+            right_description: right.description,
+          })
+      })
+      res.status(200).send(resObj);
+    } else {
+      res.status(400).send({ message: "No rights available." });
+    }
+  })
+}
 
 const getRoleAndRight = (req, res, next) => {
   var allData = 'ADMIN'
@@ -135,6 +158,7 @@ const changeRole = (req, res, next) => {
 }
 
 const mgtRolesFunctions = {
+  getRights,
   getRoleAndRight,
   addNewRole,
   changeRole,

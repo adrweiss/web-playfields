@@ -20,6 +20,14 @@ export function routsMgtRoles(app) {
     mgtRolesFunctions.getRoleAndRight,
   );
 
+  app.get(
+    "/api/mgt/right",
+    [authJwt.verifyToken,
+    authJwt.getEditRole,
+    authJwt.hasRights],
+    mgtRolesFunctions.getRights,
+  );
+
   app.post(
     "/api/mgt/role",
     [authJwt.verifyToken,
