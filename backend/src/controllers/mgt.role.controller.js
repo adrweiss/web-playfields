@@ -56,16 +56,23 @@ const getRoleAndRight = (req, res, next) => {
 }
 
 const deleteRole = (req, res, next) => {
-  Role.destroy({
-    where: {
-      id: req.body.id
+  Role.findByPk(req.body.id).then(role => {
+    if (role.name === 'ADMIN') {
+      res.status(400).send({ message: 'Its not allowed to try to delete the ADMIN role.' })
+      return
+    } else {
+      Role.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(count => {
+        if (!count) {
+          return res.status(404).send({ message: 'Role not found.' });
+        }
+        res.status(200).send({ message: "Role was deleted successfully." });
+      });
     }
-  }).then(count => {
-    if (!count) {
-      return res.status(404).send({ message: 'Role not found.' });
-    }
-    res.status(200).send({ message: "Role was deleted successfully." });
-  });
+  })
 }
 
 const addNewRole = (req, res, next) => {

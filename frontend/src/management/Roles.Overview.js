@@ -19,6 +19,7 @@ import Button from '@material-ui/core/Button'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 Modal.setAppElement('body')
 
@@ -38,61 +39,105 @@ const customStyles = {
 function Row(props) {
   const { role } = props;
   const [open, setOpen] = useState(false);
-  const [modalIsOpenEditRole, setmodalIsOpenEditRole] = useState(false);
-  const [modalAdmin, setmodalAdmin] = useState(false);
+  const [modalIsOpenEditRole, setModalIsOpenEditRole] = useState(false);
+  const [modalAdmin, setModalAdmin] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [message, setMessage] = useState("");
+  const [deleteButton, setDeleteButton] = useState(false);
+  const [dataDeleted, setDataDeleted] = useState(true);
 
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
-      setmodalIsOpenEditRole(!modalIsOpenEditRole);
+      setModalIsOpenEditRole(!modalIsOpenEditRole);
     } else {
-      setmodalAdmin(!modalAdmin)
+      setModalAdmin(!modalAdmin)
     }
   }
 
   function closeModalAdmin() {
-    setmodalAdmin(false)
+    setModalAdmin(false)
   }
 
+  const modaDeleteRole = () => {
+    setDeleteButton(false)
+    if (role.role_name === 'ADMIN') {
+      setModalAdmin(!modalAdmin)
+    } else {
+      setModalDelete(!modalDelete)
+    }
+  }
+
+  const deleteRole = () => {
+    setDeleteButton(true)
+    ManagementRoleService.deleteRole(role.role_id).then((response) => {
+      setMessage(response.data.message);
+      setDataDeleted(false)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(_content);
+      })
+
+  }
 
   return (
     <React.Fragment>
-      <TableRow hover>
-        <TableCell align='center'>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell onClick={modalEditRole} align="left">{role.role_name}</TableCell>
-        <TableCell onClick={modalEditRole} align="left">{role.role_created_at}</TableCell>
-        <TableCell onClick={modalEditRole} align="left">{role.role_description}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <h4>Assigend rights</h4>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Right name</TableCell>
-                    <TableCell align="left">Assigned to Role</TableCell>
-                    <TableCell align="left">Right description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {role.rights.map((right) => (
-                    <TableRow key={right.right_id}>
-                      <TableCell align="left">{right.right_name}</TableCell>
-                      <TableCell align="left">{right.right_description}</TableCell>
-                      <TableCell align="left">{right.right_assigned_to}</TableCell>
+      {dataDeleted && (
+        <TableRow hover>
+          <TableCell align='center'>
+            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell onClick={modalEditRole} align="left">{role.role_name}</TableCell>
+          <TableCell onClick={modalEditRole} align="left">{role.role_created_at}</TableCell>
+          <TableCell onClick={modalEditRole} align="left">{role.role_description}</TableCell>
+          <TableCell align="left">
+            {role.role_name !== 'ADMIN' && (
+              <IconButton onClick={modaDeleteRole} >
+                <Tooltip title="Delete Role" aria-label="delete">
+                  <DeleteIcon fontSize='small' />
+                </Tooltip>
+              </IconButton>
+            )}
+          </TableCell>
+        </TableRow>
+      )}
+      {dataDeleted && (
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <h4>Assigend rights</h4>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Right name</TableCell>
+                      <TableCell align="left">Assigned to Role</TableCell>
+                      <TableCell align="left">Right description</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {role.rights.map((right) => (
+                      <TableRow key={right.right_id}>
+                        <TableCell align="left">{right.right_name}</TableCell>
+                        <TableCell align="left">{right.right_description}</TableCell>
+                        <TableCell align="left">{right.right_assigned_to}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      )}
       <Modal
         isOpen={modalIsOpenEditRole}
         onRequestClose={modalEditRole}
@@ -119,6 +164,26 @@ function Row(props) {
           <h3>Its not allowed to change the ADMIN Role.</h3>
         </div>
       </Modal>
+      <Modal
+        isOpen={modalDelete}
+        onRequestClose={modaDeleteRole}
+        style={customStyles}
+        contentLabel="Delete_Role"
+      >
+        <div className='modal__delete'>
+          {message && (
+            <div className="response">
+              {message}
+            </div>
+          )}
+          <h3>Delete {role.role_name}?</h3>
+          <div>
+            Are you sure that you want to delete the Role "{role.role_name}"?
+          </div>
+          <Button variant="contained" onClick={deleteRole} color="secondary" disabled={deleteButton}>Delete</Button>
+          <Button variant="contained" onClick={modaDeleteRole}>Close</Button>
+        </div>
+      </Modal>
     </React.Fragment>
   );
 }
@@ -136,7 +201,7 @@ function RolesOverview() {
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
       setRoles(response.data)
-      analysisDate(response.data)
+      //analysisDate(response.data)
     },
       (error) => {
         const _content =
@@ -148,7 +213,7 @@ function RolesOverview() {
 
         console.log(_content);
       })
-    const accessRights = [];
+    /*const accessRights = [];
     function analysisDate(data) {
       data.forEach(dataRow => {
         dataRow.rights.forEach(dataRowRight => {
@@ -159,7 +224,9 @@ function RolesOverview() {
       })
       const unique = [...new Map(accessRights.map(item => [item['right_id'], item])).values()]
       setAllRights(unique)
+      
     }
+    */
   }, [])
 
 
@@ -192,9 +259,9 @@ function RolesOverview() {
       accessRights.push(right.right_id);
     })
 
-    var name =  roleName.value.toUpperCase().replace(' ', '_')
+    var name = roleName.value.toUpperCase().replace(' ', '_')
     var description = roleDescription.value
-    
+
     setAllRightsforModel([])
     setRightsForNewRole([])
     setIsOpenCreateRole(false);
@@ -212,29 +279,29 @@ function RolesOverview() {
         setMessage(_content);
       })
 
-      ManagementRoleService.getRoles().then((response) => {
-        setRoles(response.data)
-      },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-  
-          console.log(_content);
-        })
+    ManagementRoleService.getRoles().then((response) => {
+      setRoles(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
       {message && (
-          <div className="response">
-            {message}
-          </div>
-        )}
+        <div className="response">
+          {message}
+        </div>
+      )}
       <TableContainer>
         <Table>
           <TableHead>
@@ -249,6 +316,7 @@ function RolesOverview() {
               <TableCell align="left" width="100px">Name</TableCell>
               <TableCell align="left" width="200px">Created at</TableCell>
               <TableCell align="left">Description</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -274,13 +342,13 @@ function RolesOverview() {
               className='input__field__name'
               label="Role Name"
               margin="normal"
-              inputRef={element => setroleName(element)} 
+              inputRef={element => setroleName(element)}
               variant="outlined" />
 
             <TextField className='input__field__desciption'
               label="Role Description"
               margin="normal"
-              inputRef={element => setRoleDescription(element)} 
+              inputRef={element => setRoleDescription(element)}
               variant="outlined" />
 
             {rightsForNewRole.length !== 0 && (

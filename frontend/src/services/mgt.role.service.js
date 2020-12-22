@@ -24,9 +24,7 @@ const editRole = (id, name, description, rights) => {
 };
 
 const deleteRole = (id) => {
-  return axios.delete("/mgt/role", {
-    "id": id,
-  }, { headers: authHeader() });
+  return axios.delete("/mgt/role", { headers: authHeader() , data: { "id": id }});
 };
 
 const ManagementRoleService = {
