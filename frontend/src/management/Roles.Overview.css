@@ -43,3 +43,7 @@
     margin-top: 10px;
     width: 50%;
 }
+
+.edit__rights__modal__table {
+    max-height: 250px;
+}

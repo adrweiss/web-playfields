@@ -139,23 +139,52 @@ const addNewRole = (req, res, next) => {
 }
 
 const changeRole = (req, res, next) => {
-  Role.findByPk(req.body.id).then(role => {
-    if (role) {
-      role.update({
-        name: req.body.name,
-        description: req.body.description,
-      })
+  if (req.body.name === "") {
+    res.status(400).send({ message: 'No name was entered.' })
+    return
+  }
 
-      role.setRights(req.body.rights).then(() => {
-        res.status(200).send({ message: 'Change existing role successfull.' })
-      }).catch(error =>
-        res.status(400).send({ error: 'Rights are not available.' })
-      )
+  if (req.body.description === "") {
+    res.status(400).send({ message: 'No descipriton was entered.' })
+    return
+  }
+  if (req.body.rights.length === 0) {
+    res.status(400).send({ message: 'No rights are set.' })
+    return
+  }
+
+  Right.findAll({
+    where: {
+      [Op.and]: [
+        { id: req.body.rights },
+        { name: "ADMIN" }
+      ]
+    }
+  }).then(right => {
+    if (right.length !== 0) {
+      res.status(400).send({ message: 'Its not allowed to try to set admin rights to another role then the "ADMIN" Role.' })
+      return
     } else {
-      res.status(400).send({ error: 'Role not found.' });
+      Role.findByPk(req.body.id).then(role => {
+        if (role) {
+          role.update({
+            name: req.body.name,
+            description: req.body.description,
+          })
+
+          role.setRights(req.body.rights).then(() => {
+            res.status(200).send({ message: 'Change existing role successfull.' })
+          }).catch(error =>
+            res.status(400).send({ error: 'Rights are not available.' })
+          )
+        } else {
+          res.status(400).send({ error: 'Role not found.' });
+        }
+      })
     }
   })
 }
+
 
 const mgtRolesFunctions = {
   getRights,

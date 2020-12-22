@@ -24,6 +24,7 @@ function Management() {
   if (currentUser !== null) {
     rights = currentUser.rights
   }
+  
 
   if (!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))) {
     history.push('/unauthorized')
@@ -81,12 +82,12 @@ function Management() {
               <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
             {(rights.includes('READ_ROLE_MANAGEMENT') || rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageRole}>Roles</MenuItem>)}
-            {(rights.includes('READ_VIEW_LOGIN') || rights.includes('READ_VIEW_DELETE') || rights.includes('ADMIN')) && (
+            {/*(rights.includes('READ_VIEW_LOGIN') || rights.includes('READ_VIEW_DELETE') || rights.includes('ADMIN')) && (
               <MenuItem
                 onClick={handleToggle}
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true">Views</MenuItem>)}
+            aria-haspopup="true">Views</MenuItem>)*/}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>

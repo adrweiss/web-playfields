@@ -37,17 +37,40 @@ const customStyles = {
 
 
 function Row(props) {
-  const { role } = props;
+  const { role, allRights } = props;
   const [open, setOpen] = useState(false);
   const [modalIsOpenEditRole, setModalIsOpenEditRole] = useState(false);
   const [modalAdmin, setModalAdmin] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageEdit, setMessageEdit] = useState("");
   const [deleteButton, setDeleteButton] = useState(false);
   const [dataDeleted, setDataDeleted] = useState(true);
+  const [roleName, setroleName] = useState("");
+  const [roleDescription, setRoleDescription] = useState("");
+  const [rightsForNewRole, setRightsForNewRole] = useState([]);
+  const [allRightsforModel, setAllRightsforModel] = useState([]);
+  const [roleNameTable, setRoleNameTable] = useState(role.role_name);
+  const [roleDescriptionTable, setRoleDescriptionTable] = useState(role.role_description);
+  const [currentRights, setCurrentRights] = useState(role.rights);
+
+  
+  var rightsRole = currentRights 
+  const temp = []
+  
+  rightsRole.forEach(right => {
+    temp.push(right.right_id)
+  })
+  
+  rightsRole = allRights.filter((el) => !temp.includes(el.right_id))
+
+  
 
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
+      setAllRightsforModel(rightsRole)
+      setRightsForNewRole(currentRights)
+
       setModalIsOpenEditRole(!modalIsOpenEditRole);
     } else {
       setModalAdmin(!modalAdmin)
@@ -86,6 +109,44 @@ function Row(props) {
 
   }
 
+  function getCompleteRight(right_name) {
+    setRightsForNewRole([...rightsForNewRole, allRights.find(element => element.right_name === right_name)]);
+    setAllRightsforModel(allRightsforModel.filter(element => element.right_name !== right_name))
+  }
+
+  const removeItemFromCreate = (event, right_id) => {
+    setRightsForNewRole(rightsForNewRole.filter(element => element.right_id !== right_id))
+    setAllRightsforModel([...allRightsforModel, allRights.find(element => element.right_id === right_id)]);
+  }
+
+  const editExistingRole = () => {
+    const accessRights = [];
+    rightsForNewRole.forEach(right => {
+      accessRights.push(right.right_id);
+    })
+
+    var name = roleName.value.toUpperCase().replace(' ', '_')
+    var description = roleDescription.value
+
+    ManagementRoleService.editRole(role.role_id, name, description, accessRights).then((response) => {
+      setModalIsOpenEditRole(!modalIsOpenEditRole);
+      setRoleNameTable(name)
+      setRoleDescriptionTable(description)
+      setCurrentRights(rightsForNewRole)
+      console.log(response.data.message)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          setMessageEdit(_content);
+      })
+  }
+
+
   return (
     <React.Fragment>
       {dataDeleted && (
@@ -95,11 +156,11 @@ function Row(props) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell onClick={modalEditRole} align="left">{role.role_name}</TableCell>
+          <TableCell onClick={modalEditRole} align="left">{roleNameTable}</TableCell>
           <TableCell onClick={modalEditRole} align="left">{role.role_created_at}</TableCell>
-          <TableCell onClick={modalEditRole} align="left">{role.role_description}</TableCell>
+          <TableCell onClick={modalEditRole} align="left">{roleDescriptionTable}</TableCell>
           <TableCell align="left">
-            {role.role_name !== 'ADMIN' && (
+            {roleNameTable !== 'ADMIN' && (
               <IconButton onClick={modaDeleteRole} >
                 <Tooltip title="Delete Role" aria-label="delete">
                   <DeleteIcon fontSize='small' />
@@ -124,7 +185,7 @@ function Row(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {role.rights.map((right) => (
+                    {currentRights.map((right) => (
                       <TableRow key={right.right_id}>
                         <TableCell align="left">{right.right_name}</TableCell>
                         <TableCell align="left">{right.right_description}</TableCell>
@@ -145,13 +206,81 @@ function Row(props) {
         contentLabel="edit_existing_role"
       >
         <div>
+          {messageEdit && (
+            <div className="response">
+              {messageEdit}
+            </div>
+          )}
           <h1>Edit Existing Role</h1>
-          <div>
-            Test
-            {role.role_name}
-            {role.role_description}
-            Delete Button
+          <div className='modal__create__role'>
+
+            <TextField
+              className='input__field__name'
+              label="Role Name"
+              margin="normal"
+              defaultValue={roleNameTable}
+              inputRef={element => setroleName(element)}
+              variant="outlined" />
+
+            <TextField className='input__field__desciption'
+              label="Role Description"
+              margin="normal"
+              defaultValue={roleDescriptionTable}
+              inputRef={element => setRoleDescription(element)}
+              variant="outlined" />
+
+            {rightsForNewRole.length !== 0 && (
+              <TableContainer className='edit__rights__modal__table'>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell align="left">Right Name</TableCell>
+                      <TableCell align="left">Right Description</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rightsForNewRole?.map((right) => (
+                      <TableRow key={right.right_id}>
+                        <TableCell align='center' width="5px">
+                          <IconButton onClick={(event) => removeItemFromCreate(event, right.right_id)}>
+                            <Tooltip title="Remove right from list" aria-label="add">
+                              <RemoveCircleOutlineIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </TableCell>
+                        <TableCell align="left">{right.right_name}</TableCell>
+                        <TableCell align="left">{right.right_description}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+
+            <Autocomplete
+              freeSolo
+              id="free-solo-2-demo"
+              disableClearable
+              options={allRightsforModel?.map((right) => right.right_name)}
+              onChange={(event, newValue) => {
+                getCompleteRight(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Right"
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{ ...params.InputProps, type: 'search' }}
+                />
+              )}
+            />
+            <Button variant="contained" color="primary" disableElevation onClick={editExistingRole}>
+              Edit Role
+            </Button>
           </div>
+
         </div>
       </Modal>
       <Modal
@@ -176,9 +305,9 @@ function Row(props) {
               {message}
             </div>
           )}
-          <h3>Delete {role.role_name}?</h3>
+          <h3>Delete {roleNameTable}?</h3>
           <div>
-            Are you sure that you want to delete the Role "{role.role_name}"?
+            Are you sure that you want to delete the Role "{roleNameTable}"?
           </div>
           <Button variant="contained" onClick={deleteRole} color="secondary" disabled={deleteButton}>Delete</Button>
           <Button variant="contained" onClick={modaDeleteRole}>Close</Button>
@@ -213,19 +342,19 @@ function RolesOverview() {
         console.log(_content);
       })
 
-      ManagementRoleService.getRights().then((response) => {
-        setAllRights(response.data)
-      },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-  
-          console.log(_content);
-        })
+    ManagementRoleService.getRights().then((response) => {
+      setAllRights(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }, [])
 
 
@@ -320,7 +449,7 @@ function RolesOverview() {
           </TableHead>
           <TableBody>
             {roles?.map((role) => (
-              <Row key={role.role_id} role={role} />
+              <Row key={role.role_id} role={role} allRights={allRights} />
             ))}
           </TableBody>
         </Table>
@@ -351,7 +480,7 @@ function RolesOverview() {
               variant="outlined" />
 
             {rightsForNewRole.length !== 0 && (
-              <TableContainer>
+              <TableContainer className='edit__rights__modal__table'>
                 <Table aria-label="simple table">
                   <TableHead>
                     <TableRow>
