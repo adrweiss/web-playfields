@@ -15,7 +15,12 @@ import ManagementRoleService from '../services/mgt.role.service'
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
 import Modal from 'react-modal';
+import Button from '@material-ui/core/Button'
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
+Modal.setAppElement('body')
 
 const customStyles = {
   content: {
@@ -25,10 +30,10 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+    overlay: { zIndex: 9999 }
   }
 };
 
-Modal.setAppElement('body')
 
 function Row(props) {
   const { role } = props;
@@ -38,7 +43,6 @@ function Row(props) {
 
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
-      setOpen(false)
       setmodalIsOpenEditRole(!modalIsOpenEditRole);
     } else {
       setmodalAdmin(!modalAdmin)
@@ -67,7 +71,7 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <h4>Assigend rights</h4>
-              <Table stickyHeader size="small">
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">Right name</TableCell>
@@ -121,11 +125,17 @@ function Row(props) {
 
 function RolesOverview() {
   const [roles, setRoles] = useState([]);
+  const [allRights, setAllRights] = useState([]);
+  const [allRightsforModel, setAllRightsforModel] = useState([]);
   const [modalIsOpenCreateRole, setIsOpenCreateRole] = useState(false);
+  const [rightsForNewRole, setRightsForNewRole] = useState([]);
+
+
 
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
       setRoles(response.data)
+      analysisDate(response.data)
     },
       (error) => {
         const _content =
@@ -137,21 +147,45 @@ function RolesOverview() {
 
         console.log(_content);
       })
+    const accessRights = [];
+    function analysisDate(data) {
+      data.forEach(dataRow => {
+        dataRow.rights.forEach(dataRowRight => {
+          if (dataRowRight.right_name !== 'ADMIN') {
+            accessRights.push(dataRowRight);
+          }
+        })
+      })
+      setAllRights(accessRights)
+    }
   }, [])
 
+
   function openModalCreateRole() {
+    setAllRightsforModel(allRights)
     setIsOpenCreateRole(true);
   }
 
   function closeModalCreateRole() {
+    setAllRightsforModel([])
     setIsOpenCreateRole(false);
+  }
+
+  function getCompleteRight(right_name) {
+    setRightsForNewRole([...rightsForNewRole, allRights.find(element => element.right_name === right_name)]);
+    setAllRightsforModel(allRightsforModel.filter(element => element.right_name !== right_name))
+  }
+
+  const removeItemFromCreate = (event, right_id) => {
+    setRightsForNewRole(rightsForNewRole.filter(element => element.right_id !== right_id))
+    setAllRightsforModel([...allRightsforModel, allRights.find(element => element.right_id === right_id)]);
   }
 
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
       <TableContainer>
-        <Table stickyHeader>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell align='center' width="7px">
@@ -183,12 +217,69 @@ function RolesOverview() {
         <div>
           <h1>Create a new role</h1>
 
-          <div>
-            <label>Role name</label>
-            <input type="text" id="role_name" name="role_name" />
-            <label>Role Description</label>
-            <input type="text" id="role_description" name="role_description" />
-            <label>Set Rights</label>
+          <div className='modal__create__role'>
+
+            <TextField
+              className='input__field__name'
+              label="Role Name"
+              margin="normal"
+              variant="outlined" />
+
+            <TextField className='input__field__desciption'
+              label="Role Description"
+              margin="normal"
+              variant="outlined" />
+
+            {rightsForNewRole.length !== 0 && (
+              <TableContainer>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell align="left">Right Name</TableCell>
+                      <TableCell align="left">Right Description</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rightsForNewRole?.map((right) => (
+                      <TableRow key={right.right_id}>
+                        <TableCell align='center' width="5px">
+                          <IconButton onClick={(event) => removeItemFromCreate(event, right.right_id)}>
+                            <Tooltip title="Remove right from list" aria-label="add">
+                              <RemoveCircleOutlineIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </TableCell>
+                        <TableCell align="left">{right.right_name}</TableCell>
+                        <TableCell align="left">{right.right_description}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+
+            <Autocomplete
+              freeSolo
+              id="free-solo-2-demo"
+              disableClearable
+              options={allRightsforModel?.map((right) => right.right_name)}
+              onChange={(event, newValue) => {
+                getCompleteRight(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Search Right"
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{ ...params.InputProps, type: 'search' }}
+                />
+              )}
+            />
+            <Button variant="contained" color="primary" disableElevation onClick={closeModalCreateRole}>
+              Creaet New Role
+            </Button>
           </div>
         </div>
       </Modal>

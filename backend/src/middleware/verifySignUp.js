@@ -76,6 +76,11 @@ function checkDuplicateEmail(req, res, next) {
 };
 
 function checkDuplicateRoleName(req, res, next) {
+  if(req.body.name === ""){
+    res.status(400).send({message: "Role name was not set!"});
+    return
+  }
+  
   // Role name
   Role.findOne({
     where: {
@@ -88,7 +93,7 @@ function checkDuplicateRoleName(req, res, next) {
     }
     if (role) {
       res.status(400).send({
-        message: "Failed! Role name is already in use!"
+        error: "Failed! Role name is already in use!"
       });
       return;
     }
