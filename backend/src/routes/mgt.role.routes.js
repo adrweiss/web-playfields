@@ -15,8 +15,17 @@ export function routsMgtRoles(app) {
     "/api/mgt/role",
     [authJwt.verifyToken,
     authJwt.getReadRoleManagement,
-    authJwt.hasRights,],
+    authJwt.hasRights,
+    authJwt.isAdmin,],
     mgtRolesFunctions.getRoleAndRight,
+  );
+
+  app.get(
+    "/api/mgt/right",
+    [authJwt.verifyToken,
+    authJwt.getEditRole,
+    authJwt.hasRights],
+    mgtRolesFunctions.getRights,
   );
 
   app.post(

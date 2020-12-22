@@ -24,7 +24,6 @@ function User() {
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const history = useHistory();
   const currentUser = getCurrentUser();
-  const [currUsername, setCurrUsername] = useState(currentUser.username);
 
   var rights = []
   var sizeRightSection = 6
@@ -36,6 +35,8 @@ function User() {
   if (!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
+
+  const [currUsername, setCurrUsername] = useState(currentUser.username);
 
   if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
     sizeRightSection = 4
@@ -109,7 +110,7 @@ function User() {
 
   const handleClickChangeUsername = () => {
     var username = document.getElementById('username').value
-     
+
     UserService.changeUsername(username).then((response) => {
       setMessageUN(response.data.message);
       currentUser.username = username;
@@ -162,7 +163,7 @@ function User() {
 
   return (
     <div>
-      <h1>User Self Service for {currUsername}</h1>
+      <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
       <Grid container spacing={3}>
         <Grid item sm={4} hidden={!(rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN'))}>
           <div className="container__user">
@@ -216,7 +217,7 @@ function User() {
         <Grid item sm={size}>
           <div className='table__container'>
             <h2>List of assigned roles</h2>
-            <TableContainer>
+            <TableContainer className='tableContainer'>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -245,7 +246,7 @@ function User() {
         <Grid item sm={sizeRightSection} hidden={hideRoleInfo}>
           <div className='table__container' >
             <h2>List of assigned rights for "{role?.role_name}"</h2>
-            <TableContainer>
+            <TableContainer className='tableContainer'>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
