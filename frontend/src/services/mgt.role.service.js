@@ -5,6 +5,11 @@ const getRoles = () => {
   return axios.get("/mgt/role", { headers: authHeader() });
 };
 
+const getRights = () => {
+  return axios.get("/mgt/right", { headers: authHeader() });
+};
+
+
 const createRole = (name, description, rights) => {
   return axios.post("/mgt/role",
     {
@@ -29,6 +34,7 @@ const deleteRole = (id) => {
 
 const ManagementRoleService = {
   getRoles,
+  getRights,
   createRole,
   editRole,
   deleteRole,

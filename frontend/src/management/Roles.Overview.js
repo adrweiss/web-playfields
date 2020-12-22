@@ -201,7 +201,6 @@ function RolesOverview() {
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
       setRoles(response.data)
-      //analysisDate(response.data)
     },
       (error) => {
         const _content =
@@ -213,20 +212,20 @@ function RolesOverview() {
 
         console.log(_content);
       })
-    /*const accessRights = [];
-    function analysisDate(data) {
-      data.forEach(dataRow => {
-        dataRow.rights.forEach(dataRowRight => {
-          if (dataRowRight.right_name !== 'ADMIN') {
-            accessRights.push(dataRowRight);
-          }
+
+      ManagementRoleService.getRights().then((response) => {
+        setAllRights(response.data)
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+  
+          console.log(_content);
         })
-      })
-      const unique = [...new Map(accessRights.map(item => [item['right_id'], item])).values()]
-      setAllRights(unique)
-      
-    }
-    */
   }, [])
 
 
