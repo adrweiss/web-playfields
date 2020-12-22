@@ -53,6 +53,33 @@ function hasRights(req, res, next) {
   })
 }
 
+// Check if user is admin
+function isAdmin(req, res, next) {
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+          where: { name: ['ADMIN'] }
+        }],
+      },
+    ],
+    where: { id: [req.userId] }
+  }
+  ).then(users => {
+    if (users === null) {
+      req.isAdmin = false
+      next();
+      return;
+    } else {
+      req.isAdmin = true
+      next();
+      return;
+    }
+  })
+}
+
 //READ_ROLE_MANAGEMENT
 function getReadRoleManagement(req, res, next) {
   req.right = ['READ_ROLE_MANAGEMENT', 'ADMIN'];
@@ -80,6 +107,7 @@ function getReadUsrView(req, res, next) {
 const authJwt = {
   verifyToken,
   hasRights,
+  isAdmin,
   getReadRoleManagement,
   getEditRole,
   getWriteOwnUsrSettings,

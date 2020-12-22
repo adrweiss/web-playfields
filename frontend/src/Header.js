@@ -3,33 +3,43 @@ import './Header.css';
 import { Link } from 'react-router-dom';
 import { logout, getCurrentUser } from "./services/auth.service"
 import { useHistory } from 'react-router-dom';
+import UserService from './services/user.service';
 
 
 
 function Header() {
-  const currentUser = getCurrentUser();
+  var currentUser = getCurrentUser();
   const history = useHistory();
+  
   var rights = []
 
   if (currentUser !== null) {
     rights = currentUser.rights
   }
 
-  const handleClick = () => {
+  const handleClickLogout = () => {
     logout()
     history.push('/login')
   }
 
-  function timeout() {
+
+  setInterval(function() {
     if (currentUser != null) {
       if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
         logout()
         history.push('/login')
       }
+      
+      UserService.getRights().then(response => {
+        if (currentUser.righs !== response.data.rights){
+          localStorage.setItem("user", JSON.stringify(currentUser));
+          window.location.reload()
+        }
+      })
     }
-  }
+  }, 300000);
 
-  timeout()
+  
 
   return (
     <div>
@@ -61,7 +71,7 @@ function Header() {
               {"User"}
             </div>
           </Link>
-
+          
           <Link to="/management" className="header__link" hidden={!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))}>
             <div>
               {"Management"}
@@ -69,7 +79,7 @@ function Header() {
           </Link>
 
           {currentUser && (
-            <Link to='/login' onClick={handleClick} className="header__link">
+            <Link to='/login' onClick={handleClickLogout} className="header__link">
               <div className='header__logout'>
                 {"Logout"}
               </div>

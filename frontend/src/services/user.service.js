@@ -2,6 +2,10 @@ import axios from "../axios";
 import authHeader from "./auth-header";
 
 const getRolesRights = () => {
+  return axios.get("/usr/roles", { headers: authHeader() });
+};
+
+const getRights = () => {
   return axios.get("/usr/rights", { headers: authHeader() });
 };
 
@@ -31,7 +35,8 @@ const UserService = {
   getRolesRights,
   deleteUsr,
   changePassword,
-  changeUsername
+  changeUsername,
+  getRights
 }
 
 export default UserService;
