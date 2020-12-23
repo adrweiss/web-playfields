@@ -8,10 +8,10 @@ export const register = (username, email, password) => {
   });
 };
 
-export const login = (username, password) => {
+export const login = (identifier, password) => {
   return axios
     .post("auth/signin", {
-      username,
+      identifier,
       password,
     })
     .then((response) => {

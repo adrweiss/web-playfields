@@ -26,10 +26,10 @@ function Login() {
   const history = useHistory();
 
   const handleClick = () => {
-    var username = document.getElementById('email').value
+    var identifier = document.getElementById('identifier').value
     var password = document.getElementById('password').value
 
-    login(username, password).then(
+    login(identifier, password).then(
       () => {
         console.log('successfull login')
         history.push('/user')
@@ -41,9 +41,7 @@ function Login() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        //console.log(resMessage)
-        //setLoading(false);
+          
         setMessage(resMessage);
       }
     );
@@ -67,8 +65,8 @@ function Login() {
             {message}
           </div>
         )}
-        <label>E-Mail:</label>
-        <input type="text" id="email" name="email" />
+        <label>Email or Username</label>
+        <input type="text" id="identifier" name="identifier" />
         <label>Password:</label>
         <input type="password" id="password" name="password" minLength="8" required />
         <Button variant="contained" color="primary" disableElevation onClick={handleClick}>
@@ -96,8 +94,8 @@ function Login() {
           <h1>Reset Password</h1>
 
           <div className='login'>
-            <label >Username:</label>
-            <input type="text" id="username" name="username" />
+            <label >E-mail:</label>
+            <input type="text" id="email" name="email" />
             <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
               Send
             </Button>
