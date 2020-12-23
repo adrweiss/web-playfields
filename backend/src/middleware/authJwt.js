@@ -104,6 +104,18 @@ function getReadUsrView(req, res, next) {
   next();
 }
 
+//READ_VIEW_LOGIN
+function getReadViewLogin(req, res, next) {
+  req.right = ['READ_VIEW_LOGIN', 'ADMIN'];
+  next();
+}
+
+//READ_VIEW_DELETE
+function getReadViewDelete(req, res, next) {
+  req.right = ['READ_VIEW_DELETE', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -112,6 +124,8 @@ const authJwt = {
   getEditRole,
   getWriteOwnUsrSettings,
   getReadUsrView,
+  getReadViewLogin,
+  getReadViewDelete,
 };
 
 export { authJwt };
