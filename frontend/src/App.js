@@ -4,7 +4,7 @@ import Header from './Header';
 import Game from './Game';
 import Home from './Home'
 import Login from './Login'
-import Management from './Management'
+import Management from './management/Management'
 import User from './User'
 import NewUsr from './NewUsr'
 import Unauthorized from './Unauthorized'

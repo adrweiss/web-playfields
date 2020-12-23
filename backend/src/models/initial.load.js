@@ -118,7 +118,7 @@ export function initialRight(Right, Role) {
       right.setRoles(role)
     })
   });
-
+  
   return initialRight
 }
 
