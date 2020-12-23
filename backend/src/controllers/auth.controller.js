@@ -1,6 +1,6 @@
 import { db } from '../models/index.js'
 import { authConfig } from '../config/auth.config.js'
-import Sequelize from 'sequelize';
+import { helper } from '../middleware/index.js'
 
 const expireInSec = 86400 // 24 hours
 //const expireInSec = 600 // 24 hours
@@ -43,9 +43,9 @@ export function signin(req, res) {
       },
     ],
     where: {
-      [Op.or]:[
-        {username: req.body.identifier},
-        {email: req.body.identifier }
+      [Op.or]: [
+        { username: req.body.identifier },
+        { email: req.body.identifier }
       ]
     }
   })
@@ -60,6 +60,8 @@ export function signin(req, res) {
       );
 
       if (!passwordIsValid) {
+        helper.addUserLoginLog(user.id, false)
+
         return res.status(401).send({
           accessToken: null,
           message: "Invalid Password!"
@@ -77,7 +79,9 @@ export function signin(req, res) {
           accessRights.push(right.name);
         });
       });
-
+      
+      helper.addUserLoginLog(user.id, true)
+      
       res.status(200).send({
         id: user.id,
         username: user.username,

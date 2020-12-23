@@ -1,21 +1,26 @@
 import { db } from '../models/index.js'
 import bcrypt from 'bcrypt';
+import { helper } from '../middleware/index.js'
 
 const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
 const deleteUsr = (req, res, next) => {
-  User.destroy({
-    where: {
-      id: req.userId
-    }
-  }).then(count => {
-    if (!count) {
-      return res.status(404).send({ error: 'No user' });
-    }
-    res.status(200).send({message: "User was deleted successfull."});
-  });
+  User.findByPk(req.userId).then(user => {
+    helper.addDeletedUserToLogs(user.email, user.username)
+    
+    User.destroy({
+      where: {
+        id: req.userId
+      }
+    }).then(count => {
+      if (!count) {
+        return res.status(404).send({ error: 'No user' });
+      }
+      res.status(200).send({ message: "User was deleted successfull." });
+    });
+  })
 }
 
 

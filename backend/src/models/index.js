@@ -4,8 +4,9 @@ import Sequelize from 'sequelize';
 import { User } from './user.model.js'
 import { Role } from './role.model.js'
 import { Right } from './right.model.js'
+import { LogsDeleted, Logs } from './logs.model.js'
 
-import { initialRole, initialRight, initialUsr } from './initial.load.js'
+import { initialLoad } from './initial.load.js'
 
 const sequelize = new Sequelize(
   config.DB,
@@ -34,6 +35,8 @@ db.sequelize = sequelize;
 db.role = Role(sequelize, Sequelize);
 db.user = User(sequelize, Sequelize);
 db.right = Right(sequelize, Sequelize);
+db.deletedUser = LogsDeleted(sequelize, Sequelize);
+db.logs = Logs(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -57,10 +60,16 @@ db.right.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
-function roleInit(role, right, user){
-  initialRole(role)
-  initialRight(right, role)
-  initialUsr(user)
+db.user.hasMany(db.logs, {
+  as: 'logs'
+})
+
+function roleInit(role, right, user, logs, deletedUser){
+  initialLoad.role(role)
+  initialLoad.right(right, role)
+  initialLoad.usr(user)
+  initialLoad.usrLogs(logs)
+  initialLoad.deleteLogs(deletedUser)
 }
 
 //db.ROLES = ["user", "admin", "manager"];

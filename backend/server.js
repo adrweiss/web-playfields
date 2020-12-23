@@ -32,8 +32,9 @@ app.use(express.json());
 
 db.sequelize.sync({ force: true }).then(() => {
     console.log('Drop and Resync Db');
-    roleInit(db.role, db.right, db.user);
+    roleInit(db.role, db.right, db.user, db.logs, db.deletedUser);
 });
+
 //db.sequelize.sync();
 
 
