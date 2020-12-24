@@ -9,7 +9,7 @@ const Role = db.role;
 const deleteUsr = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     helper.addDeletedUserToLogs(user.email, user.username)
-    
+
     User.destroy({
       where: {
         id: req.userId
@@ -115,16 +115,16 @@ const getRights = (req, res, next) => {
   }
   ).then(user => {
     const accessRights = [];
-    if (user) {
-      user.roles.forEach(role => {
-        role.rights.forEach(right => {
-          accessRights.push(right.name);
-        });
-      });
-      res.status(200).send(accessRights)
-    } else {
-      res.status(400).send({ message: 'No user in database available.' });
+    if (!user) {
+      return res.status(400).send({ message: 'No user in database available.' });
     }
+    
+    user.roles.forEach(role => {
+      role.rights.forEach(right => {
+        accessRights.push(right.name);
+      });
+    });
+    return res.status(200).send(accessRights)
   })
 }
 

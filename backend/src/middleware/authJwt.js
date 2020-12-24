@@ -42,14 +42,25 @@ function hasRights(req, res, next) {
   }
   ).then(users => {
     if (users === null) {
-      res.status(403).send({
-        message: "Require rights!"
-      });
-      return;
-    } else {
-      next();
-      return;
+      return res.status(403).send({ message: "Require rights!" });
     }
+    
+    if (users.blocked) {
+      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+    }
+
+    next();
+    return;
+  })
+}
+
+function chkBlocked(req, res, next) {
+  User.findByPk(req.userId).then(user => {
+    if (user.blocked) {
+      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+    }
+    next();
+    return;
   })
 }
 
@@ -119,6 +130,7 @@ function getReadViewDelete(req, res, next) {
 const authJwt = {
   verifyToken,
   hasRights,
+  chkBlocked,
   isAdmin,
   getReadRoleManagement,
   getEditRole,

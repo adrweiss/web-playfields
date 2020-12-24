@@ -54,6 +54,10 @@ export function signin(req, res) {
         return res.status(404).send({ message: "User Not found." });
       }
 
+      if(user.blocked) {
+        return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+      }
+      
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password

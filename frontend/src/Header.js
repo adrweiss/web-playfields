@@ -33,7 +33,7 @@ function Header() {
       UserService.getRights().then(response => {
         if (response.data.rights.length === 0) {
           logout()
-          console.log("You are blocked! ")
+          console.log("This user is blocked, please contact the admin!")
         } else {
           if (currentUser.righs !== response.data.rights) {
             localStorage.setItem("user", JSON.stringify(currentUser));
