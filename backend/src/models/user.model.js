@@ -8,6 +8,9 @@ export function User(sequelize, Sequelize){
     },
     password: {
       type: Sequelize.STRING
+    },
+    blocked: {
+      type: Sequelize.BOOLEAN
     }
   });
   return User

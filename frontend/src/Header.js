@@ -10,7 +10,7 @@ import UserService from './services/user.service';
 function Header() {
   var currentUser = getCurrentUser();
   const history = useHistory();
-  
+
   var rights = []
 
   if (currentUser !== null) {
@@ -23,23 +23,28 @@ function Header() {
   }
 
 
-  setInterval(function() {
+  setInterval(function () {
     if (currentUser != null) {
       if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
         logout()
         history.push('/login')
       }
-      
+
       UserService.getRights().then(response => {
-        if (currentUser.righs !== response.data.rights){
-          localStorage.setItem("user", JSON.stringify(currentUser));
-          window.location.reload()
+        if (response.data.rights.length === 0) {
+          logout()
+          console.log("You are blocked! ")
+        } else {
+          if (currentUser.righs !== response.data.rights) {
+            localStorage.setItem("user", JSON.stringify(currentUser));
+            window.location.reload()
+          }
         }
       })
     }
   }, 300000);
 
-  
+
 
   return (
     <div>
@@ -71,7 +76,7 @@ function Header() {
               {"User"}
             </div>
           </Link>
-          
+
           <Link to="/management" className="header__link" hidden={!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))}>
             <div>
               {"Management"}

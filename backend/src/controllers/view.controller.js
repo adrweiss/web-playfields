@@ -11,9 +11,7 @@ const getLoginData = (req, res, next) => {
     }]
   }).then(logs => {
     if (logs) {
-      console.log(logs)
       const resObj = logs.map(log => {
-
         return Object.assign(
           {},
           {

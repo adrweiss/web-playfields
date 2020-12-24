@@ -119,6 +119,38 @@ function right(Right, Role) {
     })
   });
 
+  Right.create({
+    name: "WRITE_ROLE_USR",
+    description: "You can remove or add roles from/users.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  });
+
+  Right.create({
+    name: "WRITE_USR",
+    description: "You can block or unblock users.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  });
+
+  Right.create({
+    name: "WRITE_USR_LEVEL_2",
+    description: "You can delete users or change their passwords.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  });
   return right
 }
 
@@ -126,7 +158,8 @@ function usr(User) {
   User.create({
     username: "admin",
     email: "admin@ai.de",
-    password: bcrypt.hashSync("test1234", 8)
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false
   }).then(user => {
     user.setRoles([3])
   })
@@ -134,7 +167,8 @@ function usr(User) {
   User.create({
     username: "usr",
     email: "usr@ai.de",
-    password: bcrypt.hashSync("test1234", 8)
+    password: bcrypt.hashSync("test1234", 8), 
+    blocked: false
   }).then(user => {
     user.setRoles([1])
   })
@@ -142,7 +176,17 @@ function usr(User) {
   User.create({
     username: "usr2",
     email: "usr2@ai.de",
-    password: bcrypt.hashSync("test1234", 8)
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false
+  }).then(user => {
+    user.setRoles([1])
+  })
+
+  User.create({
+    username: "usr3",
+    email: "usr3@ai.de",
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: true
   }).then(user => {
     user.setRoles([1])
   })
@@ -150,7 +194,8 @@ function usr(User) {
   User.create({
     username: "manager",
     email: "manager@ai.de",
-    password: bcrypt.hashSync("test1234", 8)
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false
   }).then(user => {
     user.setRoles([1])
     user.setRoles([2])
