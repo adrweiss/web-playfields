@@ -44,7 +44,7 @@ function hasRights(req, res, next) {
     if (users === null) {
       return res.status(403).send({ message: "Require rights!" });
     }
-    
+
     if (users.blocked) {
       return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
     }
@@ -127,6 +127,30 @@ function getReadViewDelete(req, res, next) {
   next();
 }
 
+//READ_USER_MANAGEMENT
+function getReadUserManagement(req, res, next) {
+  req.right = ['READ_USER_MANAGEMENT', 'ADMIN'];
+  next();
+}
+
+//WRITE_ROLE_USR
+function getWriteRoleUsr(req, res, next) {
+  req.right = ['WRITE_ROLE_USR', 'ADMIN'];
+  next();
+}
+
+//WRITE_USR
+function getWriteUsr(req, res, next) {
+  req.right = ['WRITE_USR', 'ADMIN'];
+  next();
+}
+
+//WRITE_USR_LEVEL_2
+function getWriteUsrLevel2(req, res, next) {
+  req.right = ['WRITE_USR_LEVEL_2', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -138,6 +162,10 @@ const authJwt = {
   getReadUsrView,
   getReadViewLogin,
   getReadViewDelete,
+  getReadUserManagement,
+  getWriteRoleUsr,
+  getWriteUsr,
+  getWriteUsrLevel2,
 };
 
 export { authJwt };

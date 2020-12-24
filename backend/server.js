@@ -7,6 +7,7 @@ import { db, roleInit } from './src/models/index.js'
 import { routsUsr } from './src/routes/user.routes.js';
 import { authRoutes } from './src/routes/auth.routes.js';
 import { routsMgtRoles } from './src/routes/mgt.role.routes.js';
+import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
 import { routsViews } from './src/routes/view.routes.js';
 
 //import pgClient from './pgQueries.js'
@@ -45,7 +46,9 @@ app.get('/', (req, res) => res.status(200).send('Health'));
 routsUsr(app)
 authRoutes(app)
 routsMgtRoles(app)
+routsMgtUsers(app)
 routsViews(app)
+
 
 
 
