@@ -64,6 +64,11 @@ db.user.hasMany(db.logs, {
   as: 'logs'
 })
 
+db.logs.belongsTo(db.user, {
+  foreignKey: "userId",
+  as: "user",
+});
+
 function roleInit(role, right, user, logs, deletedUser){
   initialLoad.role(role)
   initialLoad.right(right, role)
