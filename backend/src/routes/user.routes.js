@@ -30,7 +30,8 @@ export function routsUsr(app) {
     "/api/usr/mgt",
     [authJwt.verifyToken,
     authJwt.getWriteOwnUsrSettings,
-    authJwt.hasRights,],
+    authJwt.hasRights,
+    authJwt.isAdmin,],
     userFunctions.deleteUsr);
 
   app.get(

@@ -7,6 +7,11 @@ const Right = db.right;
 const Role = db.role;
 
 const deleteUsr = (req, res, next) => {
+  // function is missing  -> admins can't delete his self
+  if (req.isAdmin) {
+    return res.status(400).send({ message: "With the role/right admin it is not allowes to delete his account by hisself. Ask another admin." });
+  }
+
   User.findByPk(req.userId).then(user => {
     helper.addDeletedUserToLogs(user.email, user.username)
 

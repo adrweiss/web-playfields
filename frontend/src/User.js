@@ -208,7 +208,7 @@ function User() {
             </div>
             <div className="middleline"></div>
             <div className='delete__profile'>
-              <Button variant="contained" color="secondary" startIcon={<DeleteIcon />} onClick={handleClickDeleteUsr}>
+              <Button variant="contained" color="secondary" disabled={rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={handleClickDeleteUsr}>
                 Delete Profile
               </Button>
             </div>

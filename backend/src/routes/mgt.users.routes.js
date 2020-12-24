@@ -15,8 +15,7 @@ export function routsMgtUsers(app) {
     "/api/mgt/user",
     [authJwt.verifyToken,
     authJwt.getReadUserManagement,
-    authJwt.hasRights,
-    authJwt.isAdmin,],
+    authJwt.hasRights,],
     mgtUserFunctions.getUserInfos,
   );
 

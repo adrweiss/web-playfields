@@ -165,6 +165,15 @@ function usr(User) {
   })
 
   User.create({
+    username: "admin2",
+    email: "admin2@ai.de",
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false
+  }).then(user => {
+    user.setRoles([3])
+  })
+
+  User.create({
     username: "usr",
     email: "usr@ai.de",
     password: bcrypt.hashSync("test1234", 8), 
