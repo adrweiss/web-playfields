@@ -7,6 +7,8 @@ import { db, roleInit } from './src/models/index.js'
 import { routsUsr } from './src/routes/user.routes.js';
 import { authRoutes } from './src/routes/auth.routes.js';
 import { routsMgtRoles } from './src/routes/mgt.role.routes.js';
+import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
+import { routsViews } from './src/routes/view.routes.js';
 
 //import pgClient from './pgQueries.js'
 //import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
@@ -32,8 +34,9 @@ app.use(express.json());
 
 db.sequelize.sync({ force: true }).then(() => {
     console.log('Drop and Resync Db');
-    roleInit(db.role, db.right, db.user);
+    roleInit(db.role, db.right, db.user, db.logs, db.deletedUser);
 });
+
 //db.sequelize.sync();
 
 
@@ -43,7 +46,8 @@ app.get('/', (req, res) => res.status(200).send('Health'));
 routsUsr(app)
 authRoutes(app)
 routsMgtRoles(app)
-
+routsMgtUsers(app)
+routsViews(app)
 
 
 
