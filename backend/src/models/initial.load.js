@@ -159,7 +159,8 @@ function usr(User) {
     username: "admin",
     email: "admin@ai.de",
     password: bcrypt.hashSync("test1234", 8),
-    blocked: false
+    blocked: false, 
+    validated: false
   }).then(user => {
     user.setRoles([3])
   })
@@ -168,7 +169,8 @@ function usr(User) {
     username: "admin2",
     email: "admin2@ai.de",
     password: bcrypt.hashSync("test1234", 8),
-    blocked: false
+    blocked: false,
+    validated: false
   }).then(user => {
     user.setRoles([3])
   })
@@ -177,7 +179,8 @@ function usr(User) {
     username: "usr",
     email: "usr@ai.de",
     password: bcrypt.hashSync("test1234", 8), 
-    blocked: false
+    blocked: false,
+    validated: false
   }).then(user => {
     user.setRoles([1])
   })
@@ -186,7 +189,8 @@ function usr(User) {
     username: "usr2",
     email: "usr2@ai.de",
     password: bcrypt.hashSync("test1234", 8),
-    blocked: false
+    blocked: false,
+    validated: false
   }).then(user => {
     user.setRoles([1])
   })
@@ -195,7 +199,8 @@ function usr(User) {
     username: "usr3",
     email: "usr3@ai.de",
     password: bcrypt.hashSync("test1234", 8),
-    blocked: true
+    blocked: true,
+    validated: false
   }).then(user => {
     user.setRoles([1])
   })
@@ -204,7 +209,8 @@ function usr(User) {
     username: "manager",
     email: "manager@ai.de",
     password: bcrypt.hashSync("test1234", 8),
-    blocked: false
+    blocked: false,
+    validated: false
   }).then(user => {
     user.setRoles([1])
     user.setRoles([2])

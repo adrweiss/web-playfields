@@ -6,6 +6,8 @@ const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
+const Op = db.Sequelize.Op;
+
 function verifyToken(req, res, next) {
   let token = req.headers["x-access-token"];
 
@@ -22,9 +24,23 @@ function verifyToken(req, res, next) {
       });
     }
     req.userId = decoded.id;
+    if (chkBlocked(decoded.id)) {
+      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+    }
+
     next();
   });
 };
+
+function chkBlocked(userId) {
+  User.findByPk(userId).then(user => {
+    if (user.blocked) {
+      return true;
+    }
+
+    return false;
+  })
+}
 
 // default function to check necessary rights
 function hasRights(req, res, next) {
@@ -49,16 +65,6 @@ function hasRights(req, res, next) {
       return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
     }
 
-    next();
-    return;
-  })
-}
-
-function chkBlocked(req, res, next) {
-  User.findByPk(req.userId).then(user => {
-    if (user.blocked) {
-      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
-    }
     next();
     return;
   })
@@ -89,6 +95,35 @@ function isAdmin(req, res, next) {
       return;
     }
   })
+}
+
+// Check if requested user is admin
+function requireAdmin(req, res, next) {
+  if (req.isAdmin) {
+    next();
+    return;
+  }
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+          where: { [Op.not]: { name: "ADMIN" } }
+        }],
+      },
+    ],
+    where: { id: [req.body.userId] }
+  }
+  ).then(user => {
+    if (!user) {
+      return res.status(404).send({ message: "User with admin rights can only be changed by other admins." });
+    } else {
+      next();
+      return;
+    }
+  })
+
 }
 
 //READ_ROLE_MANAGEMENT
@@ -154,8 +189,8 @@ function getWriteUsrLevel2(req, res, next) {
 const authJwt = {
   verifyToken,
   hasRights,
-  chkBlocked,
   isAdmin,
+  requireAdmin,
   getReadRoleManagement,
   getEditRole,
   getWriteOwnUsrSettings,

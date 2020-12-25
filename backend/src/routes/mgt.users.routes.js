@@ -19,24 +19,37 @@ export function routsMgtUsers(app) {
     mgtUserFunctions.getUserInfos,
   );
 
-  // remove role 
-  app.put(
-    "/api/mgt/user/removerole",
+  // delete usr
+  app.delete(
+    "/api/mgt/user",
     [authJwt.verifyToken,
-    authJwt.getWriteRoleUsr,
+    authJwt.getWriteUsrLevel2,
     authJwt.hasRights,
-    authJwt.isAdmin,],
-    mgtUserFunctions.removeRoleFromUser,
+    authJwt.isAdmin,
+    authJwt.requireAdmin,],
+    mgtUserFunctions.deleteUser,
   );
 
-  // add role 
+  // block usr 
   app.put(
-    "/api/mgt/user/addrole",
+    "/api/mgt/user",
+    [authJwt.verifyToken,
+    authJwt.getWriteUsr,
+    authJwt.hasRights,
+    authJwt.isAdmin,
+    authJwt.requireAdmin,],
+    mgtUserFunctions.changeBlockStatusFromUser,
+  );
+
+  // change role 
+  app.put(
+    "/api/mgt/user/role",
     [authJwt.verifyToken,
     authJwt.getWriteRoleUsr,
     authJwt.hasRights,
-    authJwt.isAdmin,],
-    mgtUserFunctions.addRoleToUser,
+    authJwt.isAdmin,
+    authJwt.requireAdmin,],
+    mgtUserFunctions.changeRole,
   );
 
   // change pw 
@@ -45,28 +58,9 @@ export function routsMgtUsers(app) {
     [authJwt.verifyToken,
     authJwt.getWriteUsrLevel2,
     authJwt.hasRights,
-    authJwt.isAdmin,],
+    authJwt.isAdmin,
+    authJwt.requireAdmin,],
     mgtUserFunctions.changePasswordFromUser,
-  );
-
-  // delete usr
-  app.delete(
-    "/api/mgt/user",
-    [authJwt.verifyToken,
-    authJwt.getWriteUsrLevel2,
-    authJwt.hasRights,
-    authJwt.isAdmin,],
-    mgtUserFunctions.deleteUser,
-  );
-
-  // block usr 
-  app.delete(
-    "/api/mgt/user",
-    [authJwt.verifyToken,
-    authJwt.getWriteUsr,
-    authJwt.hasRights,
-    authJwt.isAdmin,],
-    mgtUserFunctions.changeBlockStatusFromUser,
   );
 }
 

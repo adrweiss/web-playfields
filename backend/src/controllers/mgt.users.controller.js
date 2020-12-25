@@ -64,46 +64,33 @@ const getUserInfos = (req, res, next) => {
   })
 }
 
-const removeRoleFromUser = (req, res, next) => {
-  res.status(200).send({ message: "remove role from user." });
-}
-
-const addRoleToUser = (req, res, next) => {
-  res.status(200).send({ message: "add role to user." });
-}
-
-const changePasswordFromUser = (req, res, next) => {
-  res.status(200).send({ message: "change Password from user." });
-}
-
 const deleteUser = (req, res, next) => {
-  // function is missing  -> only admins can delete admins
-
   if (req.body.userId === req.userId) {
     return res.status(400).send({ message: 'Its not allowed to delete your own user' });
   }
 
   User.findByPk(req.body.userId).then(user => {
+    helper.addDeletedUserToLogs(user.email, user.username)
 
-    user.getRoles().then(role => {
-      if (req.isAdmin || !role[0].name === 'ADMIN') {
-        helper.addDeletedUserToLogs(user.email, user.username)
-
-        User.destroy({
-          where: {
-            id: req.body.userId
-          }
-        }).then(count => {
-          if (!count) {
-            return res.status(404).send({ error: 'No user' });
-          }
-          res.status(200).send({ message: "User was deleted successfull." });
-        });
-      } else {
-        return res.status(404).send({ message: 'Requier admin rights.' });
+    User.destroy({
+      where: {
+        id: req.body.userId
       }
-    })
+    }).then(count => {
+      if (!count) {
+        return res.status(404).send({ error: 'No user' });
+      }
+      res.status(200).send({ message: "User was deleted successfull." });
+    });
   })
+}
+
+const changeRole = (req, res, next) => {
+  res.status(200).send({ message: "add role to user." });
+}
+
+const changePasswordFromUser = (req, res, next) => {
+  res.status(200).send({ message: "change Password from user." });
 }
 
 const changeBlockStatusFromUser = (req, res, next) => {
@@ -113,8 +100,7 @@ const changeBlockStatusFromUser = (req, res, next) => {
 
 const mgtUserFunctions = {
   getUserInfos,
-  removeRoleFromUser,
-  addRoleToUser,
+  changeRole,
   changePasswordFromUser,
   deleteUser,
   changeBlockStatusFromUser,

@@ -5,6 +5,7 @@ import { User } from './user.model.js'
 import { Role } from './role.model.js'
 import { Right } from './right.model.js'
 import { LogsDeleted, Logs } from './logs.model.js'
+import { Validate } from './validate.model.js'
 
 import { initialLoad } from './initial.load.js'
 
@@ -37,7 +38,10 @@ db.user = User(sequelize, Sequelize);
 db.right = Right(sequelize, Sequelize);
 db.deletedUser = LogsDeleted(sequelize, Sequelize);
 db.logs = Logs(sequelize, Sequelize);
+db.validate = Validate(sequelize, Sequelize)
 
+
+//--
 db.role.belongsToMany(db.user, {
   through: "user_roles",
   foreignKey: "roleId",
@@ -49,6 +53,7 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
+//--
 db.role.belongsToMany(db.right, {
   through: "roles_right",
   foreignKey: "roleId",
@@ -60,11 +65,20 @@ db.right.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
+//--
 db.user.hasMany(db.logs, {
   as: 'logs'
 })
-
 db.logs.belongsTo(db.user, {
+  foreignKey: "userId",
+  as: "user",
+});
+
+//--
+db.user.hasMany(db.validate, {
+  as: 'valid'
+})
+db.validate.belongsTo(db.user, {
   foreignKey: "userId",
   as: "user",
 });

@@ -11,6 +11,9 @@ export function User(sequelize, Sequelize){
     },
     blocked: {
       type: Sequelize.BOOLEAN
+    }, 
+    validated: {
+      type: Sequelize.BOOLEAN
     }
   });
   return User

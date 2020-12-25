@@ -43,9 +43,6 @@ export function routsUsr(app) {
 
   app.get(
     "/api/usr/rights",
-    [authJwt.verifyToken,
-    authJwt.chkBlocked,],
+    [authJwt.verifyToken,],
     userFunctions.getRights);
-
-  // get rights.
 };
