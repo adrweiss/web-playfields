@@ -41,17 +41,6 @@ export function routsMgtUsers(app) {
     mgtUserFunctions.changeBlockStatusFromUser,
   );
 
-  // change role 
-  app.put(
-    "/api/mgt/user/role",
-    [authJwt.verifyToken,
-    authJwt.getWriteRoleUsr,
-    authJwt.hasRights,
-    authJwt.isAdmin,
-    authJwt.requireAdmin,],
-    mgtUserFunctions.changeRole,
-  );
-
   // change pw 
   app.put(
     "/api/mgt/user/chgpw",
@@ -61,6 +50,17 @@ export function routsMgtUsers(app) {
     authJwt.isAdmin,
     authJwt.requireAdmin,],
     mgtUserFunctions.changePasswordFromUser,
+  );
+
+  // change role 
+  app.put(
+    "/api/mgt/user/role",
+    [authJwt.verifyToken,
+    authJwt.getWriteRoleUsr,
+    authJwt.hasRights,
+    authJwt.isAdmin,
+    authJwt.requireAdmin,],
+    mgtUserFunctions.changeRole,
   );
 }
 
