@@ -6,6 +6,8 @@ const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
+const Op = db.Sequelize.Op;
+
 function verifyToken(req, res, next) {
   let token = req.headers["x-access-token"];
 
@@ -22,9 +24,23 @@ function verifyToken(req, res, next) {
       });
     }
     req.userId = decoded.id;
+    if (chkBlocked(decoded.id)) {
+      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+    }
+
     next();
   });
 };
+
+function chkBlocked(userId) {
+  User.findByPk(userId).then(user => {
+    if (user.blocked) {
+      return true;
+    }
+
+    return false;
+  })
+}
 
 // default function to check necessary rights
 function hasRights(req, res, next) {
@@ -42,14 +58,15 @@ function hasRights(req, res, next) {
   }
   ).then(users => {
     if (users === null) {
-      res.status(403).send({
-        message: "Require rights!"
-      });
-      return;
-    } else {
-      next();
-      return;
+      return res.status(403).send({ message: "Require rights!" });
     }
+
+    if (users.blocked) {
+      return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
+    }
+
+    next();
+    return;
   })
 }
 
@@ -80,6 +97,35 @@ function isAdmin(req, res, next) {
   })
 }
 
+// Check if requested user is admin
+function requireAdmin(req, res, next) {
+  if (req.isAdmin) {
+    next();
+    return;
+  }
+  User.findOne({
+    include: [
+      {
+        model: Role, as: 'roles',
+        include: [{
+          model: Right, as: 'rights',
+          where: { [Op.not]: { name: "ADMIN" } }
+        }],
+      },
+    ],
+    where: { id: [req.body.userId] }
+  }
+  ).then(user => {
+    if (!user) {
+      return res.status(404).send({ message: "User with admin rights can only be changed by other admins." });
+    } else {
+      next();
+      return;
+    }
+  })
+
+}
+
 //READ_ROLE_MANAGEMENT
 function getReadRoleManagement(req, res, next) {
   req.right = ['READ_ROLE_MANAGEMENT', 'ADMIN'];
@@ -104,14 +150,57 @@ function getReadUsrView(req, res, next) {
   next();
 }
 
+//READ_VIEW_LOGIN
+function getReadViewLogin(req, res, next) {
+  req.right = ['READ_VIEW_LOGIN', 'ADMIN'];
+  next();
+}
+
+//READ_VIEW_DELETE
+function getReadViewDelete(req, res, next) {
+  req.right = ['READ_VIEW_DELETE', 'ADMIN'];
+  next();
+}
+
+//READ_USER_MANAGEMENT
+function getReadUserManagement(req, res, next) {
+  req.right = ['READ_USER_MANAGEMENT', 'ADMIN'];
+  next();
+}
+
+//WRITE_ROLE_USR
+function getWriteRoleUsr(req, res, next) {
+  req.right = ['WRITE_ROLE_USR', 'ADMIN'];
+  next();
+}
+
+//WRITE_USR
+function getWriteUsr(req, res, next) {
+  req.right = ['WRITE_USR', 'ADMIN'];
+  next();
+}
+
+//WRITE_USR_LEVEL_2
+function getWriteUsrLevel2(req, res, next) {
+  req.right = ['WRITE_USR_LEVEL_2', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
   isAdmin,
+  requireAdmin,
   getReadRoleManagement,
   getEditRole,
   getWriteOwnUsrSettings,
   getReadUsrView,
+  getReadViewLogin,
+  getReadViewDelete,
+  getReadUserManagement,
+  getWriteRoleUsr,
+  getWriteUsr,
+  getWriteUsrLevel2,
 };
 
 export { authJwt };

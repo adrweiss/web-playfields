@@ -1,21 +1,31 @@
 import { db } from '../models/index.js'
 import bcrypt from 'bcrypt';
+import { helper } from '../middleware/index.js'
 
 const User = db.user;
 const Right = db.right;
 const Role = db.role;
 
 const deleteUsr = (req, res, next) => {
-  User.destroy({
-    where: {
-      id: req.userId
-    }
-  }).then(count => {
-    if (!count) {
-      return res.status(404).send({ error: 'No user' });
-    }
-    res.status(200).send({message: "User was deleted successfull."});
-  });
+  // function is missing  -> admins can't delete his self
+  if (req.isAdmin) {
+    return res.status(400).send({ message: "With the role/right admin it is not allowes to delete his account by hisself. Ask another admin." });
+  }
+
+  User.findByPk(req.userId).then(user => {
+    helper.addDeletedUserToLogs(user.email, user.username)
+
+    User.destroy({
+      where: {
+        id: req.userId
+      }
+    }).then(count => {
+      if (!count) {
+        return res.status(404).send({ error: 'No user' });
+      }
+      res.status(200).send({ message: "User was deleted successfull." });
+    });
+  })
 }
 
 
@@ -110,16 +120,16 @@ const getRights = (req, res, next) => {
   }
   ).then(user => {
     const accessRights = [];
-    if (user) {
-      user.roles.forEach(role => {
-        role.rights.forEach(right => {
-          accessRights.push(right.name);
-        });
-      });
-      res.status(200).send(accessRights)
-    } else {
-      res.status(400).send({ message: 'No user in database available.' });
+    if (!user) {
+      return res.status(400).send({ message: 'No user in database available.' });
     }
+    
+    user.roles.forEach(role => {
+      role.rights.forEach(right => {
+        accessRights.push(right.name);
+      });
+    });
+    return res.status(200).send(accessRights)
   })
 }
 
