@@ -153,8 +153,6 @@ const changeRole = (req, res, next) => {
   })
 }
 
-
-
 const mgtUserFunctions = {
   getUserInfos,
   changeRole,

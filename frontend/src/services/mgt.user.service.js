@@ -1,0 +1,52 @@
+import axios from "../axios";
+import authHeader from "./auth-header";
+
+const getUserInfos = () => {
+  return axios.get("/mgt/user", { headers: authHeader() });
+};
+
+const deleteUsr = (userId) => {
+  return axios.delete("/mgt/user",
+    {
+      "userId": userId
+    },
+    { headers: authHeader() });
+};
+
+const blockUsr = (userId, blocked) => {
+  return axios.put("/mgt/user",
+    {
+      "userId": userId,
+      "blocked": blocked
+    },
+    { headers: authHeader() });
+};
+
+const changePwFromUser = (userId, pwd) => {
+  return axios.put("/mgt/user/chgpw",
+    {
+      "userId": userId,
+      "pwd": pwd
+    },
+    { headers: authHeader() });
+};
+
+const changeRoleFromUser = (userId, func, role) => {
+  return axios.put("/mgt/user/chgpw",
+    {
+      "userId": userId,
+      "function": func, 
+      "role": role
+    },
+    { headers: authHeader() });
+};
+
+const ManagementUserService = {
+  getUserInfos,
+  deleteUsr,
+  blockUsr,
+  changePwFromUser,
+  changeRoleFromUser,
+}
+
+export default ManagementUserService;
