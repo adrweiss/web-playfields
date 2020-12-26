@@ -37,7 +37,7 @@ function Management() {
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (anchorRef.current && anchorRef.current.contains(event?.target)) {
       return;
     }
     setOpen(false);
@@ -76,22 +76,23 @@ function Management() {
   }
 
   const handleclickChangeSubpageLogin = (page) => {
-    if (subPage === 2) {
+    if (subPage === 3) {
       setSubPage(0)
     } else {
       setSubPage(3)
     }
-    //handleClose()
+    handleClose()
   }
 
   const handleclickChangeSubpageDelete = (page) => {
-    if (subPage === 2) {
+    if (subPage === 4) {
       setSubPage(0)
     } else {
       setSubPage(4)
     }
-    //handleClose()
+    handleClose()
   }
+
   return (
     <div>
       <h1>The side for the admin to controll access.</h1>

@@ -1,0 +1,9 @@
+.login__table__container {
+    width: 600px;
+    height: 640px;
+    display: flex;
+}
+
+.MuiDataGrid-columnsContainer {
+    background-color: lightgrey;
+}
