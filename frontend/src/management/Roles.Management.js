@@ -58,17 +58,17 @@ function Row(props) {
   const [roleDescriptionTable, setRoleDescriptionTable] = useState(role.role_description);
   const [currentRights, setCurrentRights] = useState(role.rights);
 
-  
-  var rightsRole = currentRights 
+
+  var rightsRole = currentRights
   const temp = []
-  
+
   rightsRole.forEach(right => {
     temp.push(right.right_id)
   })
-  
+
   rightsRole = allRights.filter((el) => !temp.includes(el.right_id))
 
-  
+
 
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
@@ -146,7 +146,7 @@ function Row(props) {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          setMessageEdit(_content);
+        setMessageEdit(_content);
       })
   }
 
@@ -226,7 +226,8 @@ function Row(props) {
               inputRef={element => setroleName(element)}
               variant="outlined" />
 
-            <TextField className='input__field__desciption'
+            <TextField
+              className='input__field__desciption'
               label="Role Description"
               margin="normal"
               defaultValue={roleDescriptionTable}
@@ -311,7 +312,7 @@ function Row(props) {
           )}
           <h3>Delete {roleNameTable}?</h3>
           <p>Are you sure that you want to delete the Role "{roleNameTable}"?</p>
-          <div/>
+          <div />
           <Button variant="contained" onClick={deleteRole} color="secondary" disabled={deleteButton}>Delete</Button>
           <Button variant="contained" onClick={modaDeleteRole}>Close</Button>
         </div>
@@ -360,6 +361,9 @@ function RolesOverview() {
       })
   }, [])
 
+  setInterval(function () {
+    setMessage("")
+  }, 120000);
 
   function openModalCreateRole() {
     setAllRightsforModel(allRights)
@@ -428,6 +432,7 @@ function RolesOverview() {
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
+      Seach function is missing
       {message && (
         <div className="response">
           {message}
@@ -476,7 +481,8 @@ function RolesOverview() {
               inputRef={element => setroleName(element)}
               variant="outlined" />
 
-            <TextField className='input__field__desciption'
+            <TextField
+              className='input__field__desciption'
               label="Role Description"
               margin="normal"
               inputRef={element => setRoleDescription(element)}

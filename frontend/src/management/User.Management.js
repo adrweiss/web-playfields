@@ -18,6 +18,8 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
+import TextField from '@material-ui/core/TextField';
+
 Modal.setAppElement('body')
 
 const customStyles = {
@@ -36,9 +38,12 @@ function UserOverview() {
   const [userData, setUserData] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
   const [message, setMessage] = useState("");
+  const [messageModal, setMessageModal] = useState("");
   const [modalUser, setModalUser] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [NewPasswordRepeat, setNewPasswordRepeat] = useState(false);
+  const [newPassword, setNewPassword] = useState(false);
 
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
@@ -56,7 +61,13 @@ function UserOverview() {
       })
   }, [])
 
+  setInterval(function () {
+    setMessageModal("")
+    setMessage("")
+  }, 120000);
+
   function getData() {
+    setMessage("")
     ManagementUserService.getUserInfos().then((response) => {
       setUserData(response.data)
     },
@@ -74,8 +85,8 @@ function UserOverview() {
 
   const blockUser = (event, userId, blocked) => {
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
-      setMessage(response.data.message)
       getData()
+      setMessage(response.data.message)
     },
       (error) => {
         const _content =
@@ -89,12 +100,10 @@ function UserOverview() {
       })
   }
 
-  const deleteUser = () => {
-    
+  function deleteUser() {
     ManagementUserService.deleteUsr(selectedUser[0]).then((response) => {
       setMessage(response.data.message)
-      setSelectedUser([])
-      setModalDelete(!modalDelete)
+      closeModalDeleteUser()
       getData()
     },
       (error) => {
@@ -106,6 +115,35 @@ function UserOverview() {
           error.toString();
 
         setMessage(_content);
+        closeModalDeleteUser()
+      })
+  }
+
+  function changePassword() {
+    if (newPassword.value !== NewPasswordRepeat.value) {
+      setMessageModal("The passwords does not match.")
+      return
+    }
+
+    if (newPassword.value.length === 0) {
+      setMessageModal("The passwords has the length of 0.")
+      return
+    }
+    
+    ManagementUserService.changePwFromUser(selectedUser[0], newPassword.value).then((response) => {
+      setMessage(response.data.message)
+      closeModalPassword()
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(_content);
+        closeModalPassword()
       })
   }
 
@@ -113,11 +151,20 @@ function UserOverview() {
     setModalUser(!modalUser)
   }
 
-  const interactModalPassword = (event, userid) => {
+  const openModalPassword = (event, userId, userName) => {
+    setMessageModal("")
+    setMessage("")
+    setSelectedUser([userId, userName])
+    setModalPassword(!modalPassword)
+  }
+
+  const closeModalPassword = () => {
+    setSelectedUser([])
     setModalPassword(!modalPassword)
   }
 
   const openModalDeleteUser = (event, userId, userName) => {
+    setMessage("")
     setSelectedUser([userId, userName])
     setModalDelete(!modalDelete)
   }
@@ -131,6 +178,7 @@ function UserOverview() {
   return (
     <div>
       <h2>The overview over all users</h2>
+      Seach function is missing
       {message && (
         <div className="response">
           {message}
@@ -176,7 +224,7 @@ function UserOverview() {
                 </TableCell>
 
                 <TableCell align="left">
-                  <Button onClick={(event) => interactModalPassword(event, row.user_id)}>
+                  <Button onClick={(event) => openModalPassword(event, row.user_id, row.username)}>
                     <Tooltip title="Change password from user" aria-label="delete_user">
                       <VpnKeyIcon fontSize='small' />
                     </Tooltip>
@@ -196,12 +244,49 @@ function UserOverview() {
         <div className='modal__delete'>
           <h3>Delete User {selectedUser && (selectedUser[1])}</h3>
           <p>Are you sure that you want to delete your the User {selectedUser && (selectedUser[1])}?</p>
-          
-          <div/>
+
+          <div />
           <Button variant="contained" onClick={deleteUser} color="secondary">Delete</Button>
           <Button variant="contained" onClick={closeModalDeleteUser}>Close</Button>
         </div>
       </Modal>
+
+      <Modal
+        isOpen={modalPassword}
+        onRequestClose={closeModalPassword}
+        style={customStyles}
+        contentLabel="handle_user_password"
+      >
+        <div className='modal__change__passsword'>
+          {messageModal && (
+            <div className="response">
+              {messageModal}
+            </div>
+          )}
+          <h3>Change password</h3>
+          <p>Change password from user {selectedUser && (selectedUser[1])}.</p>
+          <TextField
+            className="input__password__modal"
+            label="Password"
+            type="password"
+            inputRef={element => setNewPassword(element)}
+            variant="outlined"
+          />
+
+          <TextField
+            className="input__password__modal"
+            label="Repeat Password"
+            type="password"
+            margin="normal"
+            inputRef={element => setNewPasswordRepeat(element)}
+            variant="outlined"
+          />
+
+          <Button variant="contained" onClick={changePassword} color="primary">Change</Button>
+          <Button variant="contained" onClick={closeModalPassword}>Close</Button>
+        </div>
+      </Modal>
+
       <Modal
         isOpen={modalUser}
         onRequestClose={interactModalUser}
@@ -210,16 +295,6 @@ function UserOverview() {
       >
         <div>
           <h3>change roles.</h3>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={modalPassword}
-        onRequestClose={interactModalPassword}
-        style={customStyles}
-        contentLabel="handle_user_password"
-      >
-        <div>
-          <h3>change password</h3>
         </div>
       </Modal>
     </div>

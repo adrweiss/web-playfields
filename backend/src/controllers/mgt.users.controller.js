@@ -146,7 +146,7 @@ const changeRole = (req, res, next) => {
       }).catch(err => {
         return res.status(500).send({ message: 'Role does not exists.' });
       });
-      
+
     } else {
       return res.status(200).send({ message: 'No valid function set.' });
     }

@@ -18,11 +18,11 @@ const blockUsr = (userId, blocked) => {
     { headers: authHeader() });
 };
 
-const changePwFromUser = (userId, pwd) => {
+const changePwFromUser = (userId, newPassword) => {
   return axios.put("/mgt/user/chgpw",
     {
       "userId": userId,
-      "pwd": pwd
+      "pwd": newPassword
     },
     { headers: authHeader() });
 };
