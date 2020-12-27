@@ -6,6 +6,9 @@ import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip';
 import CachedIcon from '@material-ui/icons/Cached';
+import SearchIcon from '@material-ui/icons/Search';
+
+import TextField from '@material-ui/core/TextField';
 
 const columns = [
   { field: 'usr_username', headerName: 'Username', width: 150 },
@@ -57,13 +60,25 @@ function DeleteManagement() {
 
   return (
     <div className='delete__table__container'>
-      Seach and filter function is missing
+      <div className="view__header">
+        <Button onClick={reloadData}>
+          <Tooltip title="Reload data" aria-label="reload">
+            <CachedIcon fontSize="large" />
+          </Tooltip>
+        </Button>
+        <TextField
+          className='search__bar__view'
+          id="outlined-search"
+          label="Search field"
+          type="search"
+          variant="outlined" />
+        <Button>
+          <Tooltip title="Search for user" aria-label="search">
+            <SearchIcon fontSize="large" />
+          </Tooltip>
+        </Button>
 
-      <Button onClick={reloadData}>
-        <Tooltip title="Reload data" aria-label="add">
-          <CachedIcon />
-        </Tooltip>
-      </Button>
+      </div>
 
       {deleteData && (
         <DataGrid rows={deleteData} sortModel={sortModel} columns={columns} pageSize={10} />

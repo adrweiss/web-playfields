@@ -1,9 +1,18 @@
 .login__table__container {
-    width: 600px;
+    margin: 0 auto;
+    width: 660px;
     height: 640px;
-    display: flex;
+    text-align: center;
 }
 
 .MuiDataGrid-columnsContainer {
     background-color: lightgrey;
+}
+
+.view__header {
+    margin-bottom: 10px;
+}
+
+.search__bar__view {
+    width: 80%;
 }

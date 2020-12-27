@@ -83,6 +83,15 @@ function UserOverview() {
       })
   }
 
+  function greateRoleString (roles) {
+    const roleNames = []
+    roles.forEach(role => {
+      roleNames.push(role.role_name)
+    })
+    
+    return "(" + roleNames.join(', ') + ")"
+  }
+
   const blockUser = (event, userId, blocked) => {
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
       getData()
@@ -129,7 +138,7 @@ function UserOverview() {
       setMessageModal("The passwords has the length of 0.")
       return
     }
-    
+
     ManagementUserService.changePwFromUser(selectedUser[0], newPassword.value).then((response) => {
       setMessage(response.data.message)
       closeModalPassword()
@@ -193,9 +202,9 @@ function UserOverview() {
               <TableCell align="left" >Roles</TableCell>
               <TableCell align="left" width="200px" >Created</TableCell>
               <TableCell align="left" width="200px">Last Update</TableCell>
-              <TableCell align="center" width="50px">Block</TableCell>
-              <TableCell align="center" width="50px">Delete</TableCell>
-              <TableCell align="center" width="50px">Password</TableCell>
+              <TableCell align="center" >Block</TableCell>
+              <TableCell align="center" >Delete</TableCell>
+              <TableCell align="center">Password</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -203,7 +212,7 @@ function UserOverview() {
               <TableRow key={row.user_id}>
                 <TableCell onClick={interactModalUser} align="left">{row.username}</TableCell>
                 <TableCell onClick={interactModalUser} align="left">{row.user_mail}</TableCell>
-                <TableCell onClick={interactModalUser} align="left">{"roles"}</TableCell>
+                <TableCell onClick={interactModalUser} align="left">{greateRoleString(row.roles)}</TableCell>
                 <TableCell onClick={interactModalUser} align="left">{row.created}</TableCell>
                 <TableCell onClick={interactModalUser} align="left">{row.lastChange}</TableCell>
 
@@ -223,7 +232,7 @@ function UserOverview() {
                   </Button>
                 </TableCell>
 
-                <TableCell align="left">
+                <TableCell align="center">
                   <Button onClick={(event) => openModalPassword(event, row.user_id, row.username)}>
                     <Tooltip title="Change password from user" aria-label="delete_user">
                       <VpnKeyIcon fontSize='small' />

@@ -6,6 +6,9 @@ import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip';
 import CachedIcon from '@material-ui/icons/Cached';
+import SearchIcon from '@material-ui/icons/Search';
+
+import TextField from '@material-ui/core/TextField';
 
 const columns = [
   { field: 'user', headerName: 'Username', width: 150, description: 'If no value is set, the user is already deleted.' },
@@ -57,14 +60,24 @@ function LoginManagement() {
 
   return (
     <div className='login__table__container'>
-      Seach and filter function is missing
-
-      <Button onClick={reloadData}>
-        <Tooltip title="Reload data" aria-label="add">
-          <CachedIcon />
-        </Tooltip>
-      </Button>
-
+      <div className="view__header">
+        <Button onClick={reloadData}>
+          <Tooltip title="Reload data" aria-label="add">
+            <CachedIcon />
+          </Tooltip>
+        </Button>
+        <TextField
+          className='search__bar__view'
+          id="outlined-search"
+          label="Search field"
+          type="search"
+          variant="outlined" />
+        <Button>
+          <Tooltip title="Search for user" aria-label="search">
+            <SearchIcon fontSize="large" />
+          </Tooltip>
+        </Button>
+      </div>
       {loginData && (
         <DataGrid rows={loginData} sortModel={sortModel} columns={columns} pageSize={10} />
       )}
