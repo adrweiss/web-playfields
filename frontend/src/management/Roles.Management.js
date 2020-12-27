@@ -24,6 +24,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
 
 Modal.setAppElement('body')
 
@@ -432,12 +433,26 @@ function RolesOverview() {
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
-      Seach function is missing
+
       {message && (
         <div className="response">
           {message}
         </div>
       )}
+      <div className="management__header">
+        <TextField
+          className='search__bar__management'
+          id="outlined-search"
+          label="Search field"
+          type="search"
+          size="small"
+          variant="outlined" />
+        <Button>
+          <Tooltip title="Search for Role" aria-label="search">
+            <SearchIcon />
+          </Tooltip>
+        </Button>
+      </div>
       <TableContainer>
         <Table>
           <TableHead>

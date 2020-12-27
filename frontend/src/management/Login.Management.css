@@ -8,11 +8,3 @@
 .MuiDataGrid-columnsContainer {
     background-color: lightgrey;
 }
-
-.view__header {
-    margin-bottom: 10px;
-}
-
-.search__bar__view {
-    width: 80%;
-}

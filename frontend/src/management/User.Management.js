@@ -17,6 +17,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import SearchIcon from '@material-ui/icons/Search';
 
 import TextField from '@material-ui/core/TextField';
 
@@ -83,12 +84,12 @@ function UserOverview() {
       })
   }
 
-  function greateRoleString (roles) {
+  function greateRoleString(roles) {
     const roleNames = []
     roles.forEach(role => {
       roleNames.push(role.role_name)
     })
-    
+
     return "(" + roleNames.join(', ') + ")"
   }
 
@@ -187,12 +188,28 @@ function UserOverview() {
   return (
     <div>
       <h2>The overview over all users</h2>
-      Seach function is missing
+
       {message && (
         <div className="response">
           {message}
         </div>
       )}
+
+      <div className="management__header">
+        <TextField
+          className='search__bar__management'
+          id="outlined-search"
+          label="Search field"
+          type="search"
+          size="small"
+          variant="outlined" />
+        <Button>
+          <Tooltip title="Search for User" aria-label="search">
+            <SearchIcon />
+          </Tooltip>
+        </Button>
+      </div>
+
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>

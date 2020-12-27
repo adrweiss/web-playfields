@@ -71,10 +71,11 @@ function LoginManagement() {
           id="outlined-search"
           label="Search field"
           type="search"
+          size="small"
           variant="outlined" />
         <Button>
           <Tooltip title="Search for user" aria-label="search">
-            <SearchIcon fontSize="large" />
+            <SearchIcon />
           </Tooltip>
         </Button>
       </div>
