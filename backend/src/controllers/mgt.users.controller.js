@@ -129,7 +129,7 @@ const changePasswordFromUser = (req, res, next) => {
 
 const changeRole = (req, res, next) => {
   if (req.body.userId === req.userId) {
-    return res.status(400).send({ message: 'Its not allowed to delete your own user' });
+    return res.status(400).send({ message: 'Its not allowed to change roles on your own user. Please contact a admin.' });
   }
 
   User.findByPk(req.body.userId).then(user => {

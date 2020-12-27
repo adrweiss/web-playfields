@@ -157,7 +157,8 @@ function UserOverview() {
       })
   }
 
-  const interactModalUser = () => {
+  const interactModalUser = (roles) => {
+    console.log(roles)
     setModalUser(!modalUser)
   }
 
@@ -227,11 +228,11 @@ function UserOverview() {
           <TableBody>
             {userData?.map((row) => (
               <TableRow key={row.user_id}>
-                <TableCell onClick={interactModalUser} align="left">{row.username}</TableCell>
-                <TableCell onClick={interactModalUser} align="left">{row.user_mail}</TableCell>
-                <TableCell onClick={interactModalUser} align="left">{greateRoleString(row.roles)}</TableCell>
-                <TableCell onClick={interactModalUser} align="left">{row.created}</TableCell>
-                <TableCell onClick={interactModalUser} align="left">{row.lastChange}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.username}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.user_mail}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{greateRoleString(row.roles)}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.created}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.lastChange}</TableCell>
 
                 <TableCell align="center">
                   <Button onClick={(event) => blockUser(event, row.user_id, (!row.blocked))}>
