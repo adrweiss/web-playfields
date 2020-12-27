@@ -6,11 +6,7 @@ const getUserInfos = () => {
 };
 
 const deleteUsr = (userId) => {
-  return axios.delete("/mgt/user",
-    {
-      "userId": userId
-    },
-    { headers: authHeader() });
+  return axios.delete("/mgt/user", { headers: authHeader(), data: { "userId": userId } })
 };
 
 const blockUsr = (userId, blocked) => {
@@ -35,7 +31,7 @@ const changeRoleFromUser = (userId, func, role) => {
   return axios.put("/mgt/user/chgpw",
     {
       "userId": userId,
-      "function": func, 
+      "function": func,
       "role": role
     },
     { headers: authHeader() });
