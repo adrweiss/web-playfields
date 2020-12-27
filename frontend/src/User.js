@@ -38,9 +38,9 @@ function User() {
   const [messagePW, setMessagePW] = useState("");
   const [messageUN, setMessageUN] = useState("");
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
+  const [modalDelete, setModalDelete] = useState(false);
   const history = useHistory();
   const currentUser = getCurrentUser();
-  const [modalDelete, setModalDelete] = useState(false);
 
   var rights = []
   var sizeRightSection = 6
@@ -296,9 +296,8 @@ function User() {
       >
         <div className='modal__delete'>
           <h3>Delete User</h3>
-          <div>
-            Are you sure that you want to delete your user?
-          </div>
+          <p>Are you sure that you want to delete your user?</p>
+          <div />
           <Button variant="contained" onClick={handleClickDeleteUsr} color="secondary">Delete</Button>
           <Button variant="contained" onClick={modaldeleteUser}>Close</Button>
         </div>

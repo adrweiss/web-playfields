@@ -310,9 +310,8 @@ function Row(props) {
             </div>
           )}
           <h3>Delete {roleNameTable}?</h3>
-          <div>
-            Are you sure that you want to delete the Role "{roleNameTable}"?
-          </div>
+          <p>Are you sure that you want to delete the Role "{roleNameTable}"?</p>
+          <div/>
           <Button variant="contained" onClick={deleteRole} color="secondary" disabled={deleteButton}>Delete</Button>
           <Button variant="contained" onClick={modaDeleteRole}>Close</Button>
         </div>

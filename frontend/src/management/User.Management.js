@@ -34,9 +34,11 @@ const customStyles = {
 
 function UserOverview() {
   const [userData, setUserData] = useState([]);
+  const [selectedUser, setSelectedUser] = useState();
   const [message, setMessage] = useState("");
   const [modalUser, setModalUser] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
 
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
@@ -54,7 +56,7 @@ function UserOverview() {
       })
   }, [])
 
-  function getData (){
+  function getData() {
     ManagementUserService.getUserInfos().then((response) => {
       setUserData(response.data)
     },
@@ -87,9 +89,12 @@ function UserOverview() {
       })
   }
 
-  const deleteUser = (event, userId) => {
-    ManagementUserService.deleteUsr(userId).then((response) => {
+  const deleteUser = () => {
+    
+    ManagementUserService.deleteUsr(selectedUser[0]).then((response) => {
       setMessage(response.data.message)
+      setSelectedUser([])
+      setModalDelete(!modalDelete)
       getData()
     },
       (error) => {
@@ -112,7 +117,17 @@ function UserOverview() {
     setModalPassword(!modalPassword)
   }
 
- 
+  const openModalDeleteUser = (event, userId, userName) => {
+    setSelectedUser([userId, userName])
+    setModalDelete(!modalDelete)
+  }
+
+  const closeModalDeleteUser = () => {
+    setSelectedUser([])
+    setModalDelete(!modalDelete)
+  }
+
+
   return (
     <div>
       <h2>The overview over all users</h2>
@@ -127,12 +142,12 @@ function UserOverview() {
             <TableRow>
               <TableCell align="left" width="100px">Username</TableCell>
               <TableCell align="left" width="100px">Mail</TableCell>
-              <TableCell align="left" width="100px">Roles</TableCell>
+              <TableCell align="left" >Roles</TableCell>
               <TableCell align="left" width="200px" >Created</TableCell>
               <TableCell align="left" width="200px">Last Update</TableCell>
-              <TableCell align="left">Block</TableCell>
-              <TableCell align="left">Delete</TableCell>
-              <TableCell align="left">Password</TableCell>
+              <TableCell align="center" width="50px">Block</TableCell>
+              <TableCell align="center" width="50px">Delete</TableCell>
+              <TableCell align="center" width="50px">Password</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -143,42 +158,50 @@ function UserOverview() {
                 <TableCell onClick={interactModalUser} align="left">{"roles"}</TableCell>
                 <TableCell onClick={interactModalUser} align="left">{row.created}</TableCell>
                 <TableCell onClick={interactModalUser} align="left">{row.lastChange}</TableCell>
-                {row.blocked ? (
-                  <TableCell align="left">
-                    <Button onClick={(event) => blockUser(event, row.user_id, false)}>
-                      <Tooltip title="Block user" aria-label="block_user">
-                        <LockIcon fontSize='small' />
-                      </Tooltip>
-                    </Button>
-                  </TableCell>
-                ) : (
-                    <TableCell align="left">
-                      <Button onClick={(event) => blockUser(event, row.user_id, true)}>
-                        <Tooltip title="Block user" aria-label="block_user">
-                          <LockOpenIcon fontSize='small' />
-                        </Tooltip>
-                      </Button>
-                    </TableCell>
-                  )}
-                   <TableCell align="left">
-                      <Button onClick={(event) => deleteUser(event, row.user_id)}>
-                        <Tooltip title="Delete user" aria-label="delete_user">
-                          <DeleteIcon fontSize='small' />
-                        </Tooltip>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="left">
-                      <Button onClick={(event) => interactModalPassword(event, row.user_id)}>
-                        <Tooltip title="Change password from user" aria-label="delete_user">
-                          <VpnKeyIcon fontSize='small' />
-                        </Tooltip>
-                      </Button>
-                    </TableCell>
+
+                <TableCell align="center">
+                  <Button onClick={(event) => blockUser(event, row.user_id, (!row.blocked))}>
+                    <Tooltip title="Block user" aria-label="block_user">
+                      {row.blocked ? (<LockIcon fontSize='small' />) : (<LockOpenIcon fontSize='small' />)}
+                    </Tooltip>
+                  </Button>
+                </TableCell>
+
+                <TableCell align="center">
+                  <Button onClick={(event) => openModalDeleteUser(event, row.user_id, row.username)}>
+                    <Tooltip title="Delete user" aria-label="delete_user">
+                      <DeleteIcon fontSize='small' />
+                    </Tooltip>
+                  </Button>
+                </TableCell>
+
+                <TableCell align="left">
+                  <Button onClick={(event) => interactModalPassword(event, row.user_id)}>
+                    <Tooltip title="Change password from user" aria-label="delete_user">
+                      <VpnKeyIcon fontSize='small' />
+                    </Tooltip>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Modal
+        isOpen={modalDelete}
+        onRequestClose={closeModalDeleteUser}
+        style={customStyles}
+        contentLabel="Delete_User"
+      >
+        <div className='modal__delete'>
+          <h3>Delete User {selectedUser && (selectedUser[1])}</h3>
+          <p>Are you sure that you want to delete your the User {selectedUser && (selectedUser[1])}?</p>
+          
+          <div/>
+          <Button variant="contained" onClick={deleteUser} color="secondary">Delete</Button>
+          <Button variant="contained" onClick={closeModalDeleteUser}>Close</Button>
+        </div>
+      </Modal>
       <Modal
         isOpen={modalUser}
         onRequestClose={interactModalUser}
