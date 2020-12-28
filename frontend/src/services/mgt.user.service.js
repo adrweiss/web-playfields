@@ -28,7 +28,7 @@ const changePwFromUser = (userId, newPassword) => {
 };
 
 const changeRoleFromUser = (userId, func, role) => {
-  return axios.put("/mgt/user/chgpw",
+  return axios.put("/mgt/user/role",
     {
       "userId": userId,
       "function": func,

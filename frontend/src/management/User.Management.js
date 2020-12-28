@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './User.Management.css'
 import ManagementUserService from '../services/mgt.user.service'
+import ManagementRoleService from '../services/mgt.role.service'
+import { getCurrentUser } from "../services/auth.service";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,15 +11,17 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import SearchIcon from '@material-ui/icons/Search';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 import TextField from '@material-ui/core/TextField';
 
@@ -37,19 +41,46 @@ const customStyles = {
 
 function UserOverview() {
   const [userData, setUserData] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
   const [message, setMessage] = useState("");
   const [messageModal, setMessageModal] = useState("");
   const [modalUser, setModalUser] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [modalForbidden, setModalForbidden] = useState(false);
   const [NewPasswordRepeat, setNewPasswordRepeat] = useState(false);
   const [newPassword, setNewPassword] = useState(false);
   const [timerId, setTimerId] = useState();
+  const [currentUserName, setCurrentUserName] = useState("");
+  const [unselectedRoles, setUnselectedRoles] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const currentUser = getCurrentUser();
+
+
+  var rights = []
+
+  if (currentUser !== null) {
+    rights = currentUser.rights
+  }
 
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
       setUserData(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+    ManagementRoleService.getRoles().then((response) => {
+      setRoles(response.data)
     },
       (error) => {
         const _content =
@@ -93,6 +124,32 @@ function UserOverview() {
 
     return "(" + roleNames.join(', ') + ")"
   }
+
+  function createRightString(rights) {
+    const rightNames = []
+    rights.forEach(right => {
+      rightNames.push(right.right_name)
+    })
+
+    return "(" + rightNames.join(', ') + ")"
+  }
+
+  function checkButton(userId, roles) {
+    if (userId === currentUser.id) {
+      return true
+    }
+
+    if (rights.includes('ADMIN')) {
+      return false
+    }
+
+    if (roles.filter(element => element.role_name === "ADMIN").length === 0) {
+      return false
+    }
+
+    return true
+  }
+
 
   const blockUser = (event, userId, blocked) => {
     clearTimeout(timerId)
@@ -174,9 +231,24 @@ function UserOverview() {
       })
   }
 
-  const interactModalUser = (roles) => {
-    console.log(roles)
-    setModalUser(!modalUser)
+  const opentModalUser = (row) => {
+
+    const temp = []
+    row.roles.forEach(role => {
+      temp.push(role.role_id)
+    })
+
+    setUnselectedRoles(roles.filter((el) => !temp.includes(el.role_id)))
+    setCurrentUserName(row.username)
+    setCurrentUserId(row.user_id)
+
+    if (!checkButton(row.user_id, row.roles)) {
+      removeMessage()
+      setSelectedUser(row.roles)
+      setModalUser(!modalUser)
+    } else {
+      setModalForbidden(!modalForbidden)
+    }
   }
 
   const openModalPassword = (event, userId, userName) => {
@@ -201,6 +273,64 @@ function UserOverview() {
     setModalDelete(!modalDelete)
   }
 
+  const closeModalUser = () => {
+    setSelectedUser([])
+    setModalUser(!modalUser)
+    getData()
+  }
+
+  const closeModalForbidden = () => {
+    setModalForbidden(!modalForbidden)
+  }
+
+  function addRole(roleId) {
+    clearTimeout(timerId)
+
+    setUnselectedRoles(unselectedRoles.filter(element => element.role_id !== roleId))
+    setSelectedUser([...selectedUser, unselectedRoles.find(element => element.role_id === roleId)]);
+
+    ManagementUserService.changeRoleFromUser(currentUserId, 'add', roleId).then((response) => {
+      setMessageModal(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000))
+
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessageModal(_content);
+        setTimerId(setTimeout(removeMessage, 10000))
+      })
+  }
+
+  function removeRole(roleId) {
+    clearTimeout(timerId)
+
+    setSelectedUser(selectedUser.filter(element => element.role_id !== roleId))
+    setUnselectedRoles([...unselectedRoles, selectedUser.find(element => element.role_id === roleId)]);
+
+    ManagementUserService.changeRoleFromUser(currentUserId, 'remove', roleId).then((response) => {
+      setMessageModal(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000))
+
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessageModal(_content);
+        setTimerId(setTimeout(removeMessage, 10000))
+      }
+    )
+  }
 
 
   return (
@@ -228,7 +358,7 @@ function UserOverview() {
         </Button>
       </div>
 
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -244,35 +374,35 @@ function UserOverview() {
           </TableHead>
           <TableBody>
             {userData?.map((row) => (
-              <TableRow key={row.user_id}>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.username}</TableCell>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.user_mail}</TableCell>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{createRoleString(row.roles)}</TableCell>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.created}</TableCell>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.lastChange}</TableCell>
+              <TableRow hover key={row.user_id}>
+                <TableCell onClick={(event) => opentModalUser(row)} align="left">{row.username}</TableCell>
+                <TableCell onClick={(event) => opentModalUser(row)} align="left">{row.user_mail}</TableCell>
+                <TableCell onClick={(event) => opentModalUser(row)} align="left">{createRoleString(row.roles)}</TableCell>
+                <TableCell onClick={(event) => opentModalUser(row)} align="left">{row.created}</TableCell>
+                <TableCell onClick={(event) => opentModalUser(row)} align="left">{row.lastChange}</TableCell>
 
                 <TableCell align="center">
-                  <Button onClick={(event) => blockUser(event, row.user_id, (!row.blocked))}>
+                  <IconButton onClick={(event) => blockUser(event, row.user_id, (!row.blocked))} disabled={checkButton(row.user_id, row.roles)}>
                     <Tooltip title="Block user" aria-label="block_user">
                       {row.blocked ? (<LockIcon fontSize='small' />) : (<LockOpenIcon fontSize='small' />)}
                     </Tooltip>
-                  </Button>
+                  </IconButton>
                 </TableCell>
 
                 <TableCell align="center">
-                  <Button onClick={(event) => openModalDeleteUser(event, row.user_id, row.username)}>
+                  <IconButton onClick={(event) => openModalDeleteUser(event, row.user_id, row.username)} disabled={checkButton(row.user_id, row.roles)}>
                     <Tooltip title="Delete user" aria-label="delete_user">
                       <DeleteIcon fontSize='small' />
                     </Tooltip>
-                  </Button>
+                  </IconButton>
                 </TableCell>
 
                 <TableCell align="center">
-                  <Button onClick={(event) => openModalPassword(event, row.user_id, row.username)}>
+                  <IconButton onClick={(event) => openModalPassword(event, row.user_id, row.username)} disabled={checkButton(row.user_id, row.roles)}>
                     <Tooltip title="Change password from user" aria-label="delete_user">
                       <VpnKeyIcon fontSize='small' />
                     </Tooltip>
-                  </Button>
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -332,13 +462,89 @@ function UserOverview() {
       </Modal>
 
       <Modal
+        isOpen={modalForbidden}
+        onRequestClose={closeModalForbidden}
+        style={customStyles}
+        contentLabel="Not_allwoed_to_change"
+      >
+        <div>
+          <h3>Its not allowed to change your own user or admin user without admin rights.</h3>
+        </div>
+      </Modal>
+
+      <Modal
         isOpen={modalUser}
-        onRequestClose={interactModalUser}
+        onRequestClose={closeModalUser}
         style={customStyles}
         contentLabel="handle_user"
       >
-        <div>
-          <h3>change roles.</h3>
+        <div className='change__roles__user__modal'>
+          <h2>Change roles from user.</h2>
+          {messageModal && (
+            <div className="response">
+              {messageModal}
+            </div>
+          )}
+          <h3>The current roles from user "{currentUserName}"</h3>
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left" width="7px"></TableCell>
+                  <TableCell align="left" width="50px">Rolename</TableCell>
+                  <TableCell align="left" width="400px">Rights</TableCell>
+                  <TableCell align="left" >Roledescription</TableCell>
+                  <TableCell align="left" >Assigend to</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedUser?.map((row) => (
+                  <TableRow hover key={row.role_id}>
+                    <TableCell align="center">
+                      <IconButton onClick={(event) => removeRole(row.role_id)}>
+                        <Tooltip title="Remove role from user.">
+                          <RemoveCircleOutlineIcon fontSize='small' />
+                        </Tooltip>
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="left">{row.role_name}</TableCell>
+                    <TableCell align="left">{createRightString(row.rights)}</TableCell>
+                    <TableCell align="left">{row.role_description}</TableCell>
+                    <TableCell align="left">{row.assignment_date}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <h3>Roles which are not assigend to the current user.</h3>
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left" width="7px"></TableCell>
+                  <TableCell align="left" width="50px">Rolename</TableCell>
+                  <TableCell align="left" width="400px">Rights</TableCell>
+                  <TableCell align="left" >Roledescription</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {unselectedRoles?.map((row) => (
+                  <TableRow hover key={row.role_id}>
+                    <TableCell align="center">
+                      <IconButton onClick={(event) => addRole(row.role_id)}>
+                        <Tooltip title="Remove role from user.">
+                          <AddCircleOutlineIcon fontSize='small' />
+                        </Tooltip>
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="left">{row.role_name}</TableCell>
+                    <TableCell align="left">{createRightString(row.rights)}</TableCell>
+                    <TableCell align="left">{row.role_description}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </Modal>
     </div>
