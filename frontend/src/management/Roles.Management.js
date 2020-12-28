@@ -331,6 +331,7 @@ function RolesOverview() {
   const [roleName, setroleName] = useState("");
   const [roleDescription, setRoleDescription] = useState("");
   const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
 
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
@@ -362,10 +363,10 @@ function RolesOverview() {
       })
   }, [])
 
-  setInterval(function () {
+  function removeMessage() {
     setMessage("")
-  }, 120000);
-
+  }
+ 
   function openModalCreateRole() {
     setAllRightsforModel(allRights)
     setroleName("")
@@ -402,8 +403,11 @@ function RolesOverview() {
     setRightsForNewRole([])
     setIsOpenCreateRole(false);
 
+    clearTimeout(timerId)
+
     ManagementRoleService.createRole(name, description, accessRights).then((response) => {
       setMessage(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -413,6 +417,7 @@ function RolesOverview() {
           error.message ||
           error.toString();
         setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       })
 
     ManagementRoleService.getRoles().then((response) => {

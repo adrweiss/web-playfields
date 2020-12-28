@@ -45,6 +45,7 @@ function UserOverview() {
   const [modalDelete, setModalDelete] = useState(false);
   const [NewPasswordRepeat, setNewPasswordRepeat] = useState(false);
   const [newPassword, setNewPassword] = useState(false);
+  const [timerId, setTimerId] = useState();
 
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
@@ -62,13 +63,13 @@ function UserOverview() {
       })
   }, [])
 
-  setInterval(function () {
+  function removeMessage() {
     setMessageModal("")
     setMessage("")
-  }, 120000);
+  }
 
   function getData() {
-    setMessage("")
+    removeMessage()
     ManagementUserService.getUserInfos().then((response) => {
       setUserData(response.data)
     },
@@ -84,7 +85,7 @@ function UserOverview() {
       })
   }
 
-  function greateRoleString(roles) {
+  function createRoleString(roles) {
     const roleNames = []
     roles.forEach(role => {
       roleNames.push(role.role_name)
@@ -94,9 +95,13 @@ function UserOverview() {
   }
 
   const blockUser = (event, userId, blocked) => {
+    clearTimeout(timerId)
+    removeMessage()
+
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
       getData()
       setMessage(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -107,12 +112,17 @@ function UserOverview() {
           error.toString();
 
         setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       })
   }
 
+
   function deleteUser() {
+    clearTimeout(timerId)
+
     ManagementUserService.deleteUsr(selectedUser[0]).then((response) => {
       setMessage(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000))
       closeModalDeleteUser()
       getData()
     },
@@ -125,23 +135,29 @@ function UserOverview() {
           error.toString();
 
         setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000))
         closeModalDeleteUser()
       })
   }
 
   function changePassword() {
+    clearTimeout(timerId)
+
     if (newPassword.value !== NewPasswordRepeat.value) {
       setMessageModal("The passwords does not match.")
+      setTimerId(setTimeout(removeMessage, 10000))
       return
     }
 
     if (newPassword.value.length === 0) {
       setMessageModal("The passwords has the length of 0.")
+      setTimerId(setTimeout(removeMessage, 10000))
       return
     }
 
     ManagementUserService.changePwFromUser(selectedUser[0], newPassword.value).then((response) => {
       setMessage(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000))
       closeModalPassword()
     },
       (error) => {
@@ -153,6 +169,7 @@ function UserOverview() {
           error.toString();
 
         setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000))
         closeModalPassword()
       })
   }
@@ -163,10 +180,15 @@ function UserOverview() {
   }
 
   const openModalPassword = (event, userId, userName) => {
-    setMessageModal("")
-    setMessage("")
+    removeMessage()
     setSelectedUser([userId, userName])
     setModalPassword(!modalPassword)
+  }
+
+  const openModalDeleteUser = (event, userId, userName) => {
+    removeMessage()
+    setSelectedUser([userId, userName])
+    setModalDelete(!modalDelete)
   }
 
   const closeModalPassword = () => {
@@ -174,16 +196,11 @@ function UserOverview() {
     setModalPassword(!modalPassword)
   }
 
-  const openModalDeleteUser = (event, userId, userName) => {
-    setMessage("")
-    setSelectedUser([userId, userName])
-    setModalDelete(!modalDelete)
-  }
-
   const closeModalDeleteUser = () => {
     setSelectedUser([])
     setModalDelete(!modalDelete)
   }
+
 
 
   return (
@@ -230,7 +247,7 @@ function UserOverview() {
               <TableRow key={row.user_id}>
                 <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.username}</TableCell>
                 <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.user_mail}</TableCell>
-                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{greateRoleString(row.roles)}</TableCell>
+                <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{createRoleString(row.roles)}</TableCell>
                 <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.created}</TableCell>
                 <TableCell onClick={(event) => interactModalUser(row.roles)} align="left">{row.lastChange}</TableCell>
 
