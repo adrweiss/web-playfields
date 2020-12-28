@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import Modal from 'react-modal';
+
 import Button from '@material-ui/core/Button';
 import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -15,6 +17,20 @@ import TableContainer from '@material-ui/core/TableContainer';
 import { logout, getCurrentUser } from "./services/auth.service";
 import UserService from "./services/user.service";
 
+Modal.setAppElement('body')
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    overlay: { zIndex: 9999 }
+  }
+};
+
 function User() {
   const [roles, setRoles] = useState([]);
   const [role, setRole] = useState([]);
@@ -22,6 +38,7 @@ function User() {
   const [messagePW, setMessagePW] = useState("");
   const [messageUN, setMessageUN] = useState("");
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
+  const [modalDelete, setModalDelete] = useState(false);
   const history = useHistory();
   const currentUser = getCurrentUser();
 
@@ -161,6 +178,10 @@ function User() {
     document.getElementById('new_again_pass').value = ''
   }
 
+  const modaldeleteUser = () => {
+    setModalDelete(!modalDelete)
+  }
+
   return (
     <div>
       <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
@@ -208,7 +229,7 @@ function User() {
             </div>
             <div className="middleline"></div>
             <div className='delete__profile'>
-              <Button variant="contained" color="secondary" disabled={rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={handleClickDeleteUsr}>
+              <Button variant="contained" color="secondary" disabled={rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
                 Delete Profile
               </Button>
             </div>
@@ -267,6 +288,20 @@ function User() {
           </div>
         </Grid>
       </Grid>
+      <Modal
+        isOpen={modalDelete}
+        onRequestClose={modaldeleteUser}
+        style={customStyles}
+        contentLabel="Delete_User"
+      >
+        <div className='modal__delete'>
+          <h3>Delete User</h3>
+          <p>Are you sure that you want to delete your user?</p>
+          <div />
+          <Button variant="contained" onClick={handleClickDeleteUsr} color="secondary">Delete</Button>
+          <Button variant="contained" onClick={modaldeleteUser}>Close</Button>
+        </div>
+      </Modal>
     </div>
   )
 }

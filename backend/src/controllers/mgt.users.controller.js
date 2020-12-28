@@ -88,7 +88,7 @@ const deleteUser = (req, res, next) => {
 
 const changeBlockStatusFromUser = (req, res, next) => {
   if (req.body.userId === req.userId) {
-    return res.status(400).send({ message: 'Its not allowed to delete your own user' });
+    return res.status(400).send({ message: 'Its not allowed to block your own user' });
   }
 
   User.findByPk(req.body.userId).then(user => {
@@ -97,7 +97,7 @@ const changeBlockStatusFromUser = (req, res, next) => {
       user.update({
         blocked: req.body.blocked
       })
-      return res.status(200).send({ message: 'Change blocked status was not successfull.' });
+      return res.status(200).send({ message: 'Change blocked status was successfull.' });
     } else {
       return res.status(400).send({ message: 'Change blocked status was not successfull.' });
     }
@@ -129,31 +129,34 @@ const changePasswordFromUser = (req, res, next) => {
 
 const changeRole = (req, res, next) => {
   if (req.body.userId === req.userId) {
-    return res.status(400).send({ message: 'Its not allowed to delete your own user' });
+    return res.status(400).send({ message: 'Its not allowed to change roles on your own user. Please contact a admin.' });
   }
 
-  User.findByPk(req.body.userId).then(user => {
-    if (req.body.function === 'add') {
-      user.addRoles([req.body.role]).then(() => {
-        return res.status(200).send({ message: 'Add role successfull.' });
-      }).catch(err => {
-        return res.status(500).send({ message: 'Role does not exists.' });
-      });
-
-    } else if (req.body.function === 'remove') {
-      user.removeRoles([req.body.role]).then(() => {
-        return res.status(200).send({ message: 'Remove role successfull.' });
-      }).catch(err => {
-        return res.status(500).send({ message: 'Role does not exists.' });
-      });
-      
-    } else {
-      return res.status(200).send({ message: 'No valid function set.' });
+  Role.findByPk(req.body.role).then(role => {
+    if(role.name === 'ADMIN' && !req.isAdmin) {
+      return res.status(400).send({ message: 'Only user with the role admin can add admin roles to other user.' });
     }
+    User.findByPk(req.body.userId).then(user => {
+      if (req.body.function === 'add') {
+        user.addRoles([req.body.role]).then(() => {
+          return res.status(200).send({ message: 'Add role successfull.' });
+        }).catch(err => {
+          return res.status(500).send({ message: 'Role does not exists.' });
+        });
+  
+      } else if (req.body.function === 'remove') {
+        user.removeRoles([req.body.role]).then(() => {
+          return res.status(200).send({ message: 'Remove role successfull.' });
+        }).catch(err => {
+          return res.status(500).send({ message: 'Role does not exists.' });
+        });
+  
+      } else {
+        return res.status(200).send({ message: 'No valid function set.' });
+      }
+    })
   })
 }
-
-
 
 const mgtUserFunctions = {
   getUserInfos,

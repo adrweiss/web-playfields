@@ -3,3 +3,19 @@
     margin: 0 auto;
     width: 500px;
 }
+
+.view__header {
+    margin-bottom: 10px;
+}
+
+.search__bar__view {
+    width: 80%;
+}
+
+.management__header {
+    margin-bottom: 10px;
+}
+
+.search__bar__management {
+    width: 40%;
+}
