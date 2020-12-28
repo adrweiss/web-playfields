@@ -31,7 +31,7 @@ function Header() {
       }
 
       UserService.getRights().then(response => {
-        if (response.data.rights.length === 0) {
+        if (response.data.rights?.length === 0) {
           logout()
           console.log("This user is blocked, please contact the admin!")
         } else {

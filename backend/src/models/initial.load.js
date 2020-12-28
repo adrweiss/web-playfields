@@ -237,7 +237,7 @@ function usrLogs(Logs) {
 
   Logs.create({
     successfull: false,
-    userId: 2
+    userId: 3
   })
 
   Logs.create({
