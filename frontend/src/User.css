@@ -15,47 +15,25 @@
 .change__nickname {
     margin: 0 auto;
     text-align: left;
-    width: 200px;
+    width: 250px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.change__nickname>label {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.change__nickname>input {
-    margin-top: 5px;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
 .change__nickname>Button {
-    width: 102%;
+    width: 100%;
 }
 
 .change__password__section {
     margin: 0 auto;
     text-align: left;
-    width: 200px;
+    width: 250px;
     margin-top: 10px;
     margin-bottom: 20px;
 }
 
-.change__password__section>label {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.change__password__section>input {
-    margin-top: 5px;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
 .change__password__section>Button {
-    width: 102%;
+    width: 100%;
 }
 
 .container__user>p {
@@ -65,7 +43,7 @@
 .delete__profile {
     margin: 0 auto;
     text-align: left;
-    width: 200px;
+    width: 250px;
     margin-bottom: 10px;
 }
 
@@ -76,11 +54,11 @@
 
 .delete__profile>Button {
     margin-top: 20px;
-    width: 102%;
+    width: 100%;
 }
 
 .table__container {
-    height: 600px;
+    height: 663px;
     border-radius: 10px;
     padding: 15px;
     border: 1px solid;
@@ -94,4 +72,8 @@
 
 .tableContainer {
     max-height: 500px;
+}
+
+.input__user__self_service {
+    width: 250px;
 }
