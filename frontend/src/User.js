@@ -6,6 +6,7 @@ import './User.css'
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
 
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
@@ -39,6 +40,12 @@ function User() {
   const [messageUN, setMessageUN] = useState("");
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const [modalDelete, setModalDelete] = useState(false);
+  const [username, setUsername] = useState(false);
+  const [passwordOld, setPasswordOld] = useState(false);
+  const [passwordNew, setPasswordNew] = useState(false);
+  const [passwordNewAgain, setPasswordNewAgain] = useState(false);
+  
+
   const history = useHistory();
   const currentUser = getCurrentUser();
 
@@ -126,13 +133,11 @@ function User() {
   }
 
   const handleClickChangeUsername = () => {
-    var username = document.getElementById('username').value
-
-    UserService.changeUsername(username).then((response) => {
+    UserService.changeUsername(username.value).then((response) => {
       setMessageUN(response.data.message);
-      currentUser.username = username;
+      currentUser.username = username.value;
       localStorage.setItem("user", JSON.stringify(currentUser));
-      setCurrUsername(username)
+      setCurrUsername(username.value)
     },
       (error) => {
         const _content =
@@ -141,22 +146,14 @@ function User() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
         setMessageUN(_content);
       }
     )
-
-    document.getElementById('username').value = ''
-
   }
 
   const handleClickChangePassword = () => {
-    var password = document.getElementById('old_pass').value
-    var password_new = document.getElementById('new_pass').value
-    var password_new_again = document.getElementById('new_again_pass').value
-
-    if (password_new === password_new_again) {
-      UserService.changePassword(password, password_new).then((response) => {
+    if (passwordNew.value === passwordNewAgain.value) {
+      UserService.changePassword(passwordOld.value, passwordNew.value).then((response) => {
         setMessagePW(response.data.message)
       },
         (error) => {
@@ -173,9 +170,6 @@ function User() {
     } else {
       setMessagePW('The passwords does not match.')
     }
-    document.getElementById('old_pass').value = ''
-    document.getElementById('new_pass').value = ''
-    document.getElementById('new_again_pass').value = ''
   }
 
   const modaldeleteUser = () => {
@@ -199,8 +193,14 @@ function User() {
                 </div>
               )}
 
-              <label>New nickname</label>
-              <input type="text" id="username" name="username" />
+              <TextField
+                className="input__user__self_service"
+                label="New username "
+                inputRef={element => setUsername(element)}
+                variant="outlined"
+                margin="normal"
+              />
+
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
                 Accept
               </Button>
@@ -217,12 +217,33 @@ function User() {
                 </div>
               )}
 
-              <label>Old password:</label>
-              <input type="password" id="old_pass" name="password" minLength="8" required />
-              <label>New Password:</label>
-              <input type="password" id="new_pass" name="password" minLength="8" required />
-              <label>New Password again:</label>
-              <input type="password" id="new_again_pass" name="password" minLength="8" required />
+              <TextField
+                className="input__user__self_service"
+                label="Old Password"
+                type="password"
+                margin="normal"
+                inputRef={element => setPasswordOld(element)}
+                variant="outlined"
+              />
+
+              <TextField
+                className="input__user__self_service"
+                label="New Password"
+                type="password"
+                margin="normal"
+                inputRef={element => setPasswordNew(element)}
+                variant="outlined"
+              />
+
+              <TextField
+                className="input__user__self_service"
+                label="New Password Again"
+                type="password"
+                margin="normal"
+                inputRef={element => setPasswordNewAgain(element)}
+                variant="outlined"
+              />
+
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
                 Accept new password
               </Button>
