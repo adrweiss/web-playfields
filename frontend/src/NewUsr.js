@@ -3,20 +3,20 @@ import Button from '@material-ui/core/Button';
 import './NewUsr.css';
 import { register } from "./services/auth.service"
 import { useHistory } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
 
 
 function NewUsr() {
   const [message, setMessage] = useState("");
+  const [username, setUsername] = useState(false);
+  const [email, setEmail] = useState(false);
+  const [password, setPassword] = useState(false);
+  const [passwordRepeat, setPasswordRepeat] = useState(false);
   const history = useHistory();
 
   const handleClick = () => {
-    var email = document.getElementById('email').value
-    var password_1 = document.getElementById('pass').value
-    var password_2 = document.getElementById('pass_again').value
-    var username = document.getElementById('username').value
-
-    if (password_1 === password_2) {
-      register(username, email, password_1).then(
+    if (password.value === passwordRepeat.value) {
+      register(username.value, email.value, password.value).then(
         (response) => {
           console.log(response.data.message)
           //setMessage(response.data.message);
@@ -48,14 +48,39 @@ function NewUsr() {
           </div>
         )}
 
-        <label>Username:</label>
-        <input type="text" id="username" name="username" />
-        <label>E-Mail:</label>
-        <input type="text" id="email" name="email" />
-        <label>Password:</label>
-        <input type="password" id="pass" name="password" minLength="8" required />
-        <label>Password again:</label>
-        <input type="password" id="pass_again" name="password" minLength="8" required />
+        <TextField
+          className="input__create__user"
+          label="Username "
+          inputRef={element => setUsername(element)}
+          variant="outlined"
+          margin="normal"
+        />
+        
+        <TextField
+          className="input__create__user"
+          label="E-Mail "
+          inputRef={element => setEmail(element)}
+          variant="outlined"
+          margin="normal"
+        />
+        <TextField
+          className="input__create__user"
+          label="Password"
+          type="password"
+          margin="normal"
+          inputRef={element => setPassword(element)}
+          variant="outlined"
+        />
+        
+        <TextField
+          className="input__create__user"
+          label="Password repeat"
+          type="password"
+          margin="normal"
+          inputRef={element => setPasswordRepeat(element)}
+          variant="outlined"
+        />
+        
         <Button variant="contained" color="primary" onClick={handleClick}>
           Create
         </Button>

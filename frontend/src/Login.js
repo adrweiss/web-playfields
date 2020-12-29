@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import { useHistory } from 'react-router-dom';
 import { login } from "./services/auth.service"
 
+import TextField from '@material-ui/core/TextField';
 
 const customStyles = {
   content: {
@@ -21,15 +22,14 @@ const customStyles = {
 Modal.setAppElement('body')
 
 function Login() {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [username, setUsername] = useState(false);
+  const [password, setPassword] = useState(false);
   const history = useHistory();
 
   const handleClick = () => {
-    var identifier = document.getElementById('identifier').value
-    var password = document.getElementById('password').value
-
-    login(identifier, password).then(
+    login(username.value, password.value).then(
       () => {
         console.log('successfull login')
         history.push('/user')
@@ -41,7 +41,7 @@ function Login() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          
+
         setMessage(resMessage);
       }
     );
@@ -65,21 +65,35 @@ function Login() {
             {message}
           </div>
         )}
-        <label>Email or Username</label>
-        <input type="text" id="identifier" name="identifier" />
-        <label>Password:</label>
-        <input type="password" id="password" name="password" minLength="8" required />
-        <Button variant="contained" color="primary" disableElevation onClick={handleClick}>
+
+        <TextField
+          className="input__login"
+          label="Username or Email "
+          inputRef={element => setUsername(element)}
+          variant="outlined"
+          margin="normal"
+        />
+
+        <TextField
+          className="input__login"
+          label="Password"
+          type="password"
+          margin="normal"
+          inputRef={element => setPassword(element)}
+          variant="outlined"
+        />
+
+        <Button variant="contained" color="primary" onClick={handleClick}>
           Sign in
         </Button>
 
         <Link className='Link' to="/user/register">
-          <Button className="create__new__user__link" variant="contained" color="primary" disableElevation>
+          <Button className="create__new__user__link" variant="contained" color="primary">
             Create new User
           </Button>
         </Link>
 
-        <Button variant="contained" color="primary" disableElevation onClick={openModal}>
+        <Button variant="contained" color="primary" onClick={openModal}>
           Reset Password
         </Button>
       </div>
@@ -94,8 +108,12 @@ function Login() {
           <h1>Reset Password</h1>
 
           <div className='login'>
-            <label >E-mail:</label>
-            <input type="text" id="email" name="email" />
+            <TextField
+              className="input__login"
+              label="E-mail "
+              variant="outlined"
+              margin="normal"
+            />
             <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
               Send
             </Button>
