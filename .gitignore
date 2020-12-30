@@ -9,6 +9,8 @@ backend/node_modules
 backend/package-lock.json
 backend/.eslintcache
 
+backend/src/config/db.config.aws.js
+backend/src/config/db.config.js
+backend/src/config/auth.config.js
 
-backend/src/config/*
-!backend/src/config/
+!backend/src/config
