@@ -3,7 +3,7 @@ import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
-import axios from './axios';
+import axios from './config/axios';
 
 
 function Home() {

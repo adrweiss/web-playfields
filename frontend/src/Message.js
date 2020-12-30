@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Message.css";
 import Button from '@material-ui/core/Button';
-//import axios from './axios';
+//import axios from './config/axios';
 
 
 function Message({ id, title, post, usr, timestamp }) {
