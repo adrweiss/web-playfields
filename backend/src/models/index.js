@@ -83,15 +83,21 @@ db.validate.belongsTo(db.user, {
   as: "user",
 });
 
-function roleInit(role, right, user, logs, deletedUser){
+function dataDevInit(role, right, user, logs, deletedUser){
   initialLoad.role(role)
   initialLoad.right(right, role)
-  initialLoad.usr(user)
+  initialLoad.usr(user, role)
   initialLoad.usrLogs(logs)
   initialLoad.deleteLogs(deletedUser)
+}
+
+function dataProdInit(role, right, user ){
+  initialLoad.role(role)
+  initialLoad.right(right, role)
+  initialLoad.usrProd(user,role)
 }
 
 //db.ROLES = ["user", "admin", "manager"];
 //db.RIGHTS = ["admin", "READ_USER_VIEW", "READ_MANAGEMNT_VIEW"];
 
-export { db, roleInit };
+export { db, dataDevInit, dataProdInit};

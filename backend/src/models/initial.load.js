@@ -4,16 +4,22 @@ function role(Role) {
   Role.create({
     name: "USER",
     description: "User role which is the defautl role for new users.",
+  }).catch(function (err) {
+    console.log('role "USER" already exists.')
   });
 
   Role.create({
     name: "MANAGER",
     description: "Role for manager.",
+  }).catch(function (err) {
+    console.log('role "MANAGER" already exists.')
   });
 
   Role.create({
     name: "ADMIN",
     description: "Role for the system admin."
+  }).catch(function (err) {
+    console.log('role "ADMIN" already exists.')
   });
 
   return role
@@ -29,6 +35,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "ADMIN" already exists.')
   });
 
   Right.create({
@@ -40,6 +48,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_USER_VIEW" already exists.')
   });
 
   Right.create({
@@ -51,6 +61,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "WRITE_OWN_USR_SETTINGS" already exists.')
   });
 
   Right.create({
@@ -62,6 +74,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_MANAGEMENT_VIEW" already exists.')
   });
 
   Right.create({
@@ -73,6 +87,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_USER_MANAGEMENT" already exists.')
   });
 
   Right.create({
@@ -84,6 +100,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_ROLE_MANAGEMENT" already exists.')
   });
 
   Right.create({
@@ -95,6 +113,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_VIEW_LOGIN" already exists.')
   });
 
   Right.create({
@@ -106,6 +126,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "READ_VIEW_DELETE" already exists.')
   });
 
   Right.create({
@@ -117,6 +139,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "EDIT_ROLE" already exists.')
   });
 
   Right.create({
@@ -128,6 +152,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "WRITE_ROLE_USR" already exists.')
   });
 
   Right.create({
@@ -139,6 +165,8 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "WRITE_USR" already exists.')
   });
 
   Right.create({
@@ -150,11 +178,14 @@ function right(Right, Role) {
     }).then(role => {
       right.setRoles(role)
     })
+  }).catch(function (err) {
+    console.log('right "WRITE_USR_LEVEL_2" already exists.')
   });
+
   return right
 }
 
-function usr(User) {
+function usr(User, Role) {
   User.create({
     username: "admin",
     email: "admin@ai.de",
@@ -162,9 +193,13 @@ function usr(User) {
     blocked: false, 
     validated: false
   }).then(user => {
-    user.setRoles([3])
+    Role.findOne({
+      where: { name: 'ADMIN' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
-
+  
   User.create({
     username: "admin2",
     email: "admin2@ai.de",
@@ -172,7 +207,11 @@ function usr(User) {
     blocked: false,
     validated: false
   }).then(user => {
-    user.setRoles([3])
+    Role.findOne({
+      where: { name: 'ADMIN' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
 
   User.create({
@@ -182,7 +221,11 @@ function usr(User) {
     blocked: false,
     validated: false
   }).then(user => {
-    user.setRoles([1])
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
 
   User.create({
@@ -192,7 +235,11 @@ function usr(User) {
     blocked: false,
     validated: false
   }).then(user => {
-    user.setRoles([1])
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
 
   User.create({
@@ -202,7 +249,11 @@ function usr(User) {
     blocked: true,
     validated: false
   }).then(user => {
-    user.setRoles([1])
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
 
   User.create({
@@ -212,12 +263,21 @@ function usr(User) {
     blocked: false,
     validated: false
   }).then(user => {
-    user.setRoles([1])
-    user.setRoles([2])
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
   })
 
   return usr
 }
+
 
 function usrLogs(Logs) {
   Logs.create({
@@ -264,10 +324,68 @@ function deleteLogs(DeletedUser) {
   })
 }
 
+function usrProd(User, Role) {
+  User.create({
+    username: "admin",
+    email: "admin@ai.de",
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false, 
+    validated: false
+  }).then(user => {
+    Role.findOne({
+      where: { name: 'ADMIN' }
+    }).then(role => {
+      user.setRoles(role)
+    })
+  }).catch(function (err) {
+    console.log('user "admin" already exists.')
+  });
+  
+  User.create({
+    username: "usr",
+    email: "usr@ai.de",
+    password: bcrypt.hashSync("test1234", 8), 
+    blocked: false,
+    validated: false
+  }).then(user => {
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    }) 
+  }).catch(function (err) {
+    console.log('user "usr" already exists.')
+  });
+
+  User.create({
+    username: "manager",
+    email: "manager@ai.de",
+    password: bcrypt.hashSync("test1234", 8),
+    blocked: false,
+    validated: false
+  }).then(user => {
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      user.setRoles(role)
+    })
+  }).catch(function (err) {
+    console.log('user "manager" already exists.')
+  });
+
+  return usr
+}
+
 const initialLoad = {
   role,
   right,
   usr,
+  usrProd,
   usrLogs, 
   deleteLogs
 }
