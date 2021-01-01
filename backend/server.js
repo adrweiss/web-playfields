@@ -23,6 +23,9 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 8001;
 const mode = process.env.PLAYFIELD || 'dev'
 
+console.log(mode)
+console.log(process.env.PLAYFIELD)
+
 // Middlewares
 app.use(Cors());
 app.use(express.json());
