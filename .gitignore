@@ -4,12 +4,13 @@ frontend/node_modules
 frontend/.eslintcache
 frontend/build
 frontend/package-lock.json
-frontend/src/config/axios.js
+
+frontend/src/config/*
+!frontend/src/config/.gitkeep
 
 backend/node_modules
 backend/package-lock.json
 backend/.eslintcache
 
-backend/src/config/db.config.aws.js
-backend/src/config/db.config.js
-backend/src/config/auth.config.js
+backend/src/config/*
+!backend/src/config/.gitkeep
