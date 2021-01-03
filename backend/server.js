@@ -2,7 +2,7 @@ import express from "express"
 import Cors from 'cors';
 import bodyParser from 'body-parser';
 
-import { db, roleInit } from './src/models/index.js'
+import { db, dataDevInit, dataProdInit } from './src/models/index.js'
 
 import { routsUsr } from './src/routes/user.routes.js';
 import { authRoutes } from './src/routes/auth.routes.js';
@@ -21,27 +21,33 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const port = process.env.PORT || 8001;
+const mode = process.env.PLAYFIELD || 'dev'
 
 // Middlewares
 app.use(Cors());
 app.use(express.json());
-
 
 // DB config 
 //const MongoClient = Mongo.MongoClient;
 //const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
 //const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
 
-db.sequelize.sync({ force: true }).then(() => {
-    console.log('Drop and Resync Db');
-    roleInit(db.role, db.right, db.user, db.logs, db.deletedUser);
-});
-
-//db.sequelize.sync();
-
+if (mode === 'dev') {
+    db.sequelize.sync({ force: true }).then(() => {
+        console.log('Drop table and Resync Db');
+        dataDevInit(db.role, db.right, db.user, db.logs, db.deletedUser);
+    });
+} else if (mode === 'prod') {
+    db.sequelize.sync({ force: true }).then(() => {
+        console.log('Load data fro production mode');
+        dataProdInit(db.role, db.right, db.user);
+    });
+} else {
+    console.log('No database mode set.')
+}
 
 // API Endpoints
-app.get('/', (req, res) => res.status(200).send('Health'));
+app.get('/api/', (req, res) => res.status(200).send('Health'));
 
 routsUsr(app)
 authRoutes(app)

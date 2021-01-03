@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import './Roles.Overview.css'
+import './Roles.Management.css'
+import ManagementRoleService from '../services/mgt.role.service'
+
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import ManagementRoleService from '../services/mgt.role.service'
-import AddIcon from '@material-ui/icons/Add';
-import Tooltip from '@material-ui/core/Tooltip';
+
 import Modal from 'react-modal';
-import Button from '@material-ui/core/Button'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
+import AddIcon from '@material-ui/icons/Add';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
 
 Modal.setAppElement('body')
 
@@ -54,17 +59,17 @@ function Row(props) {
   const [roleDescriptionTable, setRoleDescriptionTable] = useState(role.role_description);
   const [currentRights, setCurrentRights] = useState(role.rights);
 
-  
-  var rightsRole = currentRights 
+
+  var rightsRole = currentRights
   const temp = []
-  
+
   rightsRole.forEach(right => {
     temp.push(right.right_id)
   })
-  
+
   rightsRole = allRights.filter((el) => !temp.includes(el.right_id))
 
-  
+
 
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
@@ -142,7 +147,7 @@ function Row(props) {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          setMessageEdit(_content);
+        setMessageEdit(_content);
       })
   }
 
@@ -222,7 +227,8 @@ function Row(props) {
               inputRef={element => setroleName(element)}
               variant="outlined" />
 
-            <TextField className='input__field__desciption'
+            <TextField
+              className='input__field__desciption'
               label="Role Description"
               margin="normal"
               defaultValue={roleDescriptionTable}
@@ -306,9 +312,8 @@ function Row(props) {
             </div>
           )}
           <h3>Delete {roleNameTable}?</h3>
-          <div>
-            Are you sure that you want to delete the Role "{roleNameTable}"?
-          </div>
+          <p>Are you sure that you want to delete the Role "{roleNameTable}"?</p>
+          <div />
           <Button variant="contained" onClick={deleteRole} color="secondary" disabled={deleteButton}>Delete</Button>
           <Button variant="contained" onClick={modaDeleteRole}>Close</Button>
         </div>
@@ -326,6 +331,7 @@ function RolesOverview() {
   const [roleName, setroleName] = useState("");
   const [roleDescription, setRoleDescription] = useState("");
   const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
 
   useEffect(() => {
     ManagementRoleService.getRoles().then((response) => {
@@ -357,7 +363,10 @@ function RolesOverview() {
       })
   }, [])
 
-
+  function removeMessage() {
+    setMessage("")
+  }
+ 
   function openModalCreateRole() {
     setAllRightsforModel(allRights)
     setroleName("")
@@ -394,8 +403,11 @@ function RolesOverview() {
     setRightsForNewRole([])
     setIsOpenCreateRole(false);
 
+    clearTimeout(timerId)
+
     ManagementRoleService.createRole(name, description, accessRights).then((response) => {
       setMessage(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -405,6 +417,7 @@ function RolesOverview() {
           error.message ||
           error.toString();
         setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       })
 
     ManagementRoleService.getRoles().then((response) => {
@@ -425,11 +438,26 @@ function RolesOverview() {
   return (
     <div>
       <h2>The overview of all roles to which you have access yourself</h2>
+
       {message && (
         <div className="response">
           {message}
         </div>
       )}
+      <div className="management__header">
+        <TextField
+          className='search__bar__management'
+          id="outlined-search"
+          label="Search field"
+          type="search"
+          size="small"
+          variant="outlined" />
+        <Button>
+          <Tooltip title="Search for Role" aria-label="search">
+            <SearchIcon />
+          </Tooltip>
+        </Button>
+      </div>
       <TableContainer>
         <Table>
           <TableHead>
@@ -473,7 +501,8 @@ function RolesOverview() {
               inputRef={element => setroleName(element)}
               variant="outlined" />
 
-            <TextField className='input__field__desciption'
+            <TextField
+              className='input__field__desciption'
               label="Role Description"
               margin="normal"
               inputRef={element => setRoleDescription(element)}
