@@ -1,10 +1,18 @@
 .idea
+.vscode
 frontend/node_modules
 frontend/.eslintcache
 frontend/build
 frontend/package-lock.json
-.vscode
+
+frontend/src/config/*
+!frontend/src/config/.gitkeep
 
 backend/node_modules
 backend/package-lock.json
 backend/.eslintcache
+
+backend/src/config/*
+backend/app_2.json
+!backend/src/config/auth.config.js
+!backend/src/config/db.config.js
