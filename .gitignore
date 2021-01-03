@@ -13,4 +13,6 @@ backend/package-lock.json
 backend/.eslintcache
 
 backend/src/config/*
-!backend/src/config/.gitkeep
+backend/app_2.json
+!backend/src/config/auth.config.js
+!backend/src/config/db.config.js
