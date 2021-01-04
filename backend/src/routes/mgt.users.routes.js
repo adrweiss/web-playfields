@@ -1,4 +1,4 @@
-import { authJwt, verifySignUp } from "../middleware/index.js";
+import { authJwt } from "../middleware/index.js";
 import mgtUserFunctions from "../controllers/mgt.users.controller.js";
 
 export function routsMgtUsers(app) {

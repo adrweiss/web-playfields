@@ -9,6 +9,7 @@ import { authRoutes } from './src/routes/auth.routes.js';
 import { routsMgtRoles } from './src/routes/mgt.role.routes.js';
 import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
 import { routsViews } from './src/routes/view.routes.js';
+import { routsMgt } from './src/routes/mgt.routes.js';
 
 //import pgClient from './pgQueries.js'
 //import { getUsers, getUserById, getUserIdByEmail, createUser, updatePassword, deleteUser } from './src/pgQueries.js'
@@ -54,6 +55,7 @@ authRoutes(app)
 routsMgtRoles(app)
 routsMgtUsers(app)
 routsViews(app)
+routsMgt(app)
 
 
 
