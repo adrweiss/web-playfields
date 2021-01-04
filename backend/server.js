@@ -38,7 +38,7 @@ if (mode === 'dev') {
         dataDevInit(db.role, db.right, db.user, db.logs, db.deletedUser);
     });
 } else if (mode === 'prod') {
-    db.sequelize.sync({ force: true }).then(() => {
+    db.sequelize.sync({ force: false }).then(() => {
         console.log('Load data fro production mode');
         dataProdInit(db.role, db.right, db.user);
     });
