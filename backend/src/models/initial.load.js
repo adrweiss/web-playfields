@@ -182,6 +182,19 @@ function right(Right, Role) {
     console.log('right "WRITE_USR_LEVEL_2" already exists.')
   });
 
+  Right.create({
+    name: "TRIGGER_BUILD",
+    description: "You can trigger the build process for production deployment.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  }).catch(function (err) {
+    console.log('right "TRIGGER_BUILD" already exists.')
+  });
+
   return right
 }
 
