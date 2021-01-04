@@ -186,6 +186,13 @@ function getWriteUsrLevel2(req, res, next) {
   next();
 }
 
+function getTriggerBuild(req, res, next) {
+  req.right = ['TRIGGER_BUILD', 'ADMIN'];
+  next();
+}
+
+
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -201,6 +208,7 @@ const authJwt = {
   getWriteRoleUsr,
   getWriteUsr,
   getWriteUsrLevel2,
+  getTriggerBuild,
 };
 
 export { authJwt };
