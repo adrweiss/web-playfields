@@ -28,8 +28,8 @@ export function routsHome(app) {
   app.post(
     "/api/home/post/user",
     [authJwt.verifyToken,
-      //  authJwt.getWritePost,
-      //  authJwt.hasRights
+    authJwt.getWritePost,
+    authJwt.hasRights
     ],
     homeController.writePost,
   );
@@ -37,8 +37,8 @@ export function routsHome(app) {
   app.delete(
     "/api/home/post/user",
     [authJwt.verifyToken,
-      //  authJwt.getWritePost,
-      //  authJwt.hasRights
+    authJwt.getWritePost,
+    authJwt.hasRights
     ],
     homeController.deletePost,
   );
@@ -46,8 +46,8 @@ export function routsHome(app) {
   app.delete(
     "/api/home/post/any",
     [authJwt.verifyToken,
-      //  authJwt.getDeleteAnyPost,
-      //  authJwt.hasRights
+    authJwt.getDeleteAnyPost,
+    authJwt.hasRights
     ],
     homeController.deletePost,
   );
