@@ -19,7 +19,13 @@ function getPost(req, res, next) {
 }
 
 function getAmount(req, res, next) {
-  return res.status(200).send({ message: "Get amount." });
+  blogPost.countDocuments({}, function (err, data) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send({ amount: data });
+    }
+  })
 }
 
 function deletePost(req, res, next) {

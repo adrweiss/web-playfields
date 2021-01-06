@@ -11,14 +11,13 @@ export function routsHome(app) {
   });
 
   app.post(
-    "/api/home/post/user",
-    [],
+    "/api/home/post/any",
     homeController.writePost,
   );
 
-  app.post(
-    "/api/home/post/any",
-    homeController.writePost,
+  app.get(
+    "/api/home/posts",
+    homeController.getAmount,
   );
 
   app.get(
@@ -26,15 +25,30 @@ export function routsHome(app) {
     homeController.getPost,
   );
 
+  app.post(
+    "/api/home/post/user",
+    [authJwt.verifyToken,
+      //  authJwt.getWritePost,
+      //  authJwt.hasRights
+    ],
+    homeController.writePost,
+  );
+
   app.delete(
-    "/api/home/post",
-    [],
+    "/api/home/post/user",
+    [authJwt.verifyToken,
+      //  authJwt.getWritePost,
+      //  authJwt.hasRights
+    ],
     homeController.deletePost,
   );
 
-  app.get(
-    "/api/home/posts",
-    [],
-    homeController.getAmount,
+  app.delete(
+    "/api/home/post/any",
+    [authJwt.verifyToken,
+      //  authJwt.getDeleteAnyPost,
+      //  authJwt.hasRights
+    ],
+    homeController.deletePost,
   );
 };
