@@ -1,8 +1,10 @@
 import mongoose from'mongoose'
 
-const cardSchema = mongoose.Schema({
-  name: String, 
-  imgUrl: String
+const blogPostSchema = mongoose.Schema({
+  userid: Number, 
+  date: { type: Date, default: Date.now },
+  title: String,
+  body: String
 })
 
-export default mongoose.model('cards', cardSchema);
+export default mongoose.model('blogPost', blogPostSchema);
