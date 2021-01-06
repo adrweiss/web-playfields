@@ -2,9 +2,6 @@ import express from "express"
 import Cors from 'cors';
 import bodyParser from 'body-parser';
 
-import mongoose from 'mongoose';
-import Cards from './post.js';
-
 import { db, dataDevInit, dataProdInit } from './src/models/index.js'
 
 import { routsUsr } from './src/routes/user.routes.js';
@@ -20,20 +17,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const port = process.env.PORT || 8001;
 const mode = process.env.PLAYFIELD || 'dev'
-const connection_url = `mongodb+srv://admin:Txnn7Uls6PrchoYG@cluster0.geqdu.mongodb.net/playfield`
 
 // Middlewares
 app.use(express.json());
 app.use(Cors());
 
 // DB config 
-mongoose.connect(connection_url, {
-    useNewUrlParser: true, 
-    useCreateIndex: true, 
-    useUnifiedTopology: true,
-  })
-
-
 if (mode === 'dev') {
     db.sequelize.sync({ force: true }).then(() => {
         console.log('Drop table and Resync Db');
