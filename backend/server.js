@@ -2,6 +2,10 @@ import express from "express"
 import Cors from 'cors';
 import bodyParser from 'body-parser';
 
+
+import mongoose from 'mongoose';
+import Cards from './post.js';
+
 import { db, dataDevInit, dataProdInit } from './src/models/index.js'
 
 import { routsUsr } from './src/routes/user.routes.js';
@@ -23,15 +27,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const port = process.env.PORT || 8001;
 const mode = process.env.PLAYFIELD || 'dev'
+const connection_url = `mongodb+srv://admin:Txnn7Uls6PrchoYG@cluster0.geqdu.mongodb.net/tinderdb`
 
 // Middlewares
-app.use(Cors());
 app.use(express.json());
+app.use(Cors());
 
 // DB config 
-//const MongoClient = Mongo.MongoClient;
-//const uri = "mongodb+srv://admin:admin@cluster0.anvgz.mongodb.net/Posts?retryWrites=true&w=majority";
-//const mongoClient = new MongoClient(uri, { useNewUrlParser: true });
+mongoose.connect(connection_url, {
+    useNewUrlParser: true, 
+    useCreateIndex: true, 
+    useUnifiedTopology: true,
+  })
+
 
 if (mode === 'dev') {
     db.sequelize.sync({ force: true }).then(() => {
@@ -59,7 +67,27 @@ routsMgt(app)
 
 
 
-
+app.post('/tinder/cards', (req, res) => {
+    const dbCard = req.body;
+  
+    Cards.create(dbCard, (err, data) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        res.status(201).send(data)
+      }
+    })
+  })
+  
+  app.get('/tinder/cards', (req, res) => {
+    Cards.find((err, data) => {
+      if (err) {
+        res.status(500).send(err)
+      } else {
+        res.status(200).send(data)
+      }
+    })
+  })
 
 
 /*
@@ -89,7 +117,6 @@ app.get('/getPage', (req, res)=>{
 });
 
 app.get('/countPosts', (req, res)=>{
-
     mongoClient.connect(err => {
         const collection = mongoClient.db("Posts").collection("Posts");
         collection.countDocuments(function(err, countData){
@@ -101,6 +128,7 @@ app.get('/countPosts', (req, res)=>{
         });
     });
 });
+
 //Delete Post with Database ID {id}
 app.delete('/delete', (req, res)=>{
     const {id} = req.body;
