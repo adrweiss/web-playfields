@@ -10,6 +10,7 @@ import { routsMgtRoles } from './src/routes/mgt.role.routes.js';
 import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
 import { routsViews } from './src/routes/view.routes.js';
 import { routsMgt } from './src/routes/mgt.routes.js';
+import { routsHome } from './src/routes/home.routes.js'
 
 // APP Config 
 const app = express();
@@ -46,30 +47,7 @@ routsMgtRoles(app)
 routsMgtUsers(app)
 routsViews(app)
 routsMgt(app)
-
-
-
-app.post('/tinder/cards', (req, res) => {
-    const dbCard = req.body;
-  
-    Cards.create(dbCard, (err, data) => {
-      if (err) {
-        res.status(500).send(err)
-      } else {
-        res.status(201).send(data)
-      }
-    })
-  })
-  
-  app.get('/tinder/cards', (req, res) => {
-    Cards.find((err, data) => {
-      if (err) {
-        res.status(500).send(err)
-      } else {
-        res.status(200).send(data)
-      }
-    })
-  })
+routsHome(app)
 
 // Listeners
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

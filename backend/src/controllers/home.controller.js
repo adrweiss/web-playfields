@@ -1,10 +1,48 @@
 import mongoose from 'mongoose';
-import blogPost from './blog.model.js';
+import { mongodbConfig } from '../config/mongo.db.config.js'
+import blogPost from '../models/blog.model.js';
 
-const connection_url = `mongodb+srv://admin:Txnn7Uls6PrchoYG@cluster0.geqdu.mongodb.net/playfield`
-
-const mongo = mongoose.connect(connection_url, {
+const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 })
+
+function getPost(req, res, next) {
+  blogPost.find((err, data) => {
+    if (err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(200).send(data)
+    }
+  })
+}
+
+function getAmount(req, res, next) {
+  return res.status(200).send({ message: "Get amount." });
+}
+
+function deletePost(req, res, next) {
+  return res.status(200).send({ message: "Delte Post." });
+}
+
+function writePost(req, res, next) {
+  const dbCard = req.body;
+
+  blogPost.create(dbCard, (err, data) => {
+    if (err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(201).send(data)
+    }
+  })
+}
+
+const homeController = {
+  getPost,
+  getAmount,
+  deletePost,
+  writePost
+};
+
+export default homeController;
