@@ -11,7 +11,7 @@ export function routsMgt(app) {
   });
 
 
-  app.post(
+  app.get(
     "/api/mgt/build",
     [authJwt.verifyToken,
     authJwt.getTriggerBuild,
