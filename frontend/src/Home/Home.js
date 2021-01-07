@@ -3,7 +3,9 @@ import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
-import axios from './config/axios';
+import axios from '../config/axios';
+
+import HomeService from "../services/home.service.js"
 
 
 function Home() {
@@ -12,40 +14,39 @@ function Home() {
 
   const postPSide = 5
 
-
   useEffect(() => {
-    async function fetchPosts() {
-      //const req = await axios.get('/getPage', {params: {"pageNo": '1', "size": postPSide.toString()}});
-      //setMessageFlow(req.data)
-      await axios.get('/getPage', { params: { "pageNo": '1', "size": postPSide.toString() } })
-        .then(response => {
-          setMessageFlow(response.data)
-        })
-        .catch(error => {
-          console.log('Endpoint not available.')
-        })
-    }
+    HomeService.getAmount().then((response) => {
+      setAmountPosts(Math.ceil(response.data.amount / postPSide));
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-    fetchPosts();
+        console.log(_content);
+      })
+
+    HomeService.getPosts(0, postPSide).then((response) => {
+      setMessageFlow(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+
   }, [])
 
-  useEffect(() => {
-    async function fetchCountPosts() {
-      //const req = await axios.get('/countPosts');
-      //setAmountPosts(Math.ceil(req.data.count / postPSide));
-      await axios.get('/countPosts')
-        .then(response => {
-          setAmountPosts(Math.ceil(response.data.count / postPSide));
-        })
-        .catch(error => {
-          setAmountPosts(0);
-          console.log('Endpoint not available.')
-        })
-    }
-
-    fetchCountPosts();
-  }, [])
-
+  /*
   async function fetchPosts(pageNo) {
     //const req = await axios.get('/getPage', {params: {"pageNo": pageNo.toString(), "size": postPSide.toString()}});
     //setMessageFlow(req.data)
@@ -57,6 +58,7 @@ function Home() {
         console.log('Endpoint not available.')
       });
   }
+  
 
   async function fetchCountPosts() {
     //const req = await axios.get('/countPosts');
@@ -69,9 +71,10 @@ function Home() {
         console.log('Endpoint not available.')
       })
   }
+  */
 
   const handleChangePage = (event, newPage) => {
-    fetchPosts(newPage)
+    //fetchPosts(newPage)
   }
 
   const sendPost = () => {
@@ -85,8 +88,8 @@ function Home() {
       'ID_USR': 2
     })
       .then((response) => {
-        fetchCountPosts()
-        fetchPosts('1')
+        //fetchCountPosts()
+        //fetchPosts('1')
       }, (error) => {
         console.log('Endpoint not available.')
       });
@@ -114,11 +117,12 @@ function Home() {
             <div>
               {messageFlow?.map(item => (
                 <Message
-                  id={item._id}
+                  key={item.id}
+                  id={item.id}
                   title={item.title}
-                  post={item.content}
-                  usr={item.ID_USR}
-                  timestamp={item.creationDate}
+                  post={item.body}
+                  usr={item.userid}
+                  timestamp={item.date}
                 />
               ))}
             </div>

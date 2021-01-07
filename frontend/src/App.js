@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from './Header';
 import Game from './Game';
-import Home from './Home'
+import Home from './Home/Home'
 import Login from './Login'
 import Management from './management/Management'
 import User from './User'

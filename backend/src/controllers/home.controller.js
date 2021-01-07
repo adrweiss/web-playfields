@@ -13,10 +13,10 @@ function getPost(req, res, next) {
     })
 
     BlogPost.find({},
-      ['title', 'date', 'userid'],
+      ['title', 'date', 'body', 'userid'],
       {
-        skip: req.body.skip,
-        limit: req.body.limit,
+        skip: parseInt(req.query.skip),
+        limit: parseInt(req.query.limit),
         sort: {
           date: -1
         },
@@ -35,6 +35,7 @@ function getPost(req, res, next) {
             {
               id: doc._id,
               userid: username,
+              body: doc.body,
               title: doc.title,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
