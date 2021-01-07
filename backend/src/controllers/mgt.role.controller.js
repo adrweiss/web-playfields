@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { db } from '../models/index.js'
 
 const Right = db.right;
@@ -54,7 +55,7 @@ const getRoleAndRight = (req, res, next) => {
             role_id: role.id,
             role_name: role.name,
             role_description: role.description,
-            role_created_at: role.createdAt,
+            role_created_at: format(role.createdAt, 'dd.MM.yyy hh:mm'),
             rights: role.rights.map(right => {
 
               return Object.assign(
@@ -63,7 +64,7 @@ const getRoleAndRight = (req, res, next) => {
                   right_id: right.id,
                   right_name: right.name,
                   right_description: right.description,
-                  right_assigned_to: right.roles_right.createdAt
+                  right_assigned_to: format(right.roles_right.createdAt, 'dd.MM.yyy  hh:mm')
 
                 }
               )
