@@ -87,7 +87,6 @@ function Home() {
       .then((response) => {
         fetchCountPosts()
         fetchPosts('1')
-        //console.log(response)
       }, (error) => {
         console.log('Endpoint not available.')
       });
