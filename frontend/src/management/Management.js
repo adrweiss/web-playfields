@@ -13,6 +13,10 @@ import RolesOverview from './Roles.Management';
 import LoginManagement from './Login.Management';
 import DeleteManagement from './Delete.Management';
 import { getCurrentUser } from "../services/auth.service";
+import Button from '@material-ui/core/Button'
+import ManagementService from '../services/mgt.service'
+
+
 
 function Management() {
   const [open, setOpen] = useState(false);
@@ -26,7 +30,7 @@ function Management() {
   if (currentUser !== null) {
     rights = currentUser.rights
   }
-  
+
 
   if (!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))) {
     history.push('/unauthorized')
@@ -93,6 +97,23 @@ function Management() {
     handleClose()
   }
 
+  const triggerBuild = () => {
+    ManagementService.triggerBuild().then((response) => {
+      console.log(response.data.message);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
+
   return (
     <div>
       <h1>The side for the admin to controll access.</h1>
@@ -108,7 +129,7 @@ function Management() {
                 onClick={handleToggle}
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
-            aria-haspopup="true">Views</MenuItem>)}
+                aria-haspopup="true">Views</MenuItem>)}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -133,8 +154,20 @@ function Management() {
         </Grid>
         <Grid item sm={10}>
           {subPage === 0 && (
-            <div className="startpage">
-              This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
+            <div>
+              <div className="startpage">
+                This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
+              </div>
+              {(rights.includes('TRIGGER_BUILD') || rights.includes('ADMIN')) && (
+                <div className="startpage">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={triggerBuild}>
+                    Trigger build process
+                </Button>
+                </div>
+              )}
             </div>
           )}
           {subPage === 1 && (

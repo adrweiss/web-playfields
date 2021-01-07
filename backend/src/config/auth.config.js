@@ -1,3 +1,3 @@
 export const authConfig = {
-  secret: "ai-playfield-secret-key"
+  secret: process.env.SECRET || "ai-playfield-secret-key"
 };

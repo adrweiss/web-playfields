@@ -18,7 +18,11 @@ function Header() {
   var rights = []
 
   if (currentUser !== null) {
-    rights = currentUser.rights
+    if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
+      logout()
+    } else {
+      rights = currentUser.rights
+    }
   }
 
   const handleClickLogout = () => {
