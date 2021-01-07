@@ -1,16 +1,8 @@
-import mongoose from 'mongoose';
-import { mongodbConfig } from '../config/mongo.db.config.js'
-import blogPost from '../models/blog.model.js';
-import { db } from '../models/index.js'
+import { db, mongodb} from '../models/index.js'
 import { format } from 'date-fns';
 
 const User = db.user;
-
-const mongo = mongoose.connect(mongodbConfig.connection_url, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-})
+const BlogPost = mongodb.blogPost;
 
 function getPost(req, res, next) {
   User.findAll({
@@ -20,7 +12,7 @@ function getPost(req, res, next) {
       return [user.id, user.username]
     })
 
-    blogPost.find({},
+    BlogPost.find({},
       ['title', 'date', 'userid'],
       {
         skip: req.body.skip,
@@ -44,7 +36,7 @@ function getPost(req, res, next) {
               id: doc._id,
               userid: username,
               title: doc.title,
-              date: format(doc.date, 'dd.MM.yyy hh:mm')
+              date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
           )
         })
@@ -54,7 +46,7 @@ function getPost(req, res, next) {
 }
 
 function getAmount(req, res, next) {
-  blogPost.countDocuments({}, function (err, data) {
+  BlogPost.countDocuments({}, function (err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -64,7 +56,7 @@ function getAmount(req, res, next) {
 }
 
 function deletePost(req, res, next) {
-  blogPost.findById(req.body.postId,
+  BlogPost.findById(req.body.postId,
     function (err, doc) {
       if (err) {
         return res.status(400).send({ message: "Post not found." })
@@ -73,7 +65,7 @@ function deletePost(req, res, next) {
         return res.status(400).send({ message: "The user has not the right to delete a post from another user." })
       }
 
-      blogPost.remove({ _id: req.body.postId }, function (err) {
+      BlogPost.remove({ _id: req.body.postId }, function (err) {
         if (!err) {
           return res.status(200).send({ message: "Post was deleted." });
         }
@@ -84,7 +76,7 @@ function deletePost(req, res, next) {
 }
 
 function deleteAnyPost(req, res, next) {
-  blogPost.remove({ _id: req.body.postId }, function (err) {
+  BlogPost.remove({ _id: req.body.postId }, function (err) {
     if (!err) {
       return res.status(200).send({ message: "Post was deleted." });
     }
@@ -116,7 +108,7 @@ function writePost(req, res, next) {
     }
   }
 
-  blogPost.create(dbCard, (err, data) => {
+  BlogPost.create(dbCard, (err, data) => {
     if (err) {
       return res.status(500).send(err)
     } else {
