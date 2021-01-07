@@ -6,7 +6,8 @@ export function Role(sequelize, Sequelize){
       primaryKey: true
     },
     name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      unique: true
     },
     description: {
       type: Sequelize.STRING
