@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 import { mongodbConfig } from '../config/mongo.db.config.js'
 import blogPost from '../models/blog.model.js';
+import { db } from '../models/index.js'
+import { format } from 'date-fns';
+
+const User = db.user;
 
 const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useNewUrlParser: true,
@@ -9,12 +13,43 @@ const mongo = mongoose.connect(mongodbConfig.connection_url, {
 })
 
 function getPost(req, res, next) {
-  blogPost.find((err, data) => {
-    if (err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(200).send(data)
-    }
+  User.findAll({
+    attributes: ['id', 'username']
+  }).then(user => {
+    const users = user.map(user => {
+      return [user.id, user.username]
+    })
+
+    blogPost.find({},
+      ['title', 'date', 'userid'],
+      {
+        skip: req.body.skip,
+        limit: req.body.limit,
+        sort: {
+          date: -1
+        },
+      },
+      function (err, docs) {
+        const resObj = docs.map(doc => {
+          let username = users.find(element => element[0] === doc.userid)
+          if (username) {
+            username = username[1]
+          } else {
+            username = null
+          }
+
+          return Object.assign(
+            {},
+            {
+              id: doc._id,
+              userid: username,
+              title: doc.title,
+              date: format(doc.date, 'dd.MM.yyy hh:mm')
+            }
+          )
+        })
+        res.status(200).send(resObj)
+      })
   })
 }
 
@@ -34,11 +69,11 @@ function deletePost(req, res, next) {
 
 function writePost(req, res, next) {
   if (!req.body.title) {
-    return res.status(400).send({message: "No Title was provided."})
+    return res.status(400).send({ message: "No Title was provided." })
   }
 
   if (!req.body.body) {
-    return res.status(400).send({message: "No Post was provided."})
+    return res.status(400).send({ message: "No Post was provided." })
   }
 
   var dbCard = {}
@@ -54,7 +89,7 @@ function writePost(req, res, next) {
       "title": req.body.title,
       "body": req.body.body
     }
-  } 
+  }
 
   blogPost.create(dbCard, (err, data) => {
     if (err) {

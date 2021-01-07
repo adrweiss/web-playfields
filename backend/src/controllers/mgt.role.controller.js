@@ -1,5 +1,4 @@
 import { format } from 'date-fns';
-
 import { db } from '../models/index.js'
 
 const Right = db.right;
