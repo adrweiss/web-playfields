@@ -49,6 +49,6 @@ export function routsHome(app) {
     authJwt.getDeleteAnyPost,
     authJwt.hasRights
     ],
-    homeController.deletePost,
+    homeController.deleteAnyPost,
   );
 };

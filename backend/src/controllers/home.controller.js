@@ -64,7 +64,32 @@ function getAmount(req, res, next) {
 }
 
 function deletePost(req, res, next) {
-  return res.status(200).send({ message: "Delete Post." });
+  blogPost.findById(req.body.postId,
+    function (err, doc) {
+      if (err) {
+        return res.status(400).send({ message: "Post not found." })
+      }
+      if (!req.userId === doc.userid) {
+        return res.status(400).send({ message: "The user has not the right to delete a post from another user." })
+      }
+
+      blogPost.remove({ _id: req.body.postId }, function (err) {
+        if (!err) {
+          return res.status(200).send({ message: "Post was deleted." });
+        }
+        return res.status(400).send({ message: "Deletion was not successfull." })
+      });
+    }
+  )
+}
+
+function deleteAnyPost(req, res, next) {
+  blogPost.remove({ _id: req.body.postId }, function (err) {
+    if (!err) {
+      return res.status(200).send({ message: "Post was deleted." });
+    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
+  });
 }
 
 function writePost(req, res, next) {
@@ -104,6 +129,7 @@ const homeController = {
   getPost,
   getAmount,
   deletePost,
+  deleteAnyPost,
   writePost
 };
 
