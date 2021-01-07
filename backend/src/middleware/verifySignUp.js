@@ -87,12 +87,10 @@ function checkPassword(req, res, next) {
 };
 
 const verifySignUp = {
-  //checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
   checkDuplicateUsername,
   checkDuplicateEmail,
   checkPassword,
   checkDuplicateRoleName,
-  //checkRolesExisted: checkRolesExisted
 };
 
 export { verifySignUp };

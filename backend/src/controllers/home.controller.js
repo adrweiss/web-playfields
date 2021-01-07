@@ -29,17 +29,38 @@ function getAmount(req, res, next) {
 }
 
 function deletePost(req, res, next) {
-  return res.status(200).send({ message: "Delte Post." });
+  return res.status(200).send({ message: "Delete Post." });
 }
 
 function writePost(req, res, next) {
-  const dbCard = req.body;
+  if (!req.body.title) {
+    return res.status(400).send({message: "No Title was provided."})
+  }
+
+  if (!req.body.body) {
+    return res.status(400).send({message: "No Post was provided."})
+  }
+
+  var dbCard = {}
+  if (req.userId) {
+    dbCard = {
+      "userid": req.userId,
+      "title": req.body.title,
+      "body": req.body.body
+    }
+  } else {
+    dbCard = {
+      "userid": null,
+      "title": req.body.title,
+      "body": req.body.body
+    }
+  } 
 
   blogPost.create(dbCard, (err, data) => {
     if (err) {
       return res.status(500).send(err)
     } else {
-      return res.status(201).send(data)
+      return res.status(201).send({ message: "Successfull posted." })
     }
   })
 }
