@@ -83,7 +83,23 @@ db.validate.belongsTo(db.user, {
   as: "user",
 });
 
-function dataDevInit(role, right, user, logs, deletedUser){
+// start mongodb
+import mongoose from 'mongoose';
+import { mongodbConfig } from '../config/mongo.db.config.js'
+import blogPost from '../models/blog.model.js';
+
+const mongodb = {};
+
+const mongo = mongoose.connect(mongodbConfig.connection_url, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+})
+
+mongodb.mongoose = mongo
+mongodb.blogPost = blogPost
+
+function dataDevInit(role, right, user, logs, deletedUser) {
   initialLoad.role(role)
   initialLoad.right(right, role)
   initialLoad.usr(user, role)
@@ -91,13 +107,10 @@ function dataDevInit(role, right, user, logs, deletedUser){
   initialLoad.deleteLogs(deletedUser)
 }
 
-function dataProdInit(role, right, user ){
+function dataProdInit(role, right, user) {
   initialLoad.role(role)
   initialLoad.right(right, role)
-  initialLoad.usrProd(user,role)
+  initialLoad.usrProd(user, role)
 }
 
-//db.ROLES = ["user", "admin", "manager"];
-//db.RIGHTS = ["admin", "READ_USER_VIEW", "READ_MANAGEMNT_VIEW"];
-
-export { db, dataDevInit, dataProdInit};
+export { db, mongodb, dataDevInit, dataProdInit };

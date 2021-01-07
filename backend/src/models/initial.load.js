@@ -195,6 +195,32 @@ function right(Right, Role) {
     console.log('right "TRIGGER_BUILD" already exists.')
   });
 
+  Right.create({
+    name: "WRITE_POST",
+    description: "You can write a post regarding to your user.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'USER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  }).catch(function (err) {
+    console.log('right "WRITE_POST" already exists.')
+  });
+
+  Right.create({
+    name: "DELETE_ANY_POST",
+    description: "You can delete each post.",
+  }).then(right => {
+    Role.findOne({
+      where: { name: 'MANAGER' }
+    }).then(role => {
+      right.setRoles(role)
+    })
+  }).catch(function (err) {
+    console.log('right "DELETE_ANY_POST" already exists.')
+  });
+
   return right
 }
 

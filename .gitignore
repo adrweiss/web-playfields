@@ -11,8 +11,4 @@ frontend/src/config/*
 backend/node_modules
 backend/package-lock.json
 backend/.eslintcache
-
-backend/src/config/*
 backend/app.json
-!backend/src/config/auth.config.js
-!backend/src/config/db.config.js
