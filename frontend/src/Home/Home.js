@@ -3,16 +3,23 @@ import './Home.css'
 import Message from './Message'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
-import axios from '../config/axios';
 
+import { getCurrentUser } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
 
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
+  const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
 
+  const currentUser = getCurrentUser();
   const postPSide = 5
+
+  function removeMessage() {
+    setMessage("")
+  }
 
   useEffect(() => {
     HomeService.getAmount().then((response) => {
@@ -42,62 +49,78 @@ function Home() {
 
         console.log(_content);
       })
-
-
   }, [])
 
-  /*
-  async function fetchPosts(pageNo) {
-    //const req = await axios.get('/getPage', {params: {"pageNo": pageNo.toString(), "size": postPSide.toString()}});
-    //setMessageFlow(req.data)
-    await axios.get('/getPage', { params: { "pageNo": pageNo.toString(), "size": postPSide.toString() } })
-      .then(response => {
-        setMessageFlow(response.data)
-      })
-      .catch(error => {
-        console.log('Endpoint not available.')
-      });
-  }
-  
+  function fetchPosts(skip) {
+    removeMessage()
+    HomeService.getPosts(skip, postPSide).then((response) => {
+      setMessageFlow(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-  async function fetchCountPosts() {
-    //const req = await axios.get('/countPosts');
-    //setAmountPosts(Math.ceil(req.data.count / postPSide));
-    await axios.get('/countPosts')
-      .then(response => {
-        setAmountPosts(Math.ceil(response.data.count / postPSide));
-      })
-      .catch(error => {
-        console.log('Endpoint not available.')
+        setMessage(_content);
       })
   }
-  */
 
   const handleChangePage = (event, newPage) => {
-    //fetchPosts(newPage)
+    fetchPosts(((newPage - 1) * 5))
   }
 
   const sendPost = () => {
-    var title_text = document.getElementById('title_text').value
-    var post_text = document.getElementById('post_text').value
+    removeMessage()
+    clearTimeout(timerId)
 
+    var title = document.getElementById('title_text').value
+    var post = document.getElementById('post_text').value
 
-    axios.post('/addPost', {
-      'title': title_text,
-      'content': post_text,
-      'ID_USR': 2
-    })
-      .then((response) => {
-        //fetchCountPosts()
-        //fetchPosts('1')
-      }, (error) => {
-        console.log('Endpoint not available.')
-      });
+    if (currentUser !== null && currentUser.expire >= Math.floor(new Date().getTime() / 1000)) {
+      HomeService.addPostUser(title, post).then((response) => {
+        fetchPosts(0)
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setMessage(_content);
+          setTimerId(setTimeout(removeMessage, 10000));
+        })
+    } else {
+      HomeService.addPostAny(title, post).then((response) => {
+        fetchPosts(0)
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setMessage(_content);
+          setTimerId(setTimeout(removeMessage, 10000));
+        })
+    }
   }
 
   return (
     <div>
       <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
+
+      {message && (
+        <div className="response">
+          {message}
+        </div>
+      )}
 
       <div className="homescreen_title">
         <textarea className="input__write__post" id="title_text" name="title_text" cols="35" rows="1" maxLength="35" placeholder="Write a Title" />

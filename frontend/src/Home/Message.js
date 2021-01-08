@@ -1,21 +1,11 @@
 import React from 'react';
 import "./Message.css";
 import Button from '@material-ui/core/Button';
-//import axios from './config/axios';
-
 
 function Message({ id, title, post, usr, timestamp }) {
 
   const deletePost = () => {
     console.log(id)
-    /*axios.delete('/delete', {
-      'id': id,
-    })
-    .then((response) => {
-      console.log(response)
-    }, (error) => {
-      console.log(error)
-    });*/
   }
 
   return (
@@ -27,7 +17,7 @@ function Message({ id, title, post, usr, timestamp }) {
         {post}
         <div className='user__date_container'>
           <div>
-            User: {usr}
+            User: {usr? usr: "Guest"}
           </div>
 
           <div>
