@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from './Header';
-import Game from './Game';
+import Game from './Game/Game';
 import Home from './Home/Home'
-import Login from './Login'
-import Management from './management/Management'
-import User from './User'
-import NewUsr from './NewUsr'
+import Login from './User/Login'
+import Management from './Management/Management'
+import User from './User/User'
+import NewUsr from './User/NewUsr'
 import Unauthorized from './Unauthorized'
 
 function App() {

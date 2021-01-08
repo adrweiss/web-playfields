@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
 import { useHistory } from 'react-router-dom';
-import { login } from "./services/auth.service"
+import { login } from "../services/auth.service"
 
 import TextField from '@material-ui/core/TextField';
 
@@ -23,12 +23,22 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = useState(false);
+  
   const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
+
   const [username, setUsername] = useState(false);
   const [password, setPassword] = useState(false);
   const history = useHistory();
 
+  function removeMessage() {
+    setMessage("")
+  }
+  
   const handleClick = () => {
+    removeMessage()
+    clearTimeout(timerId)
+
     login(username.value, password.value).then(
       () => {
         console.log('successfull login')
@@ -43,6 +53,7 @@ function Login() {
           error.toString();
 
         setMessage(resMessage);
+        setTimerId(setTimeout(removeMessage, 10000));
       }
     );
   }

@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import './NewUsr.css';
-import { register } from "./services/auth.service"
+import { register } from "../services/auth.service"
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 
 
 function NewUsr() {
   const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
+
   const [username, setUsername] = useState(false);
   const [email, setEmail] = useState(false);
   const [password, setPassword] = useState(false);
   const [passwordRepeat, setPasswordRepeat] = useState(false);
   const history = useHistory();
 
+  function removeMessage() {
+    setMessage("")
+  }
+
   const handleClick = () => {
+    removeMessage()
+    clearTimeout(timerId)
+
     if (password.value === passwordRepeat.value) {
       register(username.value, email.value, password.value).then(
         (response) => {
@@ -30,10 +39,12 @@ function NewUsr() {
             error.message ||
             error.toString();
           setMessage(resMessage);
+          setTimerId(setTimeout(removeMessage, 10000));
         }
       )
     } else {
       setMessage('The passwords does not match.');
+      setTimerId(setTimeout(removeMessage, 10000));
     }
   }
 

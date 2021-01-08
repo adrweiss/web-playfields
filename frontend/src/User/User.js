@@ -15,8 +15,8 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 
-import { logout, getCurrentUser } from "./services/auth.service";
-import UserService from "./services/user.service";
+import { logout, getCurrentUser } from "../services/auth.service";
+import UserService from "../services/user.service";
 
 Modal.setAppElement('body')
 
