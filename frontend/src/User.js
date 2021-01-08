@@ -45,24 +45,18 @@ function User() {
   const [passwordNew, setPasswordNew] = useState(false);
   const [passwordNewAgain, setPasswordNewAgain] = useState(false);
   
-
   const history = useHistory();
   const currentUser = getCurrentUser();
 
-  var rights = []
   var sizeRightSection = 6
 
-  if (currentUser !== null) {
-    rights = currentUser.rights
-  }
-
-  if (!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))) {
+  if (!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
 
   const [currUsername, setCurrUsername] = useState(currentUser.username);
 
-  if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+  if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
     sizeRightSection = 4
   }
 
@@ -87,13 +81,13 @@ function User() {
     if (role_id === role.role_id) {
       setHideRoleInfo(!hideRoleInfo)
       if (hideRoleInfo) {
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(4)
         } else {
           setSize(6)
         }
       } else {
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(8)
         } else {
           setSize(12)
@@ -102,7 +96,7 @@ function User() {
     } else {
       if (hideRoleInfo) {
         setHideRoleInfo(false)
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(4)
         } else {
           setSize(6)
@@ -180,7 +174,7 @@ function User() {
     <div>
       <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
       <Grid container spacing={3}>
-        <Grid item sm={4} hidden={!(rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN'))}>
+        <Grid item sm={4} hidden={!(currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN'))}>
           <div className="container__user">
             <h2>Change your user settings</h2>
 
@@ -250,7 +244,7 @@ function User() {
             </div>
             <div className="middleline"></div>
             <div className='delete__profile'>
-              <Button variant="contained" color="secondary" disabled={rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
+              <Button variant="contained" color="secondary" disabled={currentUser?.rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
                 Delete Profile
               </Button>
             </div>

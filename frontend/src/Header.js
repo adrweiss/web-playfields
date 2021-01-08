@@ -15,14 +15,8 @@ function Header() {
   const history = useHistory();
   var currentUser = getCurrentUser();
 
-  var rights = []
-
-  if (currentUser !== null) {
-    if (currentUser.expire <= Math.floor(new Date().getTime() / 1000)) {
-      logout()
-    } else {
-      rights = currentUser.rights
-    }
+  if (currentUser?.expire <= Math.floor(new Date().getTime() / 1000)) {
+    logout()
   }
 
   const handleClickLogout = () => {
@@ -84,12 +78,12 @@ function Header() {
               </Link>
             )}
 
-            <Link to="/user" className="header__link" hidden={!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))}>
+            <Link to="/user" className="header__link" hidden={!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))}>
               <AccountCircleIcon fontSize="large" />
             </Link>
           </div>
         </div>
-        
+
         {currentUser && (
           <div>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -105,12 +99,12 @@ function Header() {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>
-                <Link to="/user" className='menu__link__header' hidden={!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))}>
+                <Link to="/user" className='menu__link__header' hidden={!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))}>
                   {"Profil"}
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link to="/management" className='menu__link__header' hidden={!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))}>
+                <Link to="/management" className='menu__link__header' hidden={!(currentUser?.rights.includes('READ_MANAGEMNT_VIEW') || currentUser?.rights.includes('ADMIN'))}>
                   {"Management"}
                 </Link>
               </MenuItem>

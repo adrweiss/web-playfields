@@ -57,13 +57,6 @@ function UserOverview() {
   const [currentUserId, setCurrentUserId] = useState("");
   const currentUser = getCurrentUser();
 
-
-  var rights = []
-
-  if (currentUser !== null) {
-    rights = currentUser.rights
-  }
-
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
       setUserData(response.data)
@@ -139,7 +132,7 @@ function UserOverview() {
       return true
     }
 
-    if (rights.includes('ADMIN')) {
+    if (currentUser?.rights.includes('ADMIN')) {
       return false
     }
 

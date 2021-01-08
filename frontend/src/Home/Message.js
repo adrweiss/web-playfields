@@ -1,8 +1,10 @@
 import React from 'react';
 import "./Message.css";
 import Button from '@material-ui/core/Button';
+import { getCurrentUser } from "../services/auth.service"
 
-function Message({ id, title, post, usr, timestamp }) {
+function Message({ id, title, post, userId, usr, timestamp }) {
+  const currentUser = getCurrentUser();
 
   const deletePost = () => {
     console.log(id)
@@ -17,19 +19,20 @@ function Message({ id, title, post, usr, timestamp }) {
         {post}
         <div className='user__date_container'>
           <div>
-            User: {usr? usr: "Guest"}
+            User: {usr ? usr : "Guest"}
           </div>
 
           <div>
             Date: {timestamp}
           </div>
         </div>
-
-        <div className='delete_button' >
-          <Button size="small" variant="contained" color="secondary" onClick={deletePost}>
-            Delete
+        {(currentUser?.id === userId || currentUser?.rights.includes('DELETE_ANY_POST')) &&  (
+          <div className='delete_button' >
+            <Button size="small" variant="contained" color="secondary" onClick={deletePost}>
+              Delete
           </Button>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

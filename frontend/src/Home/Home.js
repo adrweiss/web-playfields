@@ -144,7 +144,8 @@ function Home() {
                   id={item.id}
                   title={item.title}
                   post={item.body}
-                  usr={item.userid}
+                  userId={item.userid}
+                  usr={item.username}
                   timestamp={item.date}
                 />
               ))}

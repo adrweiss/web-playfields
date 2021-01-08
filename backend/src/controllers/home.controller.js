@@ -34,7 +34,8 @@ function getPost(req, res, next) {
             {},
             {
               id: doc._id,
-              userid: username,
+              username: username,
+              userid: doc.userid,
               body: doc.body,
               title: doc.title,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
