@@ -50,7 +50,18 @@ function Header() {
             window.location.reload()
           }
         }
-      })
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        }
+      )
     }
   }, 300000);
 
