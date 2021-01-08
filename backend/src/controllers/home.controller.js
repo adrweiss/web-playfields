@@ -67,7 +67,7 @@ function deletePost(req, res, next) {
         return res.status(400).send({ message: "The user has not the right to delete a post from another user." })
       }
 
-      BlogPost.remove({ _id: req.body.postId }, function (err) {
+      BlogPost.deleteOne({ _id: req.body.postId }, function (err) {
         if (!err) {
           return res.status(200).send({ message: "Post was deleted." });
         }
@@ -78,7 +78,7 @@ function deletePost(req, res, next) {
 }
 
 function deleteAnyPost(req, res, next) {
-  BlogPost.remove({ _id: req.body.postId }, function (err) {
+  BlogPost.deleteOne({ _id: req.body.postId }, function (err) {
     if (!err) {
       return res.status(200).send({ message: "Post was deleted." });
     }

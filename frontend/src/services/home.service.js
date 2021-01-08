@@ -30,13 +30,23 @@ const addPostUser = (title, body) => {
   );
 };
 
-// delete post user 
+const deletePostAny = (postId) => {
+  return axios.delete("/home/post/any", { headers: authHeader() , data: { "postId": postId }});
+};
+
+const deletePostUser = (postId) => {
+  return axios.delete("/home/post/user",{ headers: authHeader() , data: { "postId": postId }});
+};
+
+
 // delete post any 
 const HomeService = {
   getAmount,
   getPosts,
   addPostAny,
   addPostUser,
+  deletePostAny,
+  deletePostUser
 }
 
 export default HomeService;
