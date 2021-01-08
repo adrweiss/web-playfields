@@ -38,6 +38,8 @@ function User() {
   const [size, setSize] = useState(8);
   const [messagePW, setMessagePW] = useState("");
   const [messageUN, setMessageUN] = useState("");
+  const [timerId, setTimerId] = useState();
+
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const [modalDelete, setModalDelete] = useState(false);
   const [username, setUsername] = useState(false);
@@ -58,6 +60,11 @@ function User() {
 
   if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
     sizeRightSection = 4
+  }
+
+  function removeMessage() {
+    setMessagePW("")
+    setMessageUN("")
   }
 
   useEffect(() => {
@@ -127,11 +134,15 @@ function User() {
   }
 
   const handleClickChangeUsername = () => {
+    removeMessage()
+    clearTimeout(timerId)
+
     UserService.changeUsername(username.value).then((response) => {
       setMessageUN(response.data.message);
       currentUser.username = username.value;
       localStorage.setItem("user", JSON.stringify(currentUser));
       setCurrUsername(username.value)
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -141,14 +152,19 @@ function User() {
           error.message ||
           error.toString();
         setMessageUN(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       }
     )
   }
 
   const handleClickChangePassword = () => {
+    removeMessage()
+    clearTimeout(timerId)
+
     if (passwordNew.value === passwordNewAgain.value) {
       UserService.changePassword(passwordOld.value, passwordNew.value).then((response) => {
         setMessagePW(response.data.message)
+        setTimerId(setTimeout(removeMessage, 10000));
       },
         (error) => {
           const _content =
@@ -159,10 +175,12 @@ function User() {
             error.toString();
 
           setMessagePW(_content);
+          setTimerId(setTimeout(removeMessage, 10000));
         }
       )
     } else {
       setMessagePW('The passwords does not match.')
+      setTimerId(setTimeout(removeMessage, 10000));
     }
   }
 
