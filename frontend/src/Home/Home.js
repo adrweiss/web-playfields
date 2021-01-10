@@ -7,12 +7,18 @@ import Grid from '@material-ui/core/Grid';
 import { getCurrentUser } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+
 
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
+  const [title, setTitle] = useState("");
+  const [post, setPost] = useState("");
 
   const currentUser = getCurrentUser();
   const postPSide = 5
@@ -76,12 +82,11 @@ function Home() {
     removeMessage()
     clearTimeout(timerId)
 
-    var title = document.getElementById('title_text').value
-    var post = document.getElementById('post_text').value
-
     if (currentUser !== null && currentUser.expire >= Math.floor(new Date().getTime() / 1000)) {
       HomeService.addPostUser(title, post).then((response) => {
         fetchPosts(0)
+        setTitle('')
+        setPost('')
       },
         (error) => {
           const _content =
@@ -97,6 +102,8 @@ function Home() {
     } else {
       HomeService.addPostAny(title, post).then((response) => {
         fetchPosts(0)
+        setTitle('')
+        setPost('')
       },
         (error) => {
           const _content =
@@ -112,56 +119,100 @@ function Home() {
     }
   }
 
+  const handleChangeTitle = (event) => {
+    setTitle(event.target.value);
+  };
+  const handleChangePost = (event) => {
+    setPost(event.target.value);
+  };
+
   return (
     <div>
-      <h1>The start screen will be placed here/ It will be possible to add posts here.</h1>
+      <h1>Welcome to playfield</h1>
+      <Grid container spacing={3}>
+        <Grid item sm={6}>
+          <div className='posts'>
 
-      {message && (
-        <div className="response">
-          {message}
-        </div>
-      )}
+            {message && (
+              <div className="response">
+                {message}
+              </div>
+            )}
 
-      <div className="homescreen_title">
-        <textarea className="input__write__post" id="title_text" name="title_text" cols="35" rows="1" maxLength="35" placeholder="Write a Title" />
-      </div>
+            <div className='input__section__post'>
+              <TextField
+                className='input__post'
+                label="Title"
+                variant="outlined"
+                margin="normal"
+                value={title}
+                onChange={handleChangeTitle}
+              />
 
-      <div className="homescreen">
-        <textarea className="input__write__post" id="post_text" name="text" cols="35" rows="4" maxLength="140" placeholder="Write a new Post" />
-        <input type="submit" value="Send" onClick={sendPost} />
-      </div>
+              <TextField
+                className='input__post'
+                label="Post"
+                multiline
+                variant="outlined"
+                margin="normal"
+                value={post}
+                onChange={handleChangePost}
+              />
 
-      <div>
-        {messageFlow?.length === 0 ? (
-          <div className='homescreen'>
-            <h2>No post available</h2>
-          </div>
-        ) : (
-            <div>
-              {messageFlow?.map(item => (
-                <Message
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  post={item.body}
-                  userId={item.userid}
-                  usr={item.username}
-                  timestamp={item.date}
-                />
-              ))}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={sendPost}
+              >
+                Send
+              </Button>
+
+
+              <div>
+                {messageFlow?.length === 0 ? (
+                  <div className='homescreen'>
+                    <h2>No post available</h2>
+                  </div>
+                ) : (
+                    <div>
+                      {messageFlow?.map(item => (
+                        <Message
+                          key={item.id}
+                          id={item.id}
+                          title={item.title}
+                          post={item.body}
+                          userId={item.userid}
+                          usr={item.username}
+                          timestamp={item.date}
+                        />
+                      ))}
+                    </div>
+                  )}
+              </div>
+
+              {amountPosts > 0 ? (
+                <Grid container justify="center">
+                  <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
+                </Grid>
+              ) : (
+                  <Grid container justify="center">
+                    <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
+                  </Grid>
+                )}
             </div>
-          )}
-      </div>
-
-      {amountPosts > 0 ? (
-        <Grid container justify="center">
-          <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
+          </div>
         </Grid>
-      ) : (
-          <Grid container justify="center">
-            <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
-          </Grid>
-        )}
+        <Grid item sm={6}>
+          <div className='posts'>
+            <h2>What is playfield?</h2>
+            <p>Storry about the plan</p>
+            <h2>Who am I?</h2>
+            <p>Storry about me</p>
+            <h2>What is the plan</h2>
+            <p>The plan with this webpage</p>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   )
 }
