@@ -74,6 +74,15 @@ function Message({ id, title, post, userId, usr, timestamp }) {
 
         {/*<div class="circle">{usr ? usr : "Guest"}</div>
         */}
+
+        <Tooltip title={usr ? usr : "Guest"}>
+          <div className="circle_v1">
+            {usr ? usr.substring(0, 2).toUpperCase() : "GU"}
+          </div>
+        </Tooltip>
+
+        <div className="circle_v2"></div>
+
         <h3 className='post__title'>{title}</h3>
 
         <div className='box__post__container'>
@@ -84,10 +93,10 @@ function Message({ id, title, post, userId, usr, timestamp }) {
           <div className="box__creation__date">
             Creation date: {timestamp}
           </div>
-          
+
           <div className="box__delete__post">
             <IconButton onClick={deletePost} disabled={!(currentUser && (currentUser?.id === userId || currentUser?.rights.includes('DELETE_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
-              <Tooltip title="Delete user" aria-label="delete_user">
+              <Tooltip title="Delete post." aria-label="delete_user">
                 <DeleteIcon fontSize='medium' />
               </Tooltip>
             </IconButton>

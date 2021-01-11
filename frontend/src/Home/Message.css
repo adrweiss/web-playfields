@@ -1,6 +1,6 @@
 .post__container {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     background-color: #fff;
     box-shadow: 0px 18px 53px 0px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
@@ -42,4 +42,27 @@
 .box__delete__post {
     text-align: right;
     margin-right: 10px;
+}
+
+.circle_v1 {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: -20px;
+    shape-outside: circle();
+    clip-path: circle();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: lightblue;
+}
+
+.circle_v2 {
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    z-index: -9;
+    shape-outside: circle();
+    clip-path: circle();
 }
