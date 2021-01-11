@@ -168,7 +168,7 @@ function Home() {
 
             <div className="test">
               {messageFlow?.length === 0 ? (
-                <div className='homescreen'>
+                <div className='write__posts'>
                   <h2>No post available</h2>
                 </div>
               ) : (

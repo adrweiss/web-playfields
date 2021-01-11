@@ -7,7 +7,9 @@ import { Right } from './right.model.js'
 import { LogsDeleted, Logs } from './logs.model.js'
 import { Validate } from './validate.model.js'
 
-import { initialLoad } from './initial.load.js'
+import { initialLoad } from './initial.SQL.load.js'
+
+const mode = process.env.PLAYFIELD || 'dev'
 
 const sequelize = new Sequelize(
   config.DB,
@@ -96,21 +98,30 @@ const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useUnifiedTopology: true,
 })
 
+if (mode === 'dev') {
+  blogPost.collection.drop().then(() => {
+    console.log('Existing mongodb schema blogPost is deleted.')
+  },
+  (error) => {
+    console.log('There is no mongodb schema with the name blogpost available.')
+  })
+}
+
 mongodb.mongoose = mongo
 mongodb.blogPost = blogPost
 
-function dataDevInit(role, right, user, logs, deletedUser) {
-  initialLoad.role(role)
-  initialLoad.right(right, role)
-  initialLoad.usr(user, role)
-  initialLoad.usrLogs(logs)
-  initialLoad.deleteLogs(deletedUser)
+function dataDevInit() {
+  initialLoad.role(db.role)
+  initialLoad.right(db.right, db.role)
+  initialLoad.usr(db.user, db.role)
+  initialLoad.usrLogs(db.logs)
+  initialLoad.deleteLogs(db.deletedUser)
 }
 
-function dataProdInit(role, right, user) {
-  initialLoad.role(role)
-  initialLoad.right(right, role)
-  initialLoad.usrProd(user, role)
+function dataProdInit() {
+  initialLoad.role(db.role)
+  initialLoad.right(db.right, db.role)
+  initialLoad.usrProd(db.user, db.role)
 }
 
 export { db, mongodb, dataDevInit, dataProdInit };

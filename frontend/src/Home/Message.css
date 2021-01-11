@@ -12,6 +12,7 @@
     text-align: center;
     border-bottom: 1px solid #aaa;
     background-color: rgb(241, 236, 236);
+    padding: 10px;
 }
 
 .box__post__container {
@@ -40,4 +41,5 @@
 
 .box__delete__post {
     text-align: right;
+    margin-right: 10px;
 }
