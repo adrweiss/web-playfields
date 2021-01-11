@@ -8,9 +8,7 @@ import { getCurrentUser } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-
-
+import Button from '@material-ui/core/Button'
 
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
@@ -139,7 +137,7 @@ function Home() {
               </div>
             )}
 
-            <div className='input__section__post'>
+            <div className="write__posts">
               <TextField
                 className='input__post'
                 label="Title"
@@ -165,45 +163,45 @@ function Home() {
                 onClick={sendPost}
               >
                 Send
-              </Button>
+            </Button>
+            </div>
 
-
-              <div>
-                {messageFlow?.length === 0 ? (
-                  <div className='homescreen'>
-                    <h2>No post available</h2>
-                  </div>
-                ) : (
-                    <div>
-                      {messageFlow?.map(item => (
-                        <Message
-                          key={item.id}
-                          id={item.id}
-                          title={item.title}
-                          post={item.body}
-                          userId={item.userid}
-                          usr={item.username}
-                          timestamp={item.date}
-                        />
-                      ))}
-                    </div>
-                  )}
-              </div>
-
-              {amountPosts > 0 ? (
-                <Grid container justify="center">
-                  <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
-                </Grid>
+            <div className="test">
+              {messageFlow?.length === 0 ? (
+                <div className='homescreen'>
+                  <h2>No post available</h2>
+                </div>
               ) : (
-                  <Grid container justify="center">
-                    <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
-                  </Grid>
+                  <div>
+                    {messageFlow?.map(item => (
+                      <Message
+                        key={item.id}
+                        id={item.id}
+                        title={item.title}
+                        post={item.body}
+                        userId={item.userid}
+                        usr={item.username}
+                        timestamp={item.date}
+                      />
+                    ))}
+                  </div>
                 )}
             </div>
+
+            {amountPosts > 0 ? (
+              <Grid container justify="center">
+                <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
+              </Grid>
+            ) : (
+                <Grid container justify="center">
+                  <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
+                </Grid>
+              )}
+
           </div>
         </Grid>
         <Grid item sm={6}>
-          <div className='posts'>
+          <div>
             <h2>What is playfield?</h2>
             <p>Storry about the plan</p>
             <h2>Who am I?</h2>

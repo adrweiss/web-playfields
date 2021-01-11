@@ -83,11 +83,11 @@ function Header() {
 
         <div className='header__user'>
           <div className='user__icon'>
-            {!currentUser && (
-              <Link to="/login" className="header__link">
-                <AccountCircleIcon fontSize="large" />
-              </Link>
-            )}
+
+            <Link to="/login" className="header__link" hidden={currentUser}>
+              <AccountCircleIcon fontSize="large" />
+            </Link>
+
 
             <Link to="/user" className="header__link" hidden={!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))}>
               <AccountCircleIcon fontSize="large" />

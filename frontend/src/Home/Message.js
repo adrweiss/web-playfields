@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import "./Message.css";
-import Button from '@material-ui/core/Button';
 
 import { getCurrentUser } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Message({ id, title, post, userId, usr, timestamp }) {
   const [message, setMessage] = useState("");
@@ -59,35 +61,37 @@ function Message({ id, title, post, userId, usr, timestamp }) {
   }
 
   return (
-    <div className='container'>
-      <div className='post__container'>
+    <div className='post__container'>
 
-        {message && (
-          <div className="response">
-            {message}
-          </div>
-        )}
-        <div hidden={deleted}>
-          <h3 className='post__title'>{title}</h3>
+      {message && (
+        <div className="response">
+          {message}
+        </div>
+      )}
 
+
+      <div hidden={deleted}>
+
+        {/*<div class="circle">{usr ? usr : "Guest"}</div>
+        */}
+        <h3 className='post__title'>{title}</h3>
+
+        <div className='box__post__container'>
           {post}
+        </div>
 
-          <div className='user__date_container'>
-            <div>
-              User: {usr ? usr : "Guest"}
-            </div>
-
-            <div>
-              Date: {timestamp}
-            </div>
+        <div className='user__date__container'>
+          <div className="box__creation__date">
+            Creation date: {timestamp}
           </div>
-          {currentUser && (currentUser?.id === userId || currentUser?.rights.includes('DELETE_ANY_POST') || currentUser?.rights.includes('ADMIN')) && (
-            <div className='delete_button'>
-              <Button size="small" variant="contained" color="secondary" onClick={deletePost}>
-                Delete
-          </Button>
-            </div>
-          )}
+          
+          <div className="box__delete__post">
+            <IconButton onClick={deletePost} disabled={!(currentUser && (currentUser?.id === userId || currentUser?.rights.includes('DELETE_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
+              <Tooltip title="Delete user" aria-label="delete_user">
+                <DeleteIcon fontSize='medium' />
+              </Tooltip>
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>
@@ -96,3 +100,4 @@ function Message({ id, title, post, userId, usr, timestamp }) {
 
 
 export default Message
+
