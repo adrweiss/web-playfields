@@ -17,6 +17,7 @@
 
 .write__posts>Button {
     margin-top: 15px;
+    margin-bottom: 10px;
     min-width: 100px;
     width: 75%;
 }
