@@ -42,10 +42,10 @@ function User() {
 
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const [modalDelete, setModalDelete] = useState(false);
-  const [username, setUsername] = useState(false);
-  const [passwordOld, setPasswordOld] = useState(false);
-  const [passwordNew, setPasswordNew] = useState(false);
-  const [passwordNewAgain, setPasswordNewAgain] = useState(false);
+  const [username, setUsername] = useState('');
+  const [passwordOld, setPasswordOld] = useState('');
+  const [passwordNew, setPasswordNew] = useState('');
+  const [passwordNewAgain, setPasswordNewAgain] = useState('');
   
   const history = useHistory();
   const currentUser = getCurrentUser();
@@ -137,12 +137,13 @@ function User() {
     removeMessage()
     clearTimeout(timerId)
 
-    UserService.changeUsername(username.value).then((response) => {
+    UserService.changeUsername(username).then((response) => {
       setMessageUN(response.data.message);
-      currentUser.username = username.value;
+      currentUser.username = username;
       localStorage.setItem("user", JSON.stringify(currentUser));
-      setCurrUsername(username.value)
+      setCurrUsername(username)
       setTimerId(setTimeout(removeMessage, 10000));
+      setUsername('');
     },
       (error) => {
         const _content =
@@ -161,10 +162,13 @@ function User() {
     removeMessage()
     clearTimeout(timerId)
 
-    if (passwordNew.value === passwordNewAgain.value) {
-      UserService.changePassword(passwordOld.value, passwordNew.value).then((response) => {
+    if (passwordNew === passwordNewAgain) {
+      UserService.changePassword(passwordOld, passwordNew).then((response) => {
         setMessagePW(response.data.message)
         setTimerId(setTimeout(removeMessage, 10000));
+        setPasswordOld('');
+        setPasswordNew('');
+        setPasswordNewAgain('');
       },
         (error) => {
           const _content =
@@ -188,6 +192,19 @@ function User() {
     setModalDelete(!modalDelete)
   }
 
+  const handleChangeUsername = (event) => {
+    setUsername(event.target.value);
+  };
+  const handleChangePasswordOld = (event) => {
+    setPasswordOld(event.target.value);
+  };
+  const handleChangePasswordNew = (event) => {
+    setPasswordNew(event.target.value);
+  };
+  const handleChangePasswordNewAgain = (event) => {
+    setPasswordNewAgain(event.target.value);
+  };
+
   return (
     <div>
       <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
@@ -207,10 +224,11 @@ function User() {
 
               <TextField
                 className="input__user__self_service"
-                label="New username "
-                inputRef={element => setUsername(element)}
+                label="New username"
                 variant="outlined"
                 margin="normal"
+                value={username}
+                onChange={handleChangeUsername}
               />
 
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
@@ -234,8 +252,9 @@ function User() {
                 label="Old Password"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordOld(element)}
                 variant="outlined"
+                value={passwordOld}
+                onChange={handleChangePasswordOld}
               />
 
               <TextField
@@ -243,8 +262,9 @@ function User() {
                 label="New Password"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordNew(element)}
                 variant="outlined"
+                value={passwordNew}
+                onChange={handleChangePasswordNew}
               />
 
               <TextField
@@ -252,8 +272,9 @@ function User() {
                 label="New Password Again"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordNewAgain(element)}
                 variant="outlined"
+                value={passwordNewAgain}
+                onChange={handleChangePasswordNewAgain}
               />
 
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
