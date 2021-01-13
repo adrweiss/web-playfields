@@ -1,6 +1,7 @@
 import { db } from '../models/index.js'
 import bcrypt from 'bcrypt';
 import { helper } from '../middleware/index.js'
+import { format } from 'date-fns';
 
 const User = db.user;
 const Right = db.right;
@@ -50,7 +51,7 @@ const getRoles = (req, res, next) => {
             role_id: role.id,
             role_name: role.name,
             role_description: role.description,
-            assignment_date: role.user_roles.createdAt,
+            assignment_date: format(role.user_roles.createdAt, 'dd.MM.yyy'),
             rights: role.rights.map(right => {
 
               return Object.assign(

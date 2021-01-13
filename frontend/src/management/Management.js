@@ -25,14 +25,7 @@ function Management() {
   const history = useHistory();
   const currentUser = getCurrentUser();
 
-  var rights = []
-
-  if (currentUser !== null) {
-    rights = currentUser.rights
-  }
-
-
-  if (!(rights.includes('READ_MANAGEMNT_VIEW') || rights.includes('ADMIN'))) {
+  if (!(currentUser?.rights.includes('READ_MANAGEMNT_VIEW') || currentUser?.rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
 
@@ -120,11 +113,11 @@ function Management() {
       <Grid container spacing={3}>
         <Grid item sm={2}>
           <MenuList>
-            {(rights.includes('READ_USER_MANAGEMENT') || rights.includes('ADMIN')) && (
+            {(currentUser?.rights.includes('READ_USER_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
-            {(rights.includes('READ_ROLE_MANAGEMENT') || rights.includes('ADMIN')) && (
+            {(currentUser?.rights.includes('READ_ROLE_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageRole}>Roles</MenuItem>)}
-            {(rights.includes('READ_VIEW_LOGIN') || rights.includes('READ_VIEW_DELETE') || rights.includes('ADMIN')) && (
+            {(currentUser?.rights.includes('READ_VIEW_LOGIN') || currentUser?.rights.includes('READ_VIEW_DELETE') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem
                 onClick={handleToggle}
                 ref={anchorRef}
@@ -141,9 +134,9 @@ function Management() {
                 <Paper>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      {(rights.includes('READ_VIEW_LOGIN') || rights.includes('ADMIN')) && (
+                      {(currentUser?.rights.includes('READ_VIEW_LOGIN') || currentUser?.rights.includes('ADMIN')) && (
                         <MenuItem onClick={handleclickChangeSubpageLogin}>Log-In</MenuItem>)}
-                      {(rights.includes('READ_VIEW_DELETE') || rights.includes('ADMIN')) && (
+                      {(currentUser?.rights.includes('READ_VIEW_DELETE') || currentUser?.rights.includes('ADMIN')) && (
                         <MenuItem onClick={handleclickChangeSubpageDelete}>Delete</MenuItem>)}
                     </MenuList>
                   </ClickAwayListener>
@@ -158,7 +151,7 @@ function Management() {
               <div className="startpage">
                 This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
               </div>
-              {(rights.includes('TRIGGER_BUILD') || rights.includes('ADMIN')) && (
+              {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
                 <div className="startpage">
                   <Button
                     variant="contained"

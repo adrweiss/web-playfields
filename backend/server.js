@@ -12,6 +12,8 @@ import { routsViews } from './src/routes/view.routes.js';
 import { routsMgt } from './src/routes/mgt.routes.js';
 import { routsHome } from './src/routes/home.routes.js'
 
+import { initialNoSQLLoad } from './src/models/initial.noSQL.load.js'
+
 // APP Config 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -27,12 +29,13 @@ app.use(Cors());
 if (mode === 'dev') {
     db.sequelize.sync({ force: true }).then(() => {
         console.log('Drop table and Resync Db');
-        dataDevInit(db.role, db.right, db.user, db.logs, db.deletedUser);
+        dataDevInit();
     });
+    initialNoSQLLoad.insertPosts()
 } else if (mode === 'prod') {
-    db.sequelize.sync({ force: false }).then(() => {
-        console.log('Load data fro production mode');
-        dataProdInit(db.role, db.right, db.user);
+    db.sequelize.sync({ force: true }).then(() => {
+        console.log('Load data for production mode');
+        dataProdInit();
     });
 } else {
     console.log('No database mode set.')

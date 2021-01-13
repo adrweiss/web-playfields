@@ -1,5 +1,3 @@
 export const mongodbConfig = {
-  connection_url: "mongodb+srv://admin:Txnn7Uls6PrchoYG@cluster0.geqdu.mongodb.net/playfield"
+  connection_url: process.env.MONGO_DB_CON_STR || "mongodb://localhost:27017/playfield"
 };
-
-
