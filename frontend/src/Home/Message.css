@@ -1,0 +1,68 @@
+.post__container {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    box-shadow: 0px 18px 53px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    width: 100%;
+    font: 18px 'Fira Sans', sans-serif;
+}
+
+.post__title {
+    text-align: center;
+    border-bottom: 1px solid #aaa;
+    background-color: rgb(241, 236, 236);
+    padding: 10px;
+}
+
+.box__post__container {
+    hyphens: auto;
+    text-align: justify;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.user__date__container {
+    border-top: 1px solid #aaa;
+    display: flex;
+    background-color: rgb(241, 236, 236);
+}
+
+.box__creation__date {
+    margin-left: 10px;
+    width: 100%;
+    color: rgb(160, 155, 155);
+    font: 14px 'Fira Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.box__delete__post {
+    text-align: right;
+    margin-right: 10px;
+}
+
+.circle_v1 {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: -20px;
+    shape-outside: circle();
+    clip-path: circle();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: lightblue;
+}
+
+.circle_v2 {
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    z-index: -9;
+    shape-outside: circle();
+    clip-path: circle();
+}

@@ -13,10 +13,10 @@ function getPost(req, res, next) {
     })
 
     BlogPost.find({},
-      ['title', 'date', 'userid'],
+      ['title', 'date', 'body', 'userid'],
       {
-        skip: req.body.skip,
-        limit: req.body.limit,
+        skip: parseInt(req.query.skip),
+        limit: parseInt(req.query.limit),
         sort: {
           date: -1
         },
@@ -34,7 +34,9 @@ function getPost(req, res, next) {
             {},
             {
               id: doc._id,
-              userid: username,
+              username: username,
+              userid: doc.userid,
+              body: doc.body,
               title: doc.title,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
@@ -65,7 +67,7 @@ function deletePost(req, res, next) {
         return res.status(400).send({ message: "The user has not the right to delete a post from another user." })
       }
 
-      BlogPost.remove({ _id: req.body.postId }, function (err) {
+      BlogPost.deleteOne({ _id: req.body.postId }, function (err) {
         if (!err) {
           return res.status(200).send({ message: "Post was deleted." });
         }
@@ -76,7 +78,7 @@ function deletePost(req, res, next) {
 }
 
 function deleteAnyPost(req, res, next) {
-  BlogPost.remove({ _id: req.body.postId }, function (err) {
+  BlogPost.deleteOne({ _id: req.body.postId }, function (err) {
     if (!err) {
       return res.status(200).send({ message: "Post was deleted." });
     }

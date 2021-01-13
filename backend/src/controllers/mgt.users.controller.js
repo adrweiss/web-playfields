@@ -1,6 +1,7 @@
 import { db } from '../models/index.js'
 import { helper } from '../middleware/index.js'
 import bcrypt from 'bcrypt';
+import { format } from 'date-fns';
 
 const User = db.user;
 const Right = db.right;
@@ -30,8 +31,8 @@ const getUserInfos = (req, res, next) => {
             username: user.username,
             user_mail: user.email,
             blocked: user.blocked,
-            created: user.createdAt,
-            lastChange: user.updatedAt,
+            created: format(user.createdAt, 'dd.MM.yyy HH:mm'),
+            lastChange: format(user.updatedAt, 'dd.MM.yyy HH:mm'),
             roles: user.roles.map(role => {
 
               return Object.assign(
@@ -40,7 +41,7 @@ const getUserInfos = (req, res, next) => {
                   role_id: role.id,
                   role_name: role.name,
                   role_description: role.description,
-                  assignment_date: role.user_roles.createdAt,
+                  assignment_date: format(role.user_roles.createdAt, 'dd.MM.yyy HH:mm'),
                   rights: role.rights.map(right => {
 
                     return Object.assign(

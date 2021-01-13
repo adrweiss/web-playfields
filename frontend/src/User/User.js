@@ -15,8 +15,8 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 
-import { logout, getCurrentUser } from "./services/auth.service";
-import UserService from "./services/user.service";
+import { logout, getCurrentUser } from "../services/auth.service";
+import UserService from "../services/user.service";
 
 Modal.setAppElement('body')
 
@@ -38,32 +38,33 @@ function User() {
   const [size, setSize] = useState(8);
   const [messagePW, setMessagePW] = useState("");
   const [messageUN, setMessageUN] = useState("");
+  const [timerId, setTimerId] = useState();
+
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const [modalDelete, setModalDelete] = useState(false);
-  const [username, setUsername] = useState(false);
-  const [passwordOld, setPasswordOld] = useState(false);
-  const [passwordNew, setPasswordNew] = useState(false);
-  const [passwordNewAgain, setPasswordNewAgain] = useState(false);
+  const [username, setUsername] = useState('');
+  const [passwordOld, setPasswordOld] = useState('');
+  const [passwordNew, setPasswordNew] = useState('');
+  const [passwordNewAgain, setPasswordNewAgain] = useState('');
   
-
   const history = useHistory();
   const currentUser = getCurrentUser();
 
-  var rights = []
   var sizeRightSection = 6
 
-  if (currentUser !== null) {
-    rights = currentUser.rights
-  }
-
-  if (!(rights.includes('READ_USER_VIEW') || rights.includes('ADMIN'))) {
+  if (!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))) {
     history.push('/unauthorized')
   }
 
   const [currUsername, setCurrUsername] = useState(currentUser.username);
 
-  if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+  if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
     sizeRightSection = 4
+  }
+
+  function removeMessage() {
+    setMessagePW("")
+    setMessageUN("")
   }
 
   useEffect(() => {
@@ -87,13 +88,13 @@ function User() {
     if (role_id === role.role_id) {
       setHideRoleInfo(!hideRoleInfo)
       if (hideRoleInfo) {
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(4)
         } else {
           setSize(6)
         }
       } else {
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(8)
         } else {
           setSize(12)
@@ -102,7 +103,7 @@ function User() {
     } else {
       if (hideRoleInfo) {
         setHideRoleInfo(false)
-        if (rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN')) {
+        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
           setSize(4)
         } else {
           setSize(6)
@@ -133,11 +134,16 @@ function User() {
   }
 
   const handleClickChangeUsername = () => {
-    UserService.changeUsername(username.value).then((response) => {
+    removeMessage()
+    clearTimeout(timerId)
+
+    UserService.changeUsername(username).then((response) => {
       setMessageUN(response.data.message);
-      currentUser.username = username.value;
+      currentUser.username = username;
       localStorage.setItem("user", JSON.stringify(currentUser));
-      setCurrUsername(username.value)
+      setCurrUsername(username)
+      setTimerId(setTimeout(removeMessage, 10000));
+      setUsername('');
     },
       (error) => {
         const _content =
@@ -147,14 +153,22 @@ function User() {
           error.message ||
           error.toString();
         setMessageUN(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       }
     )
   }
 
   const handleClickChangePassword = () => {
-    if (passwordNew.value === passwordNewAgain.value) {
-      UserService.changePassword(passwordOld.value, passwordNew.value).then((response) => {
+    removeMessage()
+    clearTimeout(timerId)
+
+    if (passwordNew === passwordNewAgain) {
+      UserService.changePassword(passwordOld, passwordNew).then((response) => {
         setMessagePW(response.data.message)
+        setTimerId(setTimeout(removeMessage, 10000));
+        setPasswordOld('');
+        setPasswordNew('');
+        setPasswordNewAgain('');
       },
         (error) => {
           const _content =
@@ -165,10 +179,12 @@ function User() {
             error.toString();
 
           setMessagePW(_content);
+          setTimerId(setTimeout(removeMessage, 10000));
         }
       )
     } else {
       setMessagePW('The passwords does not match.')
+      setTimerId(setTimeout(removeMessage, 10000));
     }
   }
 
@@ -176,11 +192,24 @@ function User() {
     setModalDelete(!modalDelete)
   }
 
+  const handleChangeUsername = (event) => {
+    setUsername(event.target.value);
+  };
+  const handleChangePasswordOld = (event) => {
+    setPasswordOld(event.target.value);
+  };
+  const handleChangePasswordNew = (event) => {
+    setPasswordNew(event.target.value);
+  };
+  const handleChangePasswordNewAgain = (event) => {
+    setPasswordNewAgain(event.target.value);
+  };
+
   return (
     <div>
       <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
       <Grid container spacing={3}>
-        <Grid item sm={4} hidden={!(rights.includes('WRITE_OWN_USR_SETTINGS') || rights.includes('ADMIN'))}>
+        <Grid item sm={4} hidden={!(currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN'))}>
           <div className="container__user">
             <h2>Change your user settings</h2>
 
@@ -195,10 +224,11 @@ function User() {
 
               <TextField
                 className="input__user__self_service"
-                label="New username "
-                inputRef={element => setUsername(element)}
+                label="New username"
                 variant="outlined"
                 margin="normal"
+                value={username}
+                onChange={handleChangeUsername}
               />
 
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
@@ -222,8 +252,9 @@ function User() {
                 label="Old Password"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordOld(element)}
                 variant="outlined"
+                value={passwordOld}
+                onChange={handleChangePasswordOld}
               />
 
               <TextField
@@ -231,8 +262,9 @@ function User() {
                 label="New Password"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordNew(element)}
                 variant="outlined"
+                value={passwordNew}
+                onChange={handleChangePasswordNew}
               />
 
               <TextField
@@ -240,8 +272,9 @@ function User() {
                 label="New Password Again"
                 type="password"
                 margin="normal"
-                inputRef={element => setPasswordNewAgain(element)}
                 variant="outlined"
+                value={passwordNewAgain}
+                onChange={handleChangePasswordNewAgain}
               />
 
               <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
@@ -250,7 +283,7 @@ function User() {
             </div>
             <div className="middleline"></div>
             <div className='delete__profile'>
-              <Button variant="contained" color="secondary" disabled={rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
+              <Button variant="contained" color="secondary" disabled={currentUser?.rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
                 Delete Profile
               </Button>
             </div>
