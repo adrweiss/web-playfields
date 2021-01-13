@@ -33,7 +33,7 @@ if (mode === 'dev') {
     });
     initialNoSQLLoad.insertPosts()
 } else if (mode === 'prod') {
-    db.sequelize.sync({ force: false }).then(() => {
+    db.sequelize.sync({ force: true }).then(() => {
         console.log('Load data for production mode');
         dataProdInit();
     });
