@@ -17,8 +17,9 @@ function addDeletedUserToLogs(mail, username) {
   })
 }
 
-function sendMailWithContent(url) {
+function sendMailWithContent(url, mail) {
   console.log(url)
+  console.log(mail)
 }
 
 const helper = {

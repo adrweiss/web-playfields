@@ -36,7 +36,7 @@ export function signup(req, res) {
           var urlStr = 'localhost:3000/user/validate?vk=' + keyString + '&' + 'userid=' + user.id 
 
           user.setRoles([1]).then(() => {
-            helper.sendMailWithContent(urlStr)
+            helper.sendMailWithContent(urlStr, req.body.email)
 
             res.send({ message: "User was registered successfully!" });
           });
