@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
 import { useHistory } from 'react-router-dom';
 import { login } from "../services/auth.service"
+import UserService from "../services/user.service";
 
 import TextField from '@material-ui/core/TextField';
 
@@ -40,11 +41,10 @@ function Login() {
     removeMessage()
     clearTimeout(timerId)
 
-    login(username.value, password.value).then(
-      () => {
-        console.log('successfull login')
-        history.push('/user')
-      },
+    login(username.value, password.value).then(() => {
+      console.log('successfull login')
+      history.push('/user')
+    },
       (error) => {
         const resMessage =
           (error.response &&
@@ -65,7 +65,13 @@ function Login() {
 
   function closeModal() {
     setIsOpen(false);
-    console.log(forgottPassword)
+
+    removeMessage()
+    clearTimeout(timerId)
+    UserService.resetPassword(forgottPassword).then(() => {
+      setMessage("Email with a password reset link is sent.");
+      setTimerId(setTimeout(removeMessage, 10000));
+    })
   }
 
   const handleForgottPassword = (event) => {

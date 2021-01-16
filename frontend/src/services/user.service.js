@@ -25,10 +25,14 @@ const changePassword = (password, password_new) => {
 };
 
 const changeUsername = (username) => {
-  console.log(username)
   return axios.put("/usr/mgt/chgUN",
     { username },
     { headers: authHeader() })
+};
+
+const resetPassword = (email) => {
+  return axios.post("/usr/resetpw",
+    { email })
 };
 
 const UserService = {
@@ -36,7 +40,8 @@ const UserService = {
   deleteUsr,
   changePassword,
   changeUsername,
-  getRights
+  getRights, 
+  resetPassword,
 }
 
 export default UserService;
