@@ -160,6 +160,7 @@ const resetPassword = (req, res, next) => {
 }
 
 const sendNewPassword = (req, res, next) => {
+  console.log(req.body)
   return res.status(200).send({message : 'test'})
 }
 

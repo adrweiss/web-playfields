@@ -35,13 +35,22 @@ const resetPassword = (email) => {
     { email })
 };
 
+const setPassword = (key, password) => {
+  return axios.post("/usr/setforgottpw",
+    {
+      key,
+      password
+    })
+};
+
 const UserService = {
   getRolesRights,
   deleteUsr,
   changePassword,
   changeUsername,
-  getRights, 
+  getRights,
   resetPassword,
+  setPassword,
 }
 
 export default UserService;
