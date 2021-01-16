@@ -17,13 +17,14 @@ function addDeletedUserToLogs(mail, username) {
   })
 }
 
-/*function addValidationEntity() {
-
-}*/
+function sendMailWithContent() {
+  console.log('send mail')
+}
 
 const helper = {
   addUserLoginLog,
   addDeletedUserToLogs,
+  sendMailWithContent,
 };
 
 export { helper }

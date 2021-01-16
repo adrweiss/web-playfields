@@ -13,12 +13,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
-  
+  var currentUser =getCurrentUser();
+
   if (currentUser?.expire <= Math.floor(new Date().getTime() / 1000)) {
     logout()
-    setCurrentUser(getCurrentUser());
-  }
+    currentUser = getCurrentUser();
+  } 
+
 
   const handleClickLogout = () => {
     logout()
@@ -125,6 +126,11 @@ function Header() {
           </div>
         )}
       </nav>
+      {(currentUser && !currentUser?.validate) && (
+        <div className='account__validation'>
+          Your account is not valid. Please follow the link the email that you got.
+        </div>
+      )}
     </div >
   )
 }

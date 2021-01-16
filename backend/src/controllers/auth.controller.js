@@ -100,6 +100,7 @@ export function signin(req, res) {
         username: user.username,
         expire: expire,
         rights: accessRights,
+        validate: user.validated,
         accessToken: token
       });
     })
