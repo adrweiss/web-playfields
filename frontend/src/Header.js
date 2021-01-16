@@ -13,10 +13,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  var currentUser = getCurrentUser();
-
+  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  
   if (currentUser?.expire <= Math.floor(new Date().getTime() / 1000)) {
     logout()
+    setCurrentUser(getCurrentUser());
   }
 
   const handleClickLogout = () => {
