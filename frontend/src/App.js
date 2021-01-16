@@ -8,6 +8,7 @@ import Management from './Management/Management'
 import User from './User/User'
 import NewUsr from './User/NewUsr'
 import ForgottPassword from './User/ForgottPassword'
+import ValidateUser from './User/ValidateUser'
 import Unauthorized from './Unauthorized'
 
 function App() {
@@ -34,6 +35,10 @@ function App() {
           <Route path="/user/forgott">
             <Header />
             <ForgottPassword />
+          </Route>
+          <Route path="/user/validate">
+            <Header />
+            <ValidateUser />
           </Route>
           <Route path="/user">
             <Header />
