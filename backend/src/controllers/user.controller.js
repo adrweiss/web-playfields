@@ -9,6 +9,8 @@ const Right = db.right;
 const Role = db.role;
 const Validate = db.validate;
 
+const Op = db.Sequelize.Op;
+
 const deleteUsr = (req, res, next) => {
   // function is missing  -> admins can't delete his self
   if (req.isAdmin) {
@@ -160,8 +162,34 @@ const resetPassword = (req, res, next) => {
 }
 
 const sendNewPassword = (req, res, next) => {
-  console.log(req.body)
-  return res.status(200).send({message : 'test'})
+
+  Validate.findOne({
+    where: {
+      key: req.body.key,
+      type: 'resetpw',
+      used: false,
+      expire: {
+        [Op.gt]: (Math.floor(Date.now() / 1000))
+      }
+    }
+  })
+    .then(valid => {
+      if (valid) {
+        valid.update({
+          used: true
+        }).then(() => {
+          User.findByPk(valid.userId).then(user => {
+            user.update({
+              password: bcrypt.hashSync(req.body.password, 8)
+            }).then(() => {
+              return res.status(200).send({ message: 'password successfull changed.' });
+            })
+          })
+        })
+      } else {
+        return res.status(400).send({ message: 'No valid key used.' })
+      }
+    })
 }
 
 const userFunctions = {
