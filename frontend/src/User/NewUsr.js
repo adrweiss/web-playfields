@@ -74,6 +74,7 @@ function NewUsr() {
           variant="outlined"
           margin="normal"
         />
+     
         <TextField
           className="input__create__user"
           label="Password"
