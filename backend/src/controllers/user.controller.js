@@ -159,6 +159,10 @@ const resetPassword = (req, res, next) => {
   })
 }
 
+const sendNewPassword = (req, res, next) => {
+  return res.status(200).send({message : 'test'})
+}
+
 const userFunctions = {
   deleteUsr,
   getRights,
@@ -166,6 +170,7 @@ const userFunctions = {
   changeUserName,
   changeUserPassword,
   resetPassword,
+  sendNewPassword,
 };
 
 export default userFunctions;
