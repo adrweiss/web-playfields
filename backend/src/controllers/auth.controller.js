@@ -25,7 +25,7 @@ export function signup(req, res) {
     validated: false
   })
     .then(user => {
-      var keyString = bcrypt.hashSync((req.body.username.toString() + Date.now().toString()), 8)
+      var keyString = bcrypt.hashSync((req.body.username.toString() + authConfig.secret + Date.now().toString()), 8)
       
       Validate.create({
         type: 'valid',
