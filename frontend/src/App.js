@@ -7,6 +7,7 @@ import Login from './User/Login'
 import Management from './Management/Management'
 import User from './User/User'
 import NewUsr from './User/NewUsr'
+import ForgottPassword from './User/ForgottPassword'
 import Unauthorized from './Unauthorized'
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
           <Route path="/user/register">
             <Header />
             <NewUsr />
+          </Route>
+          <Route path="/user/forgott">
+            <Header />
+            <ForgottPassword />
           </Route>
           <Route path="/user">
             <Header />
