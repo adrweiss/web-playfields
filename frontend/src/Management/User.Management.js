@@ -343,8 +343,9 @@ function UserOverview() {
           label="Search field"
           type="search"
           size="small"
-          variant="outlined" />
-        <Button>
+          variant="outlined" 
+          disabled={true}/>
+        <Button disabled={true}>
           <Tooltip title="Search for User" aria-label="search">
             <SearchIcon />
           </Tooltip>
