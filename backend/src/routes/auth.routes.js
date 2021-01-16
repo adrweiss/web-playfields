@@ -1,5 +1,5 @@
 import { verifySignUp } from "../middleware/index.js"
-import { signup, signin } from "../controllers/auth.controller.js"
+import { signup, signin, forgottPassword } from "../controllers/auth.controller.js"
 
 export function authRoutes(app) {
   app.use(function (req, res, next) {
@@ -22,4 +22,6 @@ export function authRoutes(app) {
   );
 
   app.post("/api/auth/signin", signin);
+
+  app.post("/api/auth/forgottPassword", forgottPassword);
 };

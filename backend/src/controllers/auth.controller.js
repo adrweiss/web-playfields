@@ -8,6 +8,7 @@ const expireInSec = 86400 // 24 hours
 const User = db.user;
 const Role = db.role;
 const Right = db.right;
+const Validate = db.validate;
 
 const Op = db.Sequelize.Op;
 
@@ -19,12 +20,20 @@ export function signup(req, res) {
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
+    blocked: false,
+    validated: false
   })
     .then(user => {
-      user.setRoles([1]).then(() => {
-        res.send({ message: "User was registered successfully!" });
-      });
+      Validate.create({
+        type: 'valid'
+      }).then(valid => {
+        valid.setUser(user).then(() => {
+          user.setRoles([1]).then(() => {
+            res.send({ message: "User was registered successfully!" });
+          });
+        })
+      })
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -54,10 +63,10 @@ export function signin(req, res) {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      if(user.blocked) {
+      if (user.blocked) {
         return res.status(404).send({ message: "This user is blocked, please contact the admin!" });
       }
-      
+
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
@@ -83,9 +92,9 @@ export function signin(req, res) {
           accessRights.push(right.name);
         });
       });
-      
+
       helper.addUserLoginLog(user.id, true)
-      
+
       res.status(200).send({
         id: user.id,
         username: user.username,
@@ -98,3 +107,9 @@ export function signin(req, res) {
       res.status(500).send({ message: err.message });
     });
 };
+
+export function forgottPassword(req, res) {
+  console.log(req.body)
+
+  res.status(200).send({ message: 'forgott password' });
+}

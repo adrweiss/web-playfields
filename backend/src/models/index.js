@@ -9,6 +9,11 @@ import { Validate } from './validate.model.js'
 
 import { initialLoad } from './initial.SQL.load.js'
 
+// start mongodb
+import mongoose from 'mongoose';
+import { mongodbConfig } from '../config/mongo.db.config.js'
+import blogPost from '../models/blog.model.js';
+
 const mode = process.env.PLAYFIELD || 'dev'
 
 const sequelize = new Sequelize(
@@ -84,11 +89,6 @@ db.validate.belongsTo(db.user, {
   foreignKey: "userId",
   as: "user",
 });
-
-// start mongodb
-import mongoose from 'mongoose';
-import { mongodbConfig } from '../config/mongo.db.config.js'
-import blogPost from '../models/blog.model.js';
 
 const mongodb = {};
 

@@ -23,18 +23,19 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = useState(false);
-  
+
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
 
   const [username, setUsername] = useState(false);
   const [password, setPassword] = useState(false);
+  const [forgottPassword, setForgottPassword] = useState('');
   const history = useHistory();
 
   function removeMessage() {
     setMessage("")
   }
-  
+
   const handleClick = () => {
     removeMessage()
     clearTimeout(timerId)
@@ -64,7 +65,12 @@ function Login() {
 
   function closeModal() {
     setIsOpen(false);
+    console.log(forgottPassword)
   }
+
+  const handleForgottPassword = (event) => {
+    setForgottPassword(event.target.value);
+  };
 
   return (
     <div className='container__login'>
@@ -99,12 +105,12 @@ function Login() {
         </Button>
 
         <Link className='Link' to="/user/register">
-          <Button className="create__new__user__link" variant="contained" color="primary">
+          <Button className="create__new__user__link" variant="contained">
             Create new User
           </Button>
         </Link>
 
-        <Button variant="contained" color="primary" onClick={openModal}>
+        <Button variant="contained" onClick={openModal}>
           Reset Password
         </Button>
       </div>
@@ -115,7 +121,7 @@ function Login() {
         style={customStyles}
         contentLabel="Reset Password"
       >
-        <div className="modal__login">
+        <div className="modal__reset__password">
           <h1>Reset Password</h1>
 
           <div className='login'>
@@ -124,6 +130,8 @@ function Login() {
               label="E-mail "
               variant="outlined"
               margin="normal"
+              value={forgottPassword}
+              onChange={handleForgottPassword}
             />
             <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
               Send

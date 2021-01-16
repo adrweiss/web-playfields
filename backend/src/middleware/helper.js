@@ -17,6 +17,10 @@ function addDeletedUserToLogs(mail, username) {
   })
 }
 
+/*function addValidationEntity() {
+
+}*/
+
 const helper = {
   addUserLoginLog,
   addDeletedUserToLogs,
