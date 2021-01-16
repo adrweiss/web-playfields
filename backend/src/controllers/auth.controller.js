@@ -25,8 +25,11 @@ export function signup(req, res) {
     validated: false
   })
     .then(user => {
+    
+      
       Validate.create({
-        type: 'valid'
+        type: 'valid',
+        key: bcrypt.hashSync((req.body.username.toString() + Date.now().toString()), 8),
       }).then(valid => {
         valid.setUser(user).then(() => {
           user.setRoles([1]).then(() => {
@@ -113,4 +116,11 @@ export function forgottPassword(req, res) {
   console.log(req.body)
 
   res.status(200).send({ message: 'forgott password' });
+}
+
+export function validateAccount(req, res) {
+  console.log(req.body.userid)
+  console.log(req.body.token)
+
+  res.status(200).send({ message: 'validate account' });
 }
