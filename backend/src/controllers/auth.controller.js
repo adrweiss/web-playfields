@@ -25,14 +25,19 @@ export function signup(req, res) {
     validated: false
   })
     .then(user => {
-    
+      var keyString = bcrypt.hashSync((req.body.username.toString() + Date.now().toString()), 8)
       
       Validate.create({
         type: 'valid',
-        key: bcrypt.hashSync((req.body.username.toString() + Date.now().toString()), 8),
+        key: keyString,
+        used: false
       }).then(valid => {
         valid.setUser(user).then(() => {
+          var urlStr = 'localhost:3000/user/validate?vk=' + keyString + '&' + 'userid=' + user.id 
+
           user.setRoles([1]).then(() => {
+            helper.sendMailWithContent(urlStr)
+
             res.send({ message: "User was registered successfully!" });
           });
         })
@@ -119,8 +124,32 @@ export function forgottPassword(req, res) {
 }
 
 export function validateAccount(req, res) {
-  console.log(req.body.userid)
-  console.log(req.body.token)
+  Validate.findOne({
+    where: {
+      userId: req.body.userId,
+      key: req.body.token,
+      type: 'valid',
+      used: false
+    }
+  })
+    .then(valid => {
+      if (valid) {
+        valid.update({
+          used: true
+        }).then(() => {
+          User.findByPk(req.body.userId).then(user => {
+            user.update({
+              validated: true
+            }).then(() => {
+              return res.status(200).send({ message: 'validate account' });
+            })
+          })
+        })
+      } else {
+        return res.status(400).send({ message: 'The Url is no longer valid.' });
+      }
+    }).catch(err => {
+      res.status(500).send({ message: 'Something went wrong.' });
+    })
 
-  res.status(200).send({ message: 'validate account' });
 }

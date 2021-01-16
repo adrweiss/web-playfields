@@ -56,7 +56,7 @@ function User() {
     history.push('/unauthorized')
   }
 
-  const [currUsername, setCurrUsername] = useState(currentUser.username);
+  const [currUsername, setCurrUsername] = useState(currentUser?.username);
 
   if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
     sizeRightSection = 4
