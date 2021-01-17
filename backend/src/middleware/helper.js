@@ -1,5 +1,7 @@
 import { db } from '../models/index.js'
 
+import nodemailer from 'nodemailer';
+
 const Logs = db.logs
 const DeletedUser = db.deletedUser
 
@@ -17,9 +19,30 @@ function addDeletedUserToLogs(mail, username) {
   })
 }
 
-function sendMailWithContent(url, mail) {
-  console.log(url)
-  console.log(mail)
+function sendMailWithContent(url, mail, subject) {
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAILUSER,
+      pass: process.env.EMAILPASS
+    }
+  });
+
+
+  var mailOptions = {
+    from: "Playfield",
+    to: mail,
+    subject: subject,
+    text: url
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log('Not able to send mail.')
+    } else {
+      console.log('Able to send mail.')
+    }
+  });
 }
 
 const helper = {

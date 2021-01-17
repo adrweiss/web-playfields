@@ -2,8 +2,9 @@ import { db } from '../models/index.js'
 import { authConfig } from '../config/auth.config.js'
 import { helper } from '../middleware/index.js'
 
-const expireInSec = 86400 // 24 hours
-//const expireInSec = 600 // 24 hours
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const User = db.user;
 const Role = db.role;
@@ -12,9 +13,9 @@ const Validate = db.validate;
 
 const Op = db.Sequelize.Op;
 
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+const url = process.env.LOCATION
+const expireInSec = 86400 // 24 hours
+//const expireInSec = 600 // 24 hours
 
 export function signup(req, res) {
   // Save User to Database
@@ -34,10 +35,10 @@ export function signup(req, res) {
         used: false
       }).then(valid => {
         valid.setUser(user).then(() => {
-          var urlStr = 'localhost:3000/user/validate?vk=' + keyString + '&' + 'userid=' + user.id
-
+          var urlStr = url + '/user/validate?vk=' + keyString + '&' + 'userid=' + user.id
+          var subject = 'Please verify your email address'
           user.setRoles([1]).then(() => {
-            helper.sendMailWithContent(urlStr, req.body.email)
+            helper.sendMailWithContent(urlStr, req.body.email, subject)
 
             res.send({ message: "User was registered successfully!" });
           });

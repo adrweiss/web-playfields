@@ -12,6 +12,8 @@ const Validate = db.validate;
 
 const Op = db.Sequelize.Op;
 
+const url = process.env.LOCATION
+
 const deleteUsr = (req, res, next) => {
   // function is missing  -> admins can't delete his self
   if (req.isAdmin) {
@@ -151,9 +153,9 @@ const resetPassword = (req, res, next) => {
         expire: Math.floor(Date.now() / 1000) + 86400,
         used: false
       }).then(valid => {
-        var urlStr = 'localhost:3000/user/forgott?fp=' + keyString
-
-        helper.sendMailWithContent(urlStr, req.body.email)
+        var urlStr = url + '/user/forgott?fp=' + keyString
+        var subject = 'Link to reset your password.'
+        helper.sendMailWithContent(urlStr, req.body.email, subject)
 
         valid.setUser(user)
       })
