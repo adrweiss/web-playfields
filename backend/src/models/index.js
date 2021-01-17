@@ -14,8 +14,6 @@ import mongoose from 'mongoose';
 import { mongodbConfig } from '../config/mongo.db.config.js'
 import blogPost from '../models/blog.model.js';
 
-const mode = process.env.PLAYFIELD || 'dev'
-
 const sequelize = new Sequelize(
   config.DB,
   config.USER,
@@ -98,7 +96,7 @@ const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useUnifiedTopology: true,
 })
 
-if (mode === 'dev') {
+if (process.env.PLAYFIELD === 'dev') {
   blogPost.collection.drop().then(() => {
     console.log('Existing mongodb schema blogPost is deleted.')
   },
