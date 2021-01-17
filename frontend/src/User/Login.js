@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
 import { useHistory } from 'react-router-dom';
 import { login } from "../services/auth.service"
+import UserService from "../services/user.service";
 
 import TextField from '@material-ui/core/TextField';
 
@@ -23,27 +24,27 @@ Modal.setAppElement('body')
 
 function Login() {
   const [modalIsOpen, setIsOpen] = useState(false);
-  
+
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
 
   const [username, setUsername] = useState(false);
   const [password, setPassword] = useState(false);
+  const [forgottPassword, setForgottPassword] = useState('');
   const history = useHistory();
 
   function removeMessage() {
     setMessage("")
   }
-  
+
   const handleClick = () => {
     removeMessage()
     clearTimeout(timerId)
 
-    login(username.value, password.value).then(
-      () => {
-        console.log('successfull login')
-        history.push('/user')
-      },
+    login(username.value, password.value).then(() => {
+      console.log('successfull login')
+      history.push('/user')
+    },
       (error) => {
         const resMessage =
           (error.response &&
@@ -64,7 +65,18 @@ function Login() {
 
   function closeModal() {
     setIsOpen(false);
+
+    removeMessage()
+    clearTimeout(timerId)
+    UserService.resetPassword(forgottPassword).then(() => {
+      setMessage("Email with a password reset link is sent.");
+      setTimerId(setTimeout(removeMessage, 10000));
+    })
   }
+
+  const handleForgottPassword = (event) => {
+    setForgottPassword(event.target.value);
+  };
 
   return (
     <div className='container__login'>
@@ -99,12 +111,12 @@ function Login() {
         </Button>
 
         <Link className='Link' to="/user/register">
-          <Button className="create__new__user__link" variant="contained" color="primary">
+          <Button className="create__new__user__link" variant="contained">
             Create new User
           </Button>
         </Link>
 
-        <Button variant="contained" color="primary" onClick={openModal}>
+        <Button variant="contained" onClick={openModal}>
           Reset Password
         </Button>
       </div>
@@ -115,7 +127,7 @@ function Login() {
         style={customStyles}
         contentLabel="Reset Password"
       >
-        <div className="modal__login">
+        <div className="modal__reset__password">
           <h1>Reset Password</h1>
 
           <div className='login'>
@@ -124,6 +136,8 @@ function Login() {
               label="E-mail "
               variant="outlined"
               margin="normal"
+              value={forgottPassword}
+              onChange={handleForgottPassword}
             />
             <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
               Send

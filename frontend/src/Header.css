@@ -40,3 +40,13 @@
     margin-right: 20px;
     font: 18px 'Arial';
 }
+
+.account__validation {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding: 10px;
+    font: 18px 'Arial';
+    text-align: center;
+    border: 2px solid rgb(165, 37, 37);
+    border-radius: 10px;
+}
