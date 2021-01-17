@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_LOCATION
+  baseURL: process.env.REACT_APP_BACKEND_LOCATION + "api/"
 })
 
 export default instance; 
