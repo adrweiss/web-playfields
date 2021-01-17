@@ -23,6 +23,13 @@ export const login = (identifier, password) => {
     });
 };
 
+export const validate = (userId, token) => {
+  return axios.post("auth/validate", {
+    userId,
+    token,
+  });
+};
+
 export const logout = () => {
   localStorage.removeItem("user");
   console.log('successfull logout')

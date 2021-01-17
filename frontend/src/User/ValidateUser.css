@@ -1,0 +1,10 @@
+.validate {
+    text-align: center;
+}
+
+.validate__text {
+    display: flex;
+    justify-content: center;
+    font: 18px 'Arial';
+    margin-bottom: 10px;
+}

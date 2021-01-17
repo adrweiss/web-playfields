@@ -1,10 +1,10 @@
 export const config = {
-  HOST: process.env.DB_HOST || 'localhost',
-  USER: process.env.DB_USER ||"postgres",
-  PASSWORD: process.env.DB_PASSWORD || "",
-  DB: process.env.DB || "postgres",
-  dialect: process.env.DB_DIALECT || "postgres",
-  schema: process.env.DB_SCHEMA || "playfield",
+  HOST: process.env.DB_HOST,
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  DB: process.env.DB,
+  dialect: process.env.DB_DIALECT,
+  schema: process.env.DB_SCHEMA,
   pool: {
     max: 5,
     min: 0,

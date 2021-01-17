@@ -9,7 +9,10 @@ import { Validate } from './validate.model.js'
 
 import { initialLoad } from './initial.SQL.load.js'
 
-const mode = process.env.PLAYFIELD || 'dev'
+// start mongodb
+import mongoose from 'mongoose';
+import { mongodbConfig } from '../config/mongo.db.config.js'
+import blogPost from '../models/blog.model.js';
 
 const sequelize = new Sequelize(
   config.DB,
@@ -85,11 +88,6 @@ db.validate.belongsTo(db.user, {
   as: "user",
 });
 
-// start mongodb
-import mongoose from 'mongoose';
-import { mongodbConfig } from '../config/mongo.db.config.js'
-import blogPost from '../models/blog.model.js';
-
 const mongodb = {};
 
 const mongo = mongoose.connect(mongodbConfig.connection_url, {
@@ -98,7 +96,7 @@ const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useUnifiedTopology: true,
 })
 
-if (mode === 'dev') {
+if (process.env.PLAYFIELD === 'dev') {
   blogPost.collection.drop().then(() => {
     console.log('Existing mongodb schema blogPost is deleted.')
   },

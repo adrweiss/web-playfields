@@ -45,4 +45,8 @@ export function routsUsr(app) {
     "/api/usr/rights",
     [authJwt.verifyToken,],
     userFunctions.getRights);
+
+  app.post("/api/usr/resetpw", userFunctions.resetPassword);  
+  
+  app.post("/api/usr/setforgottpw", userFunctions.sendNewPassword);  
 };

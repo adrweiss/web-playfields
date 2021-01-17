@@ -373,7 +373,7 @@ function usr(User, Role) {
     email: "admin@ai.de",
     password: bcrypt.hashSync("test1234", 8),
     blocked: false,
-    validated: false
+    validated: true
   }).then(user => {
     Role.findOne({
       where: { name: 'ADMIN' }
@@ -387,7 +387,7 @@ function usr(User, Role) {
     email: "admin2@ai.de",
     password: bcrypt.hashSync("test1234", 8),
     blocked: false,
-    validated: false
+    validated: true
   }).then(user => {
     Role.findOne({
       where: { name: 'ADMIN' }
@@ -401,7 +401,7 @@ function usr(User, Role) {
     email: "usr@ai.de",
     password: bcrypt.hashSync("test1234", 8),
     blocked: false,
-    validated: false
+    validated: true
   }).then(user => {
     Role.findOne({
       where: { name: 'USER' }
@@ -443,7 +443,7 @@ function usr(User, Role) {
     email: "manager@ai.de",
     password: bcrypt.hashSync("test1234", 8),
     blocked: false,
-    validated: false
+    validated: true
   }).then(user => {
     Role.findOne({
       where: { name: 'USER' }
