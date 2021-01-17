@@ -120,7 +120,7 @@ function UserOverview() {
 
   function createRightString(rights) {
     const rightNames = []
-    rights.forEach(right => {
+    rights?.forEach(right => {
       rightNames.push(right.right_name)
     })
 
@@ -147,11 +147,11 @@ function UserOverview() {
   const blockUser = (event, userId, blocked) => {
     clearTimeout(timerId)
     removeMessage()
-
+    
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
-      getData()
       setMessage(response.data.message)
       setTimerId(setTimeout(removeMessage, 10000));
+      getData()
     },
       (error) => {
         const _content =
@@ -492,8 +492,8 @@ function UserOverview() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedUser?.map((row) => (
-                  <TableRow hover key={row.role_id}>
+                {selectedUser?.map((row, i) => (
+                  <TableRow hover key={i}>
                     <TableCell align="center">
                       <IconButton onClick={(event) => removeRole(row.role_id)}>
                         <Tooltip title="Remove role from user.">
