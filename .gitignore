@@ -5,7 +5,7 @@ frontend/.eslintcache
 frontend/build
 frontend/package-lock.json
 
-frontend/src/config/*
+frontend/src/config/axios.js
 !frontend/src/config/.gitkeep
 
 backend/node_modules
