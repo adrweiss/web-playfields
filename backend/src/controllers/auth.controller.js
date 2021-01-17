@@ -13,7 +13,7 @@ const Validate = db.validate;
 
 const Op = db.Sequelize.Op;
 
-const url = process.env.LOCATION
+const url = process.env.FRONTEND_LOCATION
 const expireInSec = 86400 // 24 hours
 //const expireInSec = 600 // 24 hours
 

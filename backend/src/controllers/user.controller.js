@@ -12,7 +12,7 @@ const Validate = db.validate;
 
 const Op = db.Sequelize.Op;
 
-const url = process.env.LOCATION
+const url = process.env.FRONTEND_LOCATION
 
 const deleteUsr = (req, res, next) => {
   // function is missing  -> admins can't delete his self
