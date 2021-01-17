@@ -37,11 +37,16 @@ export function signup(req, res) {
         valid.setUser(user).then(() => {
           var urlStr = url + '/user/validate?vk=' + keyString + '&' + 'userid=' + user.id
           var subject = 'Please verify your email address'
-          user.setRoles([1]).then(() => {
-            helper.sendMailWithContent(urlStr, req.body.email, subject)
 
-            res.send({ message: "User was registered successfully!" });
-          });
+          Role.findOne({
+            where: { name: 'USER' }
+          }).then(role => {
+            user.setRoles(role).then(() => {
+              helper.sendMailWithContent(urlStr, req.body.email, subject)
+
+              res.send({ message: "User was registered successfully!" });
+            });
+          })
         })
       })
     })

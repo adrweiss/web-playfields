@@ -5,6 +5,9 @@ frontend/.eslintcache
 frontend/build
 frontend/package-lock.json
 
+frontend/src/config/*
+!frontend/src/config/.gitkeep
+
 backend/node_modules
 backend/package-lock.json
 backend/.eslintcache
