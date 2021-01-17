@@ -14,6 +14,7 @@ const Op = db.Sequelize.Op;
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 export function signup(req, res) {
   // Save User to Database
@@ -25,15 +26,15 @@ export function signup(req, res) {
     validated: false
   })
     .then(user => {
-      var keyString = bcrypt.hashSync((req.body.username.toString() + authConfig.secret + Date.now().toString()), 8)
-      
+      var keyString = crypto.randomBytes(36).toString('hex');
+
       Validate.create({
         type: 'valid',
         key: keyString,
         used: false
       }).then(valid => {
         valid.setUser(user).then(() => {
-          var urlStr = 'localhost:3000/user/validate?vk=' + keyString + '&' + 'userid=' + user.id 
+          var urlStr = 'localhost:3000/user/validate?vk=' + keyString + '&' + 'userid=' + user.id
 
           user.setRoles([1]).then(() => {
             helper.sendMailWithContent(urlStr, req.body.email)

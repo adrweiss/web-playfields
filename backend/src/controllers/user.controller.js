@@ -1,8 +1,9 @@
 import { db } from '../models/index.js'
-import bcrypt from 'bcrypt';
 import { helper } from '../middleware/index.js'
 import { format } from 'date-fns';
-import { authConfig } from '../config/auth.config.js'
+
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const User = db.user;
 const Right = db.right;
@@ -142,7 +143,7 @@ const resetPassword = (req, res, next) => {
     where: { email: req.body.email }
   }).then(user => {
     if (user) {
-      var keyString = bcrypt.hashSync((req.body.email.toString() + authConfig.secret + Date.now().toString()), 8)
+      var keyString = crypto.randomBytes(36).toString('hex');
 
       Validate.create({
         type: 'resetpw',
