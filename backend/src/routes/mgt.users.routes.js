@@ -62,6 +62,16 @@ export function routsMgtUsers(app) {
     authJwt.requireAdmin,],
     mgtUserFunctions.changeRole,
   );
+
+  // change valid status 
+   // block usr 
+   app.put(
+    "/api/mgt/user/valid",
+    [authJwt.verifyToken,
+    authJwt.getWriteUsr,
+    authJwt.hasRights,],
+    mgtUserFunctions.changeValidStatusFromUser,
+  );
 }
 
 

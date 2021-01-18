@@ -37,12 +37,21 @@ const changeRoleFromUser = (userId, func, role) => {
     { headers: authHeader() });
 };
 
+const validUsr = (userId) => {
+  return axios.put("/mgt/user/valid",
+    {
+      "userId": userId,
+    },
+    { headers: authHeader() });
+};
+
 const ManagementUserService = {
   getUserInfos,
   deleteUsr,
   blockUsr,
   changePwFromUser,
   changeRoleFromUser,
+  validUsr,
 }
 
 export default ManagementUserService;

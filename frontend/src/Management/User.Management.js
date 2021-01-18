@@ -61,7 +61,6 @@ function UserOverview() {
 
   useEffect(() => {
     ManagementUserService.getUserInfos().then((response) => {
-      console.log(response.data)
       setUserData(response.data)
     },
       (error) => {
@@ -152,6 +151,28 @@ function UserOverview() {
     removeMessage()
 
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
+      setMessage(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000));
+      getData()
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
+      })
+  }
+
+  const validUser = (event, userId) => {
+    clearTimeout(timerId)
+    removeMessage()
+
+    ManagementUserService.validUsr(userId).then((response) => {
       setMessage(response.data.message)
       setTimerId(setTimeout(removeMessage, 10000));
       getData()
@@ -403,11 +424,10 @@ function UserOverview() {
                   </IconButton>
                 </TableCell>
 
-
                 <TableCell align="center">
-                  <IconButton disabled={!row.validated} >
-                    <Tooltip title="Change password from user" aria-label="delete_user">
-                      {row.validated ? (<CheckBoxOutlineBlankOutlinedIcon fontSize='small' />) : (<CheckBoxOutlinedIcon fontSize='small' />)}
+                  <IconButton onClick={(event) => validUser(event, row.user_id)} disabled={row.validated} >
+                    <Tooltip title="Change valid status from user" aria-label="validate_user">
+                      {row.validated ? (<CheckBoxOutlinedIcon fontSize='small' />) : (<CheckBoxOutlineBlankOutlinedIcon fontSize='small' />)}
                     </Tooltip>
                   </IconButton>
                 </TableCell>
