@@ -31,6 +31,7 @@ const getUserInfos = (req, res, next) => {
             username: user.username,
             user_mail: user.email,
             blocked: user.blocked,
+            validated: user.validated,
             created: format(user.createdAt, 'dd.MM.yyy HH:mm'),
             lastChange: format(user.updatedAt, 'dd.MM.yyy HH:mm'),
             roles: user.roles.map(role => {
@@ -159,12 +160,27 @@ const changeRole = (req, res, next) => {
   })
 }
 
+const changeValidStatusFromUser = (req, res, next) => {
+  User.findByPk(req.body.userId).then(user => {
+    // Check if record exists in db
+    if (user) {
+      user.update({
+        validated: true
+      })
+      return res.status(200).send({ message: 'Change valid status was successfull.' });
+    } else {
+      return res.status(400).send({ message: 'Change blocked status was not successfull.' });
+    }
+  })
+}
+
 const mgtUserFunctions = {
   getUserInfos,
   changeRole,
   changePasswordFromUser,
   deleteUser,
   changeBlockStatusFromUser,
+  changeValidStatusFromUser,
 };
 
 export default mgtUserFunctions;

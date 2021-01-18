@@ -22,6 +22,8 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import SearchIcon from '@material-ui/icons/Search';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import CheckBoxOutlineBlankOutlinedIcon from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
+import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 
 import TextField from '@material-ui/core/TextField';
 
@@ -147,8 +149,30 @@ function UserOverview() {
   const blockUser = (event, userId, blocked) => {
     clearTimeout(timerId)
     removeMessage()
-    
+
     ManagementUserService.blockUsr(userId, blocked).then((response) => {
+      setMessage(response.data.message)
+      setTimerId(setTimeout(removeMessage, 10000));
+      getData()
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
+      })
+  }
+
+  const validUser = (event, userId) => {
+    clearTimeout(timerId)
+    removeMessage()
+
+    ManagementUserService.validUsr(userId).then((response) => {
       setMessage(response.data.message)
       setTimerId(setTimeout(removeMessage, 10000));
       getData()
@@ -343,8 +367,8 @@ function UserOverview() {
           label="Search field"
           type="search"
           size="small"
-          variant="outlined" 
-          disabled={true}/>
+          variant="outlined"
+          disabled={true} />
         <Button disabled={true}>
           <Tooltip title="Search for User" aria-label="search">
             <SearchIcon />
@@ -359,11 +383,12 @@ function UserOverview() {
               <TableCell align="left" width="100px">Username</TableCell>
               <TableCell align="left" width="100px">Mail</TableCell>
               <TableCell align="left" >Roles</TableCell>
-              <TableCell align="left" width="200px" >Created</TableCell>
-              <TableCell align="left" width="200px">Last Update</TableCell>
-              <TableCell align="center" >Block</TableCell>
-              <TableCell align="center" >Delete</TableCell>
-              <TableCell align="center">Password</TableCell>
+              <TableCell align="left" width="120px" >Created</TableCell>
+              <TableCell align="left" width="120px">Last Update</TableCell>
+              <TableCell align="center" width="50px">Block</TableCell>
+              <TableCell align="center" width="50px">Delete</TableCell>
+              <TableCell align="center" width="50px">Password</TableCell>
+              <TableCell align="center" width="50px">Valid</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -393,8 +418,16 @@ function UserOverview() {
 
                 <TableCell align="center">
                   <IconButton onClick={(event) => openModalPassword(event, row.user_id, row.username)} disabled={checkButton(row.user_id, row.roles)}>
-                    <Tooltip title="Change password from user" aria-label="delete_user">
+                    <Tooltip title="Change password from user" aria-label="change_user_password">
                       <VpnKeyIcon fontSize='small' />
+                    </Tooltip>
+                  </IconButton>
+                </TableCell>
+
+                <TableCell align="center">
+                  <IconButton onClick={(event) => validUser(event, row.user_id)} disabled={row.validated} >
+                    <Tooltip title="Change valid status from user" aria-label="validate_user">
+                      {row.validated ? (<CheckBoxOutlinedIcon fontSize='small' />) : (<CheckBoxOutlineBlankOutlinedIcon fontSize='small' />)}
                     </Tooltip>
                   </IconButton>
                 </TableCell>
