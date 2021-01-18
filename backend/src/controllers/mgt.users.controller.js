@@ -31,6 +31,7 @@ const getUserInfos = (req, res, next) => {
             username: user.username,
             user_mail: user.email,
             blocked: user.blocked,
+            validated: user.validated,
             created: format(user.createdAt, 'dd.MM.yyy HH:mm'),
             lastChange: format(user.updatedAt, 'dd.MM.yyy HH:mm'),
             roles: user.roles.map(role => {
