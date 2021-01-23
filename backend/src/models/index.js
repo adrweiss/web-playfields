@@ -94,6 +94,7 @@ const mongo = mongoose.connect(mongodbConfig.connection_url, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 })
 
 if (process.env.PLAYFIELD === 'dev') {

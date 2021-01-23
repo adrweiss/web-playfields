@@ -69,4 +69,5 @@ export function routsHome(app) {
     ],
     homeController.EditAnyPost,
   );
+  
 };
