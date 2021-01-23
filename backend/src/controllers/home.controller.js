@@ -1,4 +1,4 @@
-import { db, mongodb} from '../models/index.js'
+import { db, mongodb } from '../models/index.js'
 import { format } from 'date-fns';
 
 const User = db.user;
@@ -119,12 +119,67 @@ function writePost(req, res, next) {
   })
 }
 
+function EditAnyPost(req, res, next) {
+  if (!req.body.title) {
+    return res.status(400).send({ message: "No Title was provided." })
+  }
+
+  if (!req.body.body) {
+    return res.status(400).send({ message: "No Post was provided." })
+  }
+
+  BlogPost.updateOne({
+    '_id': req.body.postId,
+  },
+    {
+      body: req.body.body,
+      title: req.body.title
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
+      return res.status(200).send({ message: 'Succesfully edited.' });
+    });
+}
+
+function EditPost(req, res, next) {
+  if (!req.body.title) {
+    return res.status(400).send({ message: "No Title was provided." })
+  }
+
+  if (!req.body.body) {
+    return res.status(400).send({ message: "No Post was provided." })
+  }
+
+  BlogPost.updateOne({
+    $and: [{
+      '_id': req.body.postId,
+      'userid': req.userId
+    }]
+  },
+    {
+      body: req.body.body,
+      title: req.body.title
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
+      return res.status(200).send({ message: 'Succesfully edited.' });
+    });
+}
+
 const homeController = {
   getPost,
   getAmount,
   deletePost,
   deleteAnyPost,
-  writePost
+  writePost,
+  EditAnyPost,
+  EditPost,
 };
 
 export default homeController;

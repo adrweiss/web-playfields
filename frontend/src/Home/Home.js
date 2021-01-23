@@ -163,7 +163,7 @@ function Home() {
                 onClick={sendPost}
               >
                 Send
-            </Button>
+              </Button>
             </div>
 
             <div className="test">

@@ -205,6 +205,12 @@ function getDeleteAnyPost(req, res, next) {
   next();
 }
 
+// EDIT_ANY_POST
+function getEditAnyPost(req, res, next) {
+  req.right = ['EDIT_ANY_POST', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -223,6 +229,7 @@ const authJwt = {
   getTriggerBuild,
   getWritePost,
   getDeleteAnyPost,
+  getEditAnyPost,
 };
 
 export { authJwt };

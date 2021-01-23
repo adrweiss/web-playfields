@@ -31,13 +31,28 @@ const addPostUser = (title, body) => {
 };
 
 const deletePostAny = (postId) => {
-  return axios.delete("/home/post/any", { headers: authHeader() , data: { "postId": postId }});
+  return axios.delete("/home/post/any", { headers: authHeader(), data: { "postId": postId } });
 };
 
 const deletePostUser = (postId) => {
-  return axios.delete("/home/post/user",{ headers: authHeader() , data: { "postId": postId }});
+  return axios.delete("/home/post/user", { headers: authHeader(), data: { "postId": postId } });
 };
 
+const editPostAny = (postId, title, body) => {
+  return axios.put("/home/post/any", {
+    postId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
+
+const editPostUser = (postId, title, body) => {
+  return axios.put("/home/post/user", {
+    postId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
 
 // delete post any 
 const HomeService = {
@@ -46,7 +61,9 @@ const HomeService = {
   addPostAny,
   addPostUser,
   deletePostAny,
-  deletePostUser
+  deletePostUser,
+  editPostAny,
+  editPostUser,
 }
 
 export default HomeService;

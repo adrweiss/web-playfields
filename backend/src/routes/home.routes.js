@@ -51,4 +51,23 @@ export function routsHome(app) {
     ],
     homeController.deleteAnyPost,
   );
+
+  app.put(
+    "/api/home/post/user",
+    [authJwt.verifyToken,
+    authJwt.getWritePost,
+    authJwt.hasRights
+    ],
+    homeController.EditPost,
+  );
+
+  app.put(
+    "/api/home/post/any",
+    [authJwt.verifyToken,
+    authJwt.getEditAnyPost,
+    authJwt.hasRights
+    ],
+    homeController.EditAnyPost,
+  );
+  
 };
