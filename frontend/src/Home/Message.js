@@ -133,7 +133,7 @@ function Message({ id, title, post, userId, usr, timestamp }) {
           </div>
 
           <div className="box__delete__post">
-            <IconButton onClick={editPost}>
+            <IconButton onClick={editPost} disabled={!(currentUser && (currentUser?.id === userId || currentUser?.rights.includes('EDIT_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
               <Tooltip title="Edit post" aria-label="delete_user">
                 <EditIcon />
               </Tooltip>

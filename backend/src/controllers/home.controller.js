@@ -1,4 +1,4 @@
-import { db, mongodb} from '../models/index.js'
+import { db, mongodb } from '../models/index.js'
 import { format } from 'date-fns';
 
 const User = db.user;
@@ -119,12 +119,22 @@ function writePost(req, res, next) {
   })
 }
 
+function EditAnyPost(req, res, next) {
+  return res.status(200).send({ message: "Post was edited." });
+}
+
+function EditPost(req, res, next) {
+  return res.status(200).send({ message: "Post was edited." });
+}
+
 const homeController = {
   getPost,
   getAmount,
   deletePost,
   deleteAnyPost,
-  writePost
+  writePost,
+  EditAnyPost,
+  EditPost,
 };
 
 export default homeController;

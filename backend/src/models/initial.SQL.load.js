@@ -364,6 +364,28 @@ function right(Right, Role) {
     }
   })
 
+  //----------------------------
+  Right.findOne({
+    where: { name: 'EDIT_ANY_POST' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "EDIT_ANY_POST",
+        description: "You can edit each post.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "EDIT_ANY_POST" right.')
+      });
+    } else {
+      console.log('right "EDIT_ANY_POST" already exists.')
+    }
+  })
+
   return right
 }
 
