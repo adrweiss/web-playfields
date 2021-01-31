@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 const User = db.user;
 const BlogPost = mongodb.blogPost;
+const Description = mongodb.description;
 
 function getPost(req, res, next) {
   User.findAll({

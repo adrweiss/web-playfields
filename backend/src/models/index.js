@@ -12,7 +12,8 @@ import { initialLoad } from './initial.SQL.load.js'
 // start mongodb
 import mongoose from 'mongoose';
 import { mongodbConfig } from '../config/mongo.db.config.js'
-import blogPost from '../models/blog.model.js';
+import blogPost from './blog.model.js';
+import description from './description.model.js';
 
 const sequelize = new Sequelize(
   config.DB,
@@ -104,10 +105,17 @@ if (process.env.PLAYFIELD === 'dev') {
   (error) => {
     console.log('There is no mongodb schema with the name blogpost available.')
   })
+  description.collection.drop().then(() => {
+    console.log('Existing mongodb schema description is deleted.')
+  },
+  (error) => {
+    console.log('There is no mongodb schema with the name description available.')
+  })
 }
 
 mongodb.mongoose = mongo
 mongodb.blogPost = blogPost
+mongodb.description = description
 
 function dataDevInit() {
   initialLoad.role(db.role)
