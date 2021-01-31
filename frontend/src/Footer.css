@@ -14,3 +14,16 @@
     font: 18px 'Arial';
     color: black;
 }
+
+.modal__footer {
+    width: 350px;
+    text-align: center;
+}
+
+.modal__footer__send {
+    width: 150px;
+}
+
+.modal__footer__textfield {
+    width: 100%;
+}
