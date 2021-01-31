@@ -25,6 +25,11 @@ export function routsHome(app) {
     homeController.getPost,
   );
 
+  app.get(
+    "/api/home/desc",
+    homeController.getDescriptions,
+  );
+
   app.post(
     "/api/home/post/user",
     [authJwt.verifyToken,

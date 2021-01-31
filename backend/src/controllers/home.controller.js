@@ -172,9 +172,32 @@ function EditPost(req, res, next) {
     });
 }
 
+function getDescriptions(req, res, next) {
+  const descriptionText = [
+    {
+      "id": 1,
+      "title": "What is playfield?",
+      "body": "Storry about the plan"
+    },
+    {
+      "id": 2,
+      "title": "Who am I ?",
+      "body": "Storry about me"
+    },
+    {
+      "id": 3,
+      "title": "What is the plan",
+      "body": "The plan with this webpage"
+    }
+  ]
+
+  return res.status(200).send(descriptionText)
+}
+
 const homeController = {
   getPost,
   getAmount,
+  getDescriptions,
   deletePost,
   deleteAnyPost,
   writePost,
