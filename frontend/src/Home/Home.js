@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Message from './Message'
+import Welcome from './Welcome'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
 
@@ -20,6 +21,25 @@ function Home() {
 
   const currentUser = getCurrentUser();
   const postPSide = 5
+
+  const descriptionText = [
+    {
+      "id": 1,
+      "title": "What is playfield?",
+      "body": "Storry about the plan"
+    },
+    {
+      "id": 2,
+      "title": "Who am I ?",
+      "body": "Storry about me"
+    },
+    {
+      "id": 3,
+      "title": "What is the plan",
+      "body": "The plan with this webpage"
+    }
+  ]
+
 
   function removeMessage() {
     setMessage("")
@@ -42,6 +62,7 @@ function Home() {
 
     HomeService.getPosts(0, postPSide).then((response) => {
       setMessageFlow(response.data)
+      console.log(response.data)
     },
       (error) => {
         const _content =
@@ -202,12 +223,13 @@ function Home() {
         </Grid>
         <Grid item sm={6}>
           <div>
-            <h2>What is playfield?</h2>
-            <p>Storry about the plan</p>
-            <h2>Who am I?</h2>
-            <p>Storry about me</p>
-            <h2>What is the plan</h2>
-            <p>The plan with this webpage</p>
+            {descriptionText?.map(item => (
+              <Welcome
+                id={item.id}
+                title={item.title}
+                body={item.body}
+              />
+            ))}
           </div>
         </Grid>
       </Grid>
