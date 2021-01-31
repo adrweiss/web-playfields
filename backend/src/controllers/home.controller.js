@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 const User = db.user;
 const BlogPost = mongodb.blogPost;
+const Description = mongodb.description;
 
 function getPost(req, res, next) {
   User.findAll({
@@ -45,6 +46,17 @@ function getPost(req, res, next) {
         res.status(200).send(resObj)
       })
   })
+}
+
+function getDescriptions(req, res, next) {
+  Description.find({}, ['_id', 'title', 'body'], function (err, docs) {
+    if (!err) {
+      return res.status(200).send(docs)
+    }
+    else {
+      return res.status(400).send({ message: "An error has occurred." })
+    }
+  });
 }
 
 function getAmount(req, res, next) {
@@ -175,6 +187,7 @@ function EditPost(req, res, next) {
 const homeController = {
   getPost,
   getAmount,
+  getDescriptions,
   deletePost,
   deleteAnyPost,
   writePost,
