@@ -8,8 +8,11 @@ const getAmount = () => {
 const getPosts = (skip, limit) => {
   return axios.get("/home/post",
     { params: { "skip": skip, "limit": limit } }
-
   );
+};
+
+const getDescriptions = () => {
+  return axios.get("/home/desc");
 };
 
 const addPostAny = (title, body) => {
@@ -58,6 +61,7 @@ const editPostUser = (postId, title, body) => {
 const HomeService = {
   getAmount,
   getPosts,
+  getDescriptions,
   addPostAny,
   addPostUser,
   deletePostAny,

@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button'
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
+  const [descriptionText, setDescriptionText] = useState([]);
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
   const [title, setTitle] = useState("");
@@ -21,25 +22,6 @@ function Home() {
 
   const currentUser = getCurrentUser();
   const postPSide = 5
-
-  const descriptionText = [
-    {
-      "id": 1,
-      "title": "What is playfield?",
-      "body": "Storry about the plan"
-    },
-    {
-      "id": 2,
-      "title": "Who am I ?",
-      "body": "Storry about me"
-    },
-    {
-      "id": 3,
-      "title": "What is the plan",
-      "body": "The plan with this webpage"
-    }
-  ]
-
 
   function removeMessage() {
     setMessage("")
@@ -62,7 +44,20 @@ function Home() {
 
     HomeService.getPosts(0, postPSide).then((response) => {
       setMessageFlow(response.data)
-      console.log(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+    HomeService.getDescriptions().then((response) => {
+      setDescriptionText(response.data)
     },
       (error) => {
         const _content =
@@ -225,6 +220,7 @@ function Home() {
           <div>
             {descriptionText?.map(item => (
               <Welcome
+                key={item.id}
                 id={item.id}
                 title={item.title}
                 body={item.body}
