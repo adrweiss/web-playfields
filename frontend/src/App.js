@@ -4,13 +4,14 @@ import Header from './Header';
 import Footer from './Footer'
 import Game from './Game/Game';
 import Home from './Home/Home'
-import Login from './User/Login'
 import Management from './Management/Management'
+import Login from './User/Login'
 import User from './User/User'
 import NewUsr from './User/NewUsr'
 import ForgottPassword from './User/ForgottPassword'
 import ValidateUser from './User/ValidateUser'
 import Unauthorized from './Main/Unauthorized'
+import Impressum from './Main/Impressum'
 
 function App() {
   return (
@@ -55,6 +56,11 @@ function App() {
           <Route path="/unauthorized">
             <Header />
             <Unauthorized />
+            <Footer />
+          </Route>
+          <Route path="/impressum">
+            <Header />
+            <Impressum />
             <Footer />
           </Route>
           <Route path="/">

@@ -8,3 +8,9 @@
     border-radius: 3px;
     align-items: center;
 }
+
+.footer__entity {
+    text-decoration: none;
+    font: 18px 'Arial';
+    color: black;
+}
