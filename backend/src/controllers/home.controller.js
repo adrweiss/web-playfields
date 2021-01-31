@@ -48,6 +48,17 @@ function getPost(req, res, next) {
   })
 }
 
+function getDescriptions(req, res, next) {
+  Description.find({}, ['_id', 'title', 'body'], function (err, docs) {
+    if (!err) {
+      return res.status(200).send(docs)
+    }
+    else {
+      return res.status(400).send({ message: "An error has occurred." })
+    }
+  });
+}
+
 function getAmount(req, res, next) {
   BlogPost.countDocuments({}, function (err, data) {
     if (err) {
@@ -171,29 +182,6 @@ function EditPost(req, res, next) {
       if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
     });
-}
-
-function getDescriptions(req, res, next) {
-  
-  const descriptionText = [
-    {
-      "id": 1,
-      "title": "What is playfield?",
-      "body": "Storry about the plan"
-    },
-    {
-      "id": 2,
-      "title": "Who am I ?",
-      "body": "Storry about me"
-    },
-    {
-      "id": 3,
-      "title": "What is the plan",
-      "body": "The plan with this webpage"
-    }
-  ]
-
-  return res.status(200).send(descriptionText)
 }
 
 const homeController = {

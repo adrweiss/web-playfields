@@ -220,8 +220,8 @@ function Home() {
           <div>
             {descriptionText?.map(item => (
               <Welcome
-                key={item.id}
-                id={item.id}
+                key={item._id}
+                id={item._id}
                 title={item.title}
                 body={item.body}
               />
