@@ -24,6 +24,11 @@ const customStyles = {
 function Footer() {
   const [modalContactForm, setModalContactForm] = useState(false);
   const [modalReportButton, setModalReportButton] = useState(false);
+  const [modalContactMail, setModalContactMail] = useState("");
+  const [modalContactReason, setModalContactReason] = useState("");
+  const [modalContactDescription, setModalContactDescription] = useState("");
+  const [modalBugReason, setModalBugReason] = useState("");
+  const [modalBugDescription, setModalBugDescription] = useState("");
 
 
   const handlerModalContactForm = () => {
@@ -33,6 +38,35 @@ function Footer() {
   const handlerModalReportBug = () => {
     setModalReportButton(!modalReportButton)
   }
+
+  const handlerSendBug = () => {
+    console.log(modalBugReason)
+    console.log(modalBugDescription)
+    setModalReportButton(!modalReportButton)
+  }
+
+  const handlerSendContact = () => {
+    console.log(modalContactMail)
+    console.log(modalContactReason)
+    console.log(modalContactDescription)
+    setModalContactForm(!modalContactForm)
+  }
+ 
+  const handleContactMail = (event) => {
+    setModalContactMail(event.target.value);
+  };
+  const handleContactReason = (event) => {
+    setModalContactReason(event.target.value);
+  };
+  const handleContactDescription = (event) => {
+    setModalContactDescription(event.target.value);
+  };
+  const handleBugReason = (event) => {
+    setModalBugReason(event.target.value);
+  };
+  const handleBugDescription = (event) => {
+    setModalBugDescription(event.target.value);
+  };
 
   return (
     <div className='footer'>
@@ -68,13 +102,17 @@ function Footer() {
             label="Email (ptional)"
             variant="outlined"
             margin="normal"
+            value={modalContactMail}
+            onChange={handleContactMail}
           />
 
           <TextField
             className='modal__footer__textfield'
-            label="Resason"
+            label="Reason"
             variant="outlined"
             margin="normal"
+            value={modalContactReason}
+            onChange={handleContactReason}
           />
 
           <TextField
@@ -83,12 +121,15 @@ function Footer() {
             multiline
             variant="outlined"
             margin="normal"
+            value={modalContactDescription}
+            onChange={handleContactDescription}
           />
 
           <Button
             className='modal__footer__send'
             variant="contained"
             color="primary"
+            onClick={handlerSendContact}
           >
             Send
           </Button>
@@ -109,6 +150,8 @@ function Footer() {
             label="Resason"
             variant="outlined"
             margin="normal"
+            value={modalBugReason}
+            onChange={handleBugReason}
           />
 
           <TextField
@@ -117,12 +160,15 @@ function Footer() {
             multiline
             variant="outlined"
             margin="normal"
+            value={modalBugDescription}
+            onChange={handleBugDescription}
           />
 
           <Button
             className='modal__footer__send'
             variant="contained"
             color="primary"
+            onClick={handlerSendBug}
           >
             Send
           </Button>
