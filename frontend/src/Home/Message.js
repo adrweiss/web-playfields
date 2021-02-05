@@ -6,6 +6,7 @@ import HomeService from "../services/home.service.js"
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import FlagIcon from '@material-ui/icons/Flag';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -188,6 +189,15 @@ function Message({ id, title, post, userId, usr, timestamp }) {
         <div className='user__date__container'>
           <div className="box__creation__date">
             Creation date: {timestamp}
+          </div>
+
+          
+          <div hidden={true} className="box__delete__post">
+            <IconButton disabled={false}>
+              <Tooltip title="Repoprt post" aria-label="delete_user">
+                <FlagIcon />
+              </Tooltip>
+            </IconButton>
           </div>
 
           <div className="box__delete__post">
