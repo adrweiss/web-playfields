@@ -51,6 +51,26 @@
     justify-content: left;
 }
 
+.box__creation__reported {
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 100%;
+    color: red;
+    font: 14px 'Fira Sans', sans-serif;
+    align-items: center;
+    justify-content: left;
+}
+
+.box__creation__solved {
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 100%;
+    color: green;
+    font: 14px 'Fira Sans', sans-serif;
+    align-items: center;
+    justify-content: left;
+}
+
 .box__delete__post {
     text-align: right;
     margin-right: 10px;

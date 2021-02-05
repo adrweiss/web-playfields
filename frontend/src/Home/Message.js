@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-function Message({ id, title, post, userId, usr, timestamp }) {
+function Message({ id, title, post, userId, usr, timestamp, reported, changed, solved }) {
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
   const [deleted, setDeleted] = useState(false)
@@ -191,9 +191,16 @@ function Message({ id, title, post, userId, usr, timestamp }) {
             Creation date: {timestamp}
           </div>
 
-          
-          <div hidden={true} className="box__delete__post">
-            <IconButton disabled={false}>
+          <div className="box__creation__reported" hidden={!reported || solved}>
+            This Post is already reported and under investigation.
+          </div>
+
+          <div className="box__creation__solved" hidden={!solved}>
+            This reported post is marked as solved. 
+          </div>
+        
+          <div className="box__delete__post">
+            <IconButton disabled={reported}>
               <Tooltip title="Repoprt post" aria-label="delete_user">
                 <FlagIcon />
               </Tooltip>

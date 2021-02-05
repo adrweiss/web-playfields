@@ -198,6 +198,9 @@ function Home() {
                         userId={item.userid}
                         usr={item.username}
                         timestamp={item.date}
+                        reported={item.reported}
+                        changed={item.changed}
+                        solved={item.solved}
                       />
                     ))}
                   </div>

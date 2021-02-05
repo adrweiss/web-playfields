@@ -13,8 +13,8 @@ function getPost(req, res, next) {
       return [user.id, user.username]
     })
 
-    BlogPost.find({},
-      ['title', 'date', 'body', 'userid'],
+    BlogPost.find({deleted: false},
+      ['title', 'date', 'body', 'userid', 'reported', 'changed', 'solved'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -30,7 +30,7 @@ function getPost(req, res, next) {
           } else {
             username = null
           }
-
+          
           return Object.assign(
             {},
             {
@@ -39,6 +39,9 @@ function getPost(req, res, next) {
               userid: doc.userid,
               body: doc.body,
               title: doc.title,
+              reported: doc.reported,
+              changed: doc.changed, 
+              solved: doc.solved,               
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
           )
@@ -60,7 +63,7 @@ function getDescriptions(req, res, next) {
 }
 
 function getAmount(req, res, next) {
-  BlogPost.countDocuments({}, function (err, data) {
+  BlogPost.countDocuments({deleted: false}, function (err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
