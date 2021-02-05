@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-function Message({ id, title, post, userId, usr, timestamp, reported, changed, solved }) {
+function Message({ id, title, post, userId, usr, timestamp, reported, solved }) {
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
   const [deleted, setDeleted] = useState(false)
@@ -22,6 +22,7 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
   const [dispPost, setDispPost] = useState(post)
   const [dispTitle, setDispTitle] = useState(title)
   const [editedTitle, setEditedTitle] = useState(title)
+  const [reportedPost, setReportedPost] = useState(reported)
 
   const currentUser = getCurrentUser();
 
@@ -72,8 +73,6 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
 
   const editSend = () => {
     setEdited(!edited)
-    setDispPost(editedPost)
-    setDispTitle(editedTitle)
 
     removeMessage()
     clearTimeout(timerId)
@@ -82,6 +81,8 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
       HomeService.editPostAny(id, editedTitle, editedPost).then((response) => {
         setMessage(response.data.message)
         setTimerId(setTimeout(removeMessage, 10000));
+        setDispPost(editedPost)
+        setDispTitle(editedTitle)
       },
         (error) => {
           const _content =
@@ -98,6 +99,8 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
       HomeService.editPostUser(id, editedTitle, editedPost).then((response) => {
         setMessage(response.data.message)
         setTimerId(setTimeout(removeMessage, 10000));
+        setDispPost(editedPost)
+        setDispTitle(editedTitle)
       },
         (error) => {
           const _content =
@@ -112,6 +115,23 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
         })
     }
 
+  }
+
+  const handleReportPost = () => {
+    HomeService.reportPost().then((response) => {
+      console.log(response.data.message)
+      setReportedPost(true)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
   const editPost = () => {
@@ -191,18 +211,26 @@ function Message({ id, title, post, userId, usr, timestamp, reported, changed, s
             Creation date: {timestamp}
           </div>
 
-          <div className="box__creation__reported" hidden={!reported || solved}>
-            This Post is already reported and under investigation.
-          </div>
-
-          <div className="box__creation__solved" hidden={!solved}>
-            This reported post is marked as solved. 
-          </div>
-        
-          <div className="box__delete__post">
-            <IconButton disabled={reported}>
+          <div hidden={reportedPost} className="box__delete__post">
+            <IconButton onClick={handleReportPost}>
               <Tooltip title="Repoprt post" aria-label="delete_user">
                 <FlagIcon />
+              </Tooltip>
+            </IconButton>
+          </div>
+
+          <div hidden={!solved} className="box__delete__post">
+            <IconButton>
+              <Tooltip title="This reported post is marked as solved." aria-label="delete_user">
+                <FlagIcon />
+              </Tooltip>
+            </IconButton>
+          </div>
+
+          <div hidden={!reportedPost || solved} className="box__delete__post">
+            <IconButton>
+              <Tooltip title="This Post is reported and under investigation." aria-label="delete_user">
+                <FlagIcon color="secondary" />
               </Tooltip>
             </IconButton>
           </div>

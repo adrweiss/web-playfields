@@ -15,6 +15,10 @@ const getDescriptions = () => {
   return axios.get("/home/desc");
 };
 
+const reportPost = () => {
+  return axios.get("/home/report");
+};
+
 const addPostAny = (title, body) => {
   return axios.post("/home/post/any",
     {
@@ -68,6 +72,7 @@ const HomeService = {
   deletePostUser,
   editPostAny,
   editPostUser,
+  reportPost,
 }
 
 export default HomeService;

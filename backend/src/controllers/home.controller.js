@@ -14,7 +14,7 @@ function getPost(req, res, next) {
     })
 
     BlogPost.find({deleted: false},
-      ['title', 'date', 'body', 'userid', 'reported', 'changed', 'solved'],
+      ['title', 'date', 'body', 'userid', 'reported', 'solved'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -40,7 +40,6 @@ function getPost(req, res, next) {
               body: doc.body,
               title: doc.title,
               reported: doc.reported,
-              changed: doc.changed, 
               solved: doc.solved,               
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
@@ -171,7 +170,8 @@ function EditPost(req, res, next) {
   BlogPost.updateOne({
     $and: [{
       '_id': req.body.postId,
-      'userid': req.userId
+      'userid': req.userId,
+      'solved': false
     }]
   },
     {
@@ -181,13 +181,15 @@ function EditPost(req, res, next) {
     { upsert: false },
     function (err, doc) {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
-      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Its not allowed to edit posts which are marked as solved or post not found.' }) };
       if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
     });
 }
 
 const putReportPost = (req, res, next) => {
+  console.log(req.body)
+  console.log("test")
   res.status(200).send({ message: "report post." });
 }
 

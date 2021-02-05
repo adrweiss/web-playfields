@@ -199,7 +199,6 @@ function Home() {
                         usr={item.username}
                         timestamp={item.date}
                         reported={item.reported}
-                        changed={item.changed}
                         solved={item.solved}
                       />
                     ))}

@@ -30,6 +30,11 @@ export function routsHome(app) {
     homeController.getDescriptions,
   );
 
+  app.get(
+    "/api/home/report",
+    homeController.putReportPost,
+  );
+
   app.post(
     "/api/home/post/user",
     [authJwt.verifyToken,
