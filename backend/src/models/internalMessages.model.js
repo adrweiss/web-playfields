@@ -3,10 +3,10 @@ import mongoose from'mongoose'
 const internalMessageSchema = mongoose.Schema({
   type: String,
   mail: String,
-  reson: String,
+  reason: String,
   body: String,
-  solved: String,
+  solved: {type: Boolean, default: false},
   date: { type: Date, default: Date.now }
 })
 
-export default mongoose.model('intMess', internalMessageSchema);
+export default mongoose.model('internalMessage', internalMessageSchema);

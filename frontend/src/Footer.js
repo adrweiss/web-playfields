@@ -46,6 +46,8 @@ function Footer() {
     FooterService.postBug(modalBugReason, modalBugDescription).then(response => {
       console.log(response.data.message)
       setModalReportButton(!modalReportButton)
+      setModalBugReason("")
+      setModalBugDescription("")
     },
       (error) => {
         const _content =
@@ -64,6 +66,9 @@ function Footer() {
     FooterService.postContact(modalContactMail, modalContactReason, modalContactDescription).then(response => {
       console.log(response.data.message)
       setModalContactForm(!modalContactForm)
+      setModalContactMail("")
+      setModalContactReason("")
+      setModalContactDescription("")
     },
       (error) => {
         const _content =
@@ -125,7 +130,7 @@ function Footer() {
 
           <TextField
             className='modal__footer__textfield'
-            label="Email (ptional)"
+            label="Email (optional)"
             variant="outlined"
             margin="normal"
             value={modalContactMail}
