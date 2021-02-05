@@ -1,4 +1,5 @@
 import { mongodb } from '../models/index.js'
+import { helper } from '../middleware/index.js'
 
 const InternalMessage = mongodb.internalMessage;
 
@@ -20,6 +21,7 @@ const postContactForm = (req, res, next) => {
     if (err) {
       return res.status(500).send(err)
     } else {
+      helper.sendMailWithContent("You got one contact request", "weiss.adrian@outlook.com", "Playfields Contact Request")
       return res.status(201).send({ message: "Thank you for the contact message." })
     }
   })
