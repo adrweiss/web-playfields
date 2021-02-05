@@ -10,8 +10,23 @@ function buildProd(req, res, next) {
     })
 }
 
+const getContactMessages = (req, res, next) => {
+  res.status(200).send({ message: "get the contact messages." });
+}
+
+const getPostedBugs = (req, res, next) => {
+  res.status(200).send({ message: "get the bug messages." });
+}
+
+const getReportedPosts = (req, res, next) => {
+  res.status(200).send({ message: "get reported Posts." });
+}
+
 const mgtController = {
   buildProd,
+  getContactMessages,
+  getPostedBugs,
+  getReportedPosts,
 };
 
 export default mgtController;

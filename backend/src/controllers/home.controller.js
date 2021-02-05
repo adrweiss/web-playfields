@@ -184,6 +184,10 @@ function EditPost(req, res, next) {
     });
 }
 
+const putReportPost = (req, res, next) => {
+  res.status(200).send({ message: "report post." });
+}
+
 const homeController = {
   getPost,
   getAmount,
@@ -193,6 +197,7 @@ const homeController = {
   writePost,
   EditAnyPost,
   EditPost,
+  putReportPost
 };
 
 export default homeController;
