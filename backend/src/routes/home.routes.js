@@ -30,7 +30,7 @@ export function routsHome(app) {
     homeController.getDescriptions,
   );
 
-  app.get(
+  app.post(
     "/api/home/report",
     homeController.putReportPost,
   );

@@ -118,7 +118,7 @@ function Message({ id, title, post, userId, usr, timestamp, reported, solved }) 
   }
 
   const handleReportPost = () => {
-    HomeService.reportPost().then((response) => {
+    HomeService.reportPost(id).then((response) => {
       console.log(response.data.message)
       setReportedPost(true)
     },

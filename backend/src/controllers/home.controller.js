@@ -188,9 +188,21 @@ function EditPost(req, res, next) {
 }
 
 const putReportPost = (req, res, next) => {
-  console.log(req.body)
-  console.log("test")
-  res.status(200).send({ message: "report post." });
+  BlogPost.updateOne({
+    $and: [{
+      '_id': req.body.postId,
+    }]
+  },
+    {
+      reported: true,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Post not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already reported.' }) };
+      return res.status(200).send({ message: 'Succesfully reported.' });
+    });
 }
 
 const homeController = {

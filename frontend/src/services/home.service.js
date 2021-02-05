@@ -15,8 +15,8 @@ const getDescriptions = () => {
   return axios.get("/home/desc");
 };
 
-const reportPost = () => {
-  return axios.get("/home/report");
+const reportPost = (postId) => {
+  return axios.post("/home/report", {postId} );
 };
 
 const addPostAny = (title, body) => {
