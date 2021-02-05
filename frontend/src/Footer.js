@@ -7,6 +7,9 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
+
+import FooterService from './services/footer.service';
+
 Modal.setAppElement('body')
 
 const customStyles = {
@@ -40,18 +43,41 @@ function Footer() {
   }
 
   const handlerSendBug = () => {
-    console.log(modalBugReason)
-    console.log(modalBugDescription)
-    setModalReportButton(!modalReportButton)
+    FooterService.postBug(modalBugReason, modalBugDescription).then(response => {
+      console.log(response.data.message)
+      setModalReportButton(!modalReportButton)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      }
+    )
   }
 
   const handlerSendContact = () => {
-    console.log(modalContactMail)
-    console.log(modalContactReason)
-    console.log(modalContactDescription)
-    setModalContactForm(!modalContactForm)
+    FooterService.postContact(modalContactMail, modalContactReason, modalContactDescription).then(response => {
+      console.log(response.data.message)
+      setModalContactForm(!modalContactForm)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      }
+    )
   }
- 
+
   const handleContactMail = (event) => {
     setModalContactMail(event.target.value);
   };
