@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 import './Management.css'
 import Grid from '@material-ui/core/Grid';
 import MenuList from '@material-ui/core/MenuList';
@@ -7,13 +8,13 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { useHistory } from 'react-router-dom';
+
 import UserOverview from './User.Management';
 import RolesOverview from './Roles.Management';
 import LoginManagement from './Login.Management';
 import DeleteManagement from './Delete.Management';
+
 import { getCurrentUser } from "../services/auth.service";
-import Button from '@material-ui/core/Button'
 import ManagementService from '../services/mgt.service'
 
 
@@ -150,19 +151,7 @@ function Management() {
         <Grid item sm={10}>
           {subPage === 0 && (
             <div>
-              <div className="startpage">
                 This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
-              </div>
-              {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
-                <div className="startpage">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={triggerBuild}>
-                    Trigger build process
-                </Button>
-                </div>
-              )}
             </div>
           )}
           {subPage === 1 && (
