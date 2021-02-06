@@ -113,6 +113,8 @@ function Management() {
       <Grid container spacing={3}>
         <Grid item sm={2}>
           <MenuList>
+            {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
+              <MenuItem onClick={triggerBuild}>Trigger build process</MenuItem>)}
             {(currentUser?.rights.includes('READ_USER_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
             {(currentUser?.rights.includes('READ_ROLE_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
