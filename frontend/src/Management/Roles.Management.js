@@ -69,8 +69,6 @@ function Row(props) {
 
   rightsRole = allRights.filter((el) => !temp.includes(el.right_id))
 
-
-
   const modalEditRole = () => {
     if (role.role_name !== 'ADMIN') {
       setAllRightsforModel(rightsRole)
@@ -363,6 +361,22 @@ function RolesOverview() {
       })
   }, [])
 
+  function loadRights() {
+    ManagementRoleService.getRoles().then((response) => {
+      setRoles(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
   function removeMessage() {
     setMessage("")
   }
@@ -390,6 +404,8 @@ function RolesOverview() {
     setAllRightsforModel([...allRightsforModel, allRights.find(element => element.right_id === right_id)]);
   }
 
+  
+
   const createNewRole = () => {
     const accessRights = [];
     rightsForNewRole.forEach(right => {
@@ -408,6 +424,7 @@ function RolesOverview() {
     ManagementRoleService.createRole(name, description, accessRights).then((response) => {
       setMessage(response.data.message);
       setTimerId(setTimeout(removeMessage, 10000));
+      loadRights();
     },
       (error) => {
         const _content =
