@@ -10,7 +10,6 @@ export function routsMgt(app) {
     next();
   });
 
-
   app.get(
     "/api/mgt/build",
     [authJwt.verifyToken,

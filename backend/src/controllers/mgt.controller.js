@@ -14,19 +14,49 @@ const getContactMessages = (req, res, next) => {
   res.status(200).send({ message: "get the contact messages." });
 }
 
+const getAmountContactMessages = (req, res, next) => {
+  res.status(200).send({ message: "get the contact messages." });
+}
+
+const setSolvedStatusContactMessages = (req, res, next) => {
+  res.status(200).send({ message: "get the contact messages." });
+}
+
 const getPostedBugs = (req, res, next) => {
   res.status(200).send({ message: "get the bug messages." });
+}
+
+const getAmountPostedBugs = (req, res, next) => {
+  res.status(200).send({ message: "get reported Posts." });
+}
+
+const setSolvedStatusPostedBugs = (req, res, next) => {
+  res.status(200).send({ message: "get the contact messages." });
 }
 
 const getReportedPosts = (req, res, next) => {
   res.status(200).send({ message: "get reported Posts." });
 }
 
+const getAmountReportedPosts = (req, res, next) => {
+  res.status(200).send({ message: "get reported Posts." });
+}
+
+const setSolvedStatusReportedPosts = (req, res, next) => {
+  res.status(200).send({ message: "get the contact messages." });
+}
+
 const mgtController = {
   buildProd,
-  getContactMessages,
-  getPostedBugs,
   getReportedPosts,
+  getPostedBugs,
+  getContactMessages,
+  getAmountReportedPosts,
+  getAmountPostedBugs,
+  getAmountContactMessages,
+  setSolvedStatusContactMessages,
+  setSolvedStatusPostedBugs,
+  setSolvedStatusReportedPosts,
 };
 
 export default mgtController;
