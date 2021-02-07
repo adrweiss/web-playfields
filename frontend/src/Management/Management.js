@@ -13,11 +13,10 @@ import UserOverview from './User.Management';
 import RolesOverview from './Roles.Management';
 import LoginManagement from './Login.Management';
 import DeleteManagement from './Delete.Management';
+import HomeManagement from './Home.Management';
 
 import { getCurrentUser } from "../services/auth.service";
 import ManagementService from '../services/mgt.service'
-
-
 
 function Management() {
   const [open, setOpen] = useState(false);
@@ -56,6 +55,10 @@ function Management() {
 
     prevOpen.current = open;
   }, [open]);
+
+  const handleclickChangeHome = () => {
+    setSubPage(0)
+  }
 
   const handleclickChangeSubpageUsr = (page) => {
     if (subPage === 1) {
@@ -111,11 +114,10 @@ function Management() {
   return (
     <div>
       <h1>The side for the admin to controll access.</h1>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item sm={2}>
           <MenuList>
-            {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
-              <MenuItem onClick={triggerBuild}>Trigger build process</MenuItem>)}
+            <MenuItem onClick={handleclickChangeHome}>Home</MenuItem>
             {(currentUser?.rights.includes('READ_USER_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
             {(currentUser?.rights.includes('READ_ROLE_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
@@ -126,6 +128,8 @@ function Management() {
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true">Views</MenuItem>)}
+            {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
+              <MenuItem onClick={triggerBuild}>Trigger build process</MenuItem>)}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -150,9 +154,7 @@ function Management() {
         </Grid>
         <Grid item sm={10}>
           {subPage === 0 && (
-            <div>
-                This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
-            </div>
+            <HomeManagement />
           )}
           {subPage === 1 && (
             <UserOverview />
