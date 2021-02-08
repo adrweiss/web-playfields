@@ -27,7 +27,7 @@ export function routsMgt(app) {
   );
 
   app.put(
-    "/api/mgt/bug/messages",
+    "/api/mgt/bug/status",
     [authJwt.verifyToken,
     authJwt.getReadBugReports,
     authJwt.hasRights],
@@ -51,11 +51,19 @@ export function routsMgt(app) {
   );
 
   app.put(
-    "/api/mgt/report/messages",
+    "/api/mgt/report/status",
     [authJwt.verifyToken,
     authJwt.getReadPostReports,
     authJwt.hasRights],
     mgtController.setSolvedStatusReportedPosts,
+  );
+
+  app.put(
+    "/api/mgt/report/message",
+    [authJwt.verifyToken,
+    authJwt.getReadPostReports,
+    authJwt.hasRights],
+    mgtController.editReportedPost,
   );
 
   app.get(
@@ -75,7 +83,7 @@ export function routsMgt(app) {
   );
 
   app.put(
-    "/api/mgt/contact/messages",
+    "/api/mgt/contact/status",
     [authJwt.verifyToken,
     authJwt.getReadContactRequests,
     authJwt.hasRights],
