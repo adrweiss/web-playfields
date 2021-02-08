@@ -1,4 +1,8 @@
 import request from 'request'
+import { mongodb } from '../models/index.js'
+
+const InternalMessage = mongodb.internalMessage;
+const BlogPost = mongodb.blogPost;
 
 function buildProd(req, res, next) {
   request.get('http://192.168.0.59:8080/git/notifyCommit?url=github.com:adrweiss/playfield.git')
@@ -15,7 +19,23 @@ const getContactMessages = (req, res, next) => {
 }
 
 const getAmountContactMessages = (req, res, next) => {
-  res.status(200).send({ message: "get the contact messages." });
+  var query = {};
+  query["type"] = "Contact";
+
+  if (req.query.filter === "solved") {
+    query["solved"] = true;
+  }
+  if (req.query.filter === "unsolved") {
+    query["solved"] = false;
+  }
+
+  InternalMessage.countDocuments(query, function (err, data) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send({ amount: data });
+    }
+  })
 }
 
 const setSolvedStatusContactMessages = (req, res, next) => {
@@ -27,7 +47,24 @@ const getPostedBugs = (req, res, next) => {
 }
 
 const getAmountPostedBugs = (req, res, next) => {
-  res.status(200).send({ message: "get reported Posts." });
+  var query = {};
+  query["type"] = "Bug";
+
+  if (req.query.filter === "solved") {
+    query["solved"] = true;
+  }
+  if (req.query.filter === "unsolved") {
+    query["solved"] = false;
+  }
+
+  InternalMessage.countDocuments(query, function (err, data) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send({ amount: data });
+    }
+  })
+
 }
 
 const setSolvedStatusPostedBugs = (req, res, next) => {
@@ -39,7 +76,30 @@ const getReportedPosts = (req, res, next) => {
 }
 
 const getAmountReportedPosts = (req, res, next) => {
-  res.status(200).send({ message: "get reported Posts." });
+  var query = {};
+  query["reported"] = true;
+
+  if (req.query.filter === "solved") {
+    query["solved"] = true;
+  }
+  if (req.query.filter === "unsolved") {
+    query["solved"] = false;
+  }
+  if (req.query.deleted === "deleted") {
+    query["deleted"] = true
+  }
+  if (req.query.deleted === "undeleted") {
+    query["deleted"] = false
+  }
+  
+
+  BlogPost.countDocuments( query , function (err, data) {
+    if (err) {
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send({ amount: data });
+    }
+  })
 }
 
 const setSolvedStatusReportedPosts = (req, res, next) => {

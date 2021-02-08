@@ -61,6 +61,13 @@ function HomeManagement() {
             inputProps={{ 'aria-label': 'secondary checkbox' }}
           />
           solved
+          <Checkbox
+            checked={checked}
+            onChange={handleChange}
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          deleted
         </Grid>
       </Grid>
     </div>
