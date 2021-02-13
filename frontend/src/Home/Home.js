@@ -182,7 +182,7 @@ function Home() {
               </Button>
             </div>
 
-            <div className="test">
+            <div>
               {messageFlow?.length === 0 ? (
                 <div className='write__posts'>
                   <h2>No post available</h2>
