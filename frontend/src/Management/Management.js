@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
+import Modal from 'react-modal';
 import './Management.css'
+
 import Grid from '@material-ui/core/Grid';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,6 +10,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+import Button from '@material-ui/core/Button'
 
 import UserOverview from './User.Management';
 import RolesOverview from './Roles.Management';
@@ -18,9 +21,26 @@ import HomeManagement from './Home.Management';
 import { getCurrentUser } from "../services/auth.service";
 import ManagementService from '../services/mgt.service'
 
+Modal.setAppElement('body')
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    overlay: { zIndex: 9999 }
+  }
+};
+
 function Management() {
   const [open, setOpen] = useState(false);
+  const [triggerBuildModal, setTriggerBuildModal] = useState(false);
   const [subPage, setSubPage] = useState(0);
+  const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
   const anchorRef = useRef(null);
   const history = useHistory();
   const currentUser = getCurrentUser();
@@ -93,10 +113,15 @@ function Management() {
     }
     handleClose()
   }
-
+  
   const triggerBuild = () => {
+    handleTriggerModal()
+    removeMessage()
+    clearTimeout(timerId)
+
     ManagementService.triggerBuild().then((response) => {
-      console.log(response.data.message);
+      setMessage(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -106,14 +131,27 @@ function Management() {
           error.message ||
           error.toString();
 
-        console.log(_content);
+        setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       })
   }
 
+  const handleTriggerModal = () => {
+    setTriggerBuildModal(!triggerBuildModal)
+  }
+
+  function removeMessage() {
+    setMessage("")
+  }
 
   return (
     <div>
       <h1>The side for the admin to controll access.</h1>
+      {message && (
+        <div className="response">
+          {message}
+        </div>
+      )}
       <Grid container spacing={1}>
         <Grid item sm={2}>
           <MenuList>
@@ -129,7 +167,7 @@ function Management() {
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true">Views</MenuItem>)}
             {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
-              <MenuItem onClick={triggerBuild}>Trigger build process</MenuItem>)}
+              <MenuItem onClick={handleTriggerModal}>Trigger build process</MenuItem>)}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -170,6 +208,20 @@ function Management() {
           )}
         </Grid>
       </Grid>
+      <Modal
+        isOpen={triggerBuildModal}
+        onRequestClose={handleTriggerModal}
+        style={customStyles}
+        contentLabel="Trigger__Build"
+      >
+        <div className='modal__delete'>
+          <h3>Trigger build process</h3>
+          <p>Are you sure that you want to trigger the build process?</p>
+          <div />
+          <Button variant="contained" onClick={triggerBuild} color="primary">Trigger</Button>
+          <Button variant="contained" onClick={handleTriggerModal}>Cancel</Button>
+        </div>
+      </Modal>
     </div>
   )
 }

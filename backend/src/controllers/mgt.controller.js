@@ -12,7 +12,7 @@ function buildProd(req, res, next) {
       return res.status(200).send({ message: "Build is triggered." });
     })
     .on('error', function (err) {
-      return res.status(200).send({ message: "Build is not available." });
+      return res.status(400).send({ message: "Build is not available." });
     })
 }
 
