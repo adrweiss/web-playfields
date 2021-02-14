@@ -30,8 +30,8 @@ const getContactMessages = (req, res, next) => {
   InternalMessage.find(query,
     ['_id', 'solved', 'mail', 'reason', 'body', 'date'],
     {
-      skip: 0,
-      limit: 5,
+      skip: parseInt(req.query.skip),
+      limit: parseInt(req.query.limit),
       sort: {
         date: -1
       },
@@ -105,8 +105,8 @@ const getPostedBugs = (req, res, next) => {
   InternalMessage.find(query,
     ['_id', 'solved', 'mail', 'reason', 'body', 'date'],
     {
-      skip: 0,
-      limit: 5,
+      skip: parseInt(req.query.skip),
+      limit: parseInt(req.query.limit),
       sort: {
         date: -1
       },
@@ -194,8 +194,8 @@ const getReportedPosts = (req, res, next) => {
     BlogPost.find(query,
       ['title', 'date', 'body', 'userid', 'reported', 'solved', 'deleted', 'changed'],
       {
-        skip: 0,
-        limit: 5,
+        skip: parseInt(req.query.skip),
+        limit: parseInt(req.query.limit),
         sort: {
           date: -1
         },
