@@ -45,7 +45,7 @@ function HomeMessageManagement({ id, date, body, reason, solved, mail, type, sta
 
   const handleSolvedStatus = () => {
     setSolvedStatus(!solvedStatus)
-    
+
     if (type === "bug") {
       setBugStatus()
     } else if (type === "contact") {
@@ -60,14 +60,19 @@ function HomeMessageManagement({ id, date, body, reason, solved, mail, type, sta
         <div>
           <h3 className="home__management__message__reason">{reason}</h3>
           <div className="home__management__message__body">{body}</div>
+          {mail && (
+            <div className="home__management_message__mail">{mail}</div>
+          )}
           <div className="home__management__message__footer">
-            {date}
-            {mail}
+            <div className="home__management__message__date">
+              {date}
+            </div>
             <IconButton onClick={handleSolvedStatus}>
               <Tooltip title="Change password from user" aria-label="change_user_password">
                 {solvedStatus ? <CheckBoxOutlinedIcon fontSize='small' /> : <CheckBoxOutlineBlankOutlinedIcon fontSize='small' />}
               </Tooltip>
             </IconButton>
+
           </div>
         </div>
       )}
