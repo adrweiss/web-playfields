@@ -58,14 +58,6 @@ export function routsMgt(app) {
     mgtController.setSolvedStatusReportedPosts,
   );
 
-  app.put(
-    "/api/mgt/report/message",
-    [authJwt.verifyToken,
-    authJwt.getReadPostReports,
-    authJwt.hasRights],
-    mgtController.editReportedPost,
-  );
-
   app.get(
     "/api/mgt/report/amount",
     [authJwt.verifyToken,

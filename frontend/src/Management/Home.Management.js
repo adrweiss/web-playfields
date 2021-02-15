@@ -244,6 +244,8 @@ function HomeManagement() {
                         body={item.body}
                         reason={item.reason}
                         solved={item.solved}
+                        type="bug"
+                        status={createStatus(checkedBugSolved, checkedBugUnSolved)}
                       />
                     ))}
                   </div>
@@ -287,6 +289,8 @@ function HomeManagement() {
                         reason={item.reason}
                         solved={item.solved}
                         mail={item.mail}
+                        type="contact"
+                        status={createStatus(checkedContactSolved, checkedContactUnSolved)}
                       />
                     ))}
                   </div>

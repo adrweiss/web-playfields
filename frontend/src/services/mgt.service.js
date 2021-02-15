@@ -6,33 +6,54 @@ const triggerBuild = () => {
 };
 
 const getAmountPostedBugs = (filter) => {
-  return axios.get("/mgt/bug/amount",  
-  { headers: authHeader(), params: { "filter": filter} });
+  return axios.get("/mgt/bug/amount",
+    { headers: authHeader(), params: { "filter": filter } });
 };
 
-const getAmountReportedPosts = (filter, deleted) => { 
-  return axios.get("/mgt/report/amount", 
-  { headers: authHeader(), params: { "filter": filter, "deleted": deleted} });
- };
-
-const getAmountContactMessages = (filter) => { 
-  return axios.get("/mgt/contact/amount", 
-  { headers: authHeader(), params: { "filter": filter} });
+const getAmountReportedPosts = (filter, deleted) => {
+  return axios.get("/mgt/report/amount",
+    { headers: authHeader(), params: { "filter": filter, "deleted": deleted } });
 };
 
-const getBugMessages = (filter, skip, limit) => { 
-  return axios.get("/mgt/bug/messages", 
-  { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit} });
+const getAmountContactMessages = (filter) => {
+  return axios.get("/mgt/contact/amount",
+    { headers: authHeader(), params: { "filter": filter } });
 };
 
-const getReportMessages = (filter, deleted, skip, limit) => { 
-  return axios.get("/mgt/report/messages", 
-  { headers: authHeader(), params: { "filter": filter, "deleted": deleted, "skip": skip, "limit": limit} });
+const getBugMessages = (filter, skip, limit) => {
+  return axios.get("/mgt/bug/messages",
+    { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit } });
 };
 
-const getContactMessages = (filter, skip, limit) => { 
-  return axios.get("/mgt/contact/messages", 
-  { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit} });
+const getReportMessages = (filter, deleted, skip, limit) => {
+  return axios.get("/mgt/report/messages",
+    { headers: authHeader(), params: { "filter": filter, "deleted": deleted, "skip": skip, "limit": limit } });
+};
+
+const getContactMessages = (filter, skip, limit) => {
+  return axios.get("/mgt/contact/messages",
+    { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit } });
+};
+
+const putBugStatus = (id, solvedStatus) => {
+  return axios.put("/mgt/bug/status",
+    { id,
+      solvedStatus },
+    { headers: authHeader(), });
+};
+
+const putReportStatus = (id, solvedStatus) => {
+  return axios.put("/mgt/report/status",
+    { id, 
+      solvedStatus },
+    { headers: authHeader() });
+};
+
+const putContactStatus = (id, solvedStatus) => {
+  return axios.put("/mgt/contact/status",
+    { id,
+      solvedStatus },
+    { headers: authHeader() });
 };
 
 
@@ -43,7 +64,10 @@ const ManagementService = {
   getAmountContactMessages,
   getBugMessages,
   getReportMessages,
-  getContactMessages, 
+  getContactMessages,
+  putBugStatus,
+  putReportStatus,
+  putContactStatus
 }
 
 export default ManagementService;

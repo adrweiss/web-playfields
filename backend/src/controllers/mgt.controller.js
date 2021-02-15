@@ -77,7 +77,7 @@ const getAmountContactMessages = (req, res, next) => {
 
 const setSolvedStatusContactMessages = (req, res, next) => {
   InternalMessage.updateOne({
-    '_id': req.body.BugPost,
+    '_id': req.body.id,
     'type': "Contact"
   },
     {
@@ -153,7 +153,7 @@ const getAmountPostedBugs = (req, res, next) => {
 
 const setSolvedStatusPostedBugs = (req, res, next) => {
   InternalMessage.updateOne({
-    '_id': req.body.BugPost,
+    '_id': req.body.id,
     'type': "Bug"
   },
     {
@@ -259,7 +259,7 @@ const getAmountReportedPosts = (req, res, next) => {
 
 const setSolvedStatusReportedPosts = (req, res, next) => {
   BlogPost.updateOne({
-    '_id': req.body.BugPost,
+    '_id': req.body.id,
   },
     {
       solved: req.body.solvedStatus,
@@ -268,24 +268,6 @@ const setSolvedStatusReportedPosts = (req, res, next) => {
     function (err, doc) {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
       if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No Bug in database found.' }) };
-      return res.status(200).send({ message: 'Succesfully edited.' });
-    });
-}
-
-const editReportedPost = (req, res, next) => {
-  BlogPost.updateOne({
-    '_id': req.body.postId,
-  },
-    {
-      body: req.body.body,
-      title: req.body.title,
-      changed: true
-    },
-    { upsert: false },
-    function (err, doc) {
-      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
-      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
-      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
     });
 }
@@ -301,7 +283,6 @@ const mgtController = {
   setSolvedStatusContactMessages,
   setSolvedStatusPostedBugs,
   setSolvedStatusReportedPosts,
-  editReportedPost,
 };
 
 export default mgtController;
