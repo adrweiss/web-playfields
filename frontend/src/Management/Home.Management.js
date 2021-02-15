@@ -25,29 +25,7 @@ function HomeManagement() {
   const [messageFlowContacts, setMessageFlowContacts] = useState([]);
   const [messageFlowReports, setMessageFlowReports] = useState([]);
 
-
-
   const currentUser = getCurrentUser();
-
-  const handleChangeBugSolved = (event) => { setCheckedBugSolved(event.target.checked) };
-  const handleChangeContactSolved = (event) => { setCheckedContactSolved(event.target.checked) };
-  const handleChangeReportSolved = (event) => { setCheckedReportSolved(event.target.checked) };
-  const handleChangeBugUnSolved = (event) => { setCheckedBugUnSolved(event.target.checked) };
-  const handleChangeContactUnSolved = (event) => { setCheckedContactUnSolved(event.target.checked) };
-  const handleChangeReportUnSolved = (event) => { setCheckedReportUnSolved(event.target.checked) };
-  const handleChangeReportDeleted = (event) => { setCheckedReportDeleted(event.target.checked) };
-
-  /*
-  function createStatus(solved, unsolved) {
-    if (solved && unsolved) {
-      return "all"
-    } else if (solved) {
-      return "solved"
-    } else {
-      return "unsolved"
-    }
-  }
-  */
 
   useEffect(() => {
     ManagementService.getAmountContactMessages("unsolved").then((response) => {
@@ -89,10 +67,8 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getBugMessages("unsolved").then((response) => {
+    ManagementService.getBugMessages("unsolved", 0, 5).then((response) => {
       setMessageFlowBug(response.data);
-      console.log("Bug")
-      console.log(response.data)
     },
       (error) => {
         const _content =
@@ -104,10 +80,8 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getContactMessages("unsolved").then((response) => {
+    ManagementService.getContactMessages("unsolved", 0, 5).then((response) => {
       setMessageFlowContacts(response.data);
-      console.log("Contacts")
-      console.log(response.data)
     },
       (error) => {
         const _content =
@@ -119,10 +93,8 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getReportMessages("unsolved", "undeleted").then((response) => {
+    ManagementService.getReportMessages("unsolved", "undeleted", 0, 5).then((response) => {
       setMessageFlowReports(response.data);
-      console.log("Reports")
-      console.log(response.data)
     },
       (error) => {
         const _content =
@@ -136,22 +108,122 @@ function HomeManagement() {
       })
   }, [])
 
+  function createStatus(solved, unsolved) {
+    if (solved && unsolved) {
+      return "all"
+    } else if (solved) {
+      return "solved"
+    } else {
+      return "unsolved"
+    }
+  }
+
+  function getBugReports(status) {
+    ManagementService.getAmountPostedBugs(status).then((response) => {
+      setAmountBug(response.data.amount);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+    ManagementService.getBugMessages(status).then((response) => {
+      setMessageFlowBug(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
+  function getContactRequests(status) {
+    ManagementService.getAmountContactMessages(status).then((response) => {
+      setAmountContacts(response.data.amount);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+    ManagementService.getContactMessages(status, 0, 5).then((response) => {
+      setMessageFlowContacts(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
+  const handleChangeBugSolved = (event) => {
+    setCheckedBugSolved(event.target.checked)
+    getBugReports(createStatus(event.target.checked, checkedBugUnSolved))
+  };
+  const handleChangeContactSolved = (event) => {
+    setCheckedContactSolved(event.target.checked)
+    getContactRequests(createStatus(event.target.checked, checkedContactUnSolved))
+  };
+  const handleChangeReportSolved = (event) => {
+    setCheckedReportSolved(event.target.checked)
+    console.log(createStatus(event.target.checked, checkedReportUnSolved))
+  };
+  const handleChangeBugUnSolved = (event) => {
+    setCheckedBugUnSolved(event.target.checked)
+    getBugReports(createStatus(checkedBugSolved, event.target.checked))
+  };
+  const handleChangeContactUnSolved = (event) => {
+    setCheckedContactUnSolved(event.target.checked)
+    getContactRequests(createStatus(checkedContactSolved, event.target.checked))
+  };
+  const handleChangeReportUnSolved = (event) => {
+    setCheckedReportUnSolved(event.target.checked)
+    console.log(createStatus(checkedReportSolved, event.target.checked))
+  };
+  const handleChangeReportDeleted = (event) => {
+    setCheckedReportDeleted(event.target.checked)
+
+  };
+
+
   return (
     <div>
       <Grid container spacing={1}>
         {(currentUser?.rights.includes('READ_BUG_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
           <Grid className="management__home__message__container" item sm={4}>
+            <h2>Bug Reports</h2>
             <div>
               <Checkbox
-                checked={checkedBugSolved}
-                onChange={handleChangeBugSolved}
+                checked={checkedBugUnSolved}
+                onChange={handleChangeBugUnSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
               unsolved
               <Checkbox
-                checked={checkedBugUnSolved}
-                onChange={handleChangeBugUnSolved}
+                checked={checkedBugSolved}
+                onChange={handleChangeBugSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
@@ -160,13 +232,18 @@ function HomeManagement() {
             <div>
               {messageFlowBug?.length === 0 ? (
                 <div className='write__posts'>
-                  <h2>No post available</h2>
+                  <h2>No data available</h2>
                 </div>
               ) : (
                   <div>
                     {messageFlowBug?.map(item => (
                       <HomeMessageManagement
                         key={item.id}
+                        id={item.id}
+                        date={item.date}
+                        body={item.body}
+                        reason={item.reason}
+                        solved={item.solved}
                       />
                     ))}
                   </div>
@@ -177,17 +254,18 @@ function HomeManagement() {
         )}
         {(currentUser?.rights.includes('READ_CONTACT_REQUESTS') || currentUser?.rights.includes('ADMIN')) && (
           <Grid className="management__home__message__container" item sm={4}>
+            <h2>Contact Requests</h2>
             <div>
               <Checkbox
-                checked={checkedContactSolved}
-                onChange={handleChangeContactSolved}
+                checked={checkedContactUnSolved}
+                onChange={handleChangeContactUnSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
           unsolved
             <Checkbox
-                checked={checkedContactUnSolved}
-                onChange={handleChangeContactUnSolved}
+                checked={checkedContactSolved}
+                onChange={handleChangeContactSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
@@ -196,13 +274,19 @@ function HomeManagement() {
             <div>
               {messageFlowContacts?.length === 0 ? (
                 <div className='write__posts'>
-                  <h2>No post available</h2>
+                  <h2>No data available</h2>
                 </div>
               ) : (
                   <div>
                     {messageFlowContacts?.map(item => (
                       <HomeMessageManagement
                         key={item.id}
+                        id={item.id}
+                        date={item.date}
+                        body={item.body}
+                        reason={item.reason}
+                        solved={item.solved}
+                        mail={item.mail}
                       />
                     ))}
                   </div>
@@ -213,17 +297,18 @@ function HomeManagement() {
         )}
         {(currentUser?.rights.includes('READ_POST_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
           <Grid className="management__home__message__container" item sm={4}>
+            <h2>Reported Posts</h2>
             <div>
               <Checkbox
-                checked={checkedReportSolved}
-                onChange={handleChangeReportSolved}
+                checked={checkedReportUnSolved}
+                onChange={handleChangeReportUnSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
           unsolved
             <Checkbox
-                checked={checkedReportUnSolved}
-                onChange={handleChangeReportUnSolved}
+                checked={checkedReportSolved}
+                onChange={handleChangeReportSolved}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
@@ -236,21 +321,6 @@ function HomeManagement() {
               />
           deleted
           </div>
-            <div>
-              {messageFlowReports?.length === 0 ? (
-                <div className='write__posts'>
-                  <h2>No post available</h2>
-                </div>
-              ) : (
-                  <div>
-                    {messageFlowReports?.map(item => (
-                      <HomeMessageManagement
-                        key={item.id}
-                      />
-                    ))}
-                  </div>
-                )}
-            </div>
             <p>{amountReports}</p>
           </Grid>
         )}

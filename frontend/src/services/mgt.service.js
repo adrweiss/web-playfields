@@ -25,14 +25,14 @@ const getBugMessages = (filter, skip, limit) => {
   { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit} });
 };
 
-const getReportMessages = (filter, skip, limit) => { 
+const getReportMessages = (filter, deleted, skip, limit) => { 
   return axios.get("/mgt/report/messages", 
-  { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit} });
+  { headers: authHeader(), params: { "filter": filter, "deleted": deleted, "skip": skip, "limit": limit} });
 };
 
-const getContactMessages = (filter, deleted, skip, limit) => { 
+const getContactMessages = (filter, skip, limit) => { 
   return axios.get("/mgt/contact/messages", 
-  { headers: authHeader(), params: { "filter": filter, "deleted": deleted, "skip": skip, "limit": limit} });
+  { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit} });
 };
 
 

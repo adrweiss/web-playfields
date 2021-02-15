@@ -45,7 +45,7 @@ const getContactMessages = (req, res, next) => {
             id: doc._id,
             reason: doc.reason,
             body: doc.body,
-            mail: doc.maiö,
+            mail: doc.mail,
             solved: doc.solved,
             date: format(doc.date, 'dd.MM.yyy HH:mm')
           }
