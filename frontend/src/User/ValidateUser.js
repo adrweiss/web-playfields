@@ -12,7 +12,6 @@ function ValidateUser() {
   const [message, setMessage] = useState("");
   const history = useHistory();
   var urlParam = queryString.parse(window.location.search)
-
   logout()
 
   const handleValidate = () => {
