@@ -6,7 +6,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
-//import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { getCurrentUser } from "../services/auth.service";
 import ManagementService from "../services/mgt.service"
@@ -29,18 +29,19 @@ function HomeManagement() {
   const [contactSize, setContactSize] = useState(4)
   const [reportSize, setReportSize] = useState(4)
 
-  const [amountBug, setAmountBug] = useState([]);
-  const [amountContacts, setAmountContacts] = useState([]);
-  const [amountReports, setAmountReports] = useState([]);
+  const [amountBug, setAmountBug] = useState();
+  const [amountContacts, setAmountContacts] = useState();
+  const [amountReports, setAmountReports] = useState();
   const [messageFlowBug, setMessageFlowBug] = useState([]);
   const [messageFlowContacts, setMessageFlowContacts] = useState([]);
   const [messageFlowReports, setMessageFlowReports] = useState([]);
 
   const currentUser = getCurrentUser();
+  const postPSide = 5
 
   useEffect(() => {
     ManagementService.getAmountContactMessages("unsolved").then((response) => {
-      setAmountContacts(response.data.amount);
+      setAmountContacts(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -53,7 +54,7 @@ function HomeManagement() {
         console.log(_content);
       })
     ManagementService.getAmountPostedBugs("unsolved").then((response) => {
-      setAmountBug(response.data.amount);
+      setAmountBug(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -66,7 +67,7 @@ function HomeManagement() {
         console.log(_content);
       })
     ManagementService.getAmountReportedPosts("unsolved", "undeleted").then((response) => {
-      setAmountReports(response.data.amount);
+      setAmountReports(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -131,7 +132,7 @@ function HomeManagement() {
 
   function getBugReports(status) {
     ManagementService.getAmountPostedBugs(status).then((response) => {
-      setAmountBug(response.data.amount);
+      setAmountBug(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -144,7 +145,7 @@ function HomeManagement() {
         console.log(_content);
       })
 
-    ManagementService.getBugMessages(status).then((response) => {
+    ManagementService.getBugMessages(status, 0 ,5).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -158,10 +159,9 @@ function HomeManagement() {
         console.log(_content);
       })
   }
-
   function getContactRequests(status) {
     ManagementService.getAmountContactMessages(status).then((response) => {
-      setAmountContacts(response.data.amount);
+      setAmountContacts(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -220,7 +220,7 @@ function HomeManagement() {
   const handleResizeBug = () => {
     setResizedContact(!resizedContact)
     setResizedReport(!resizedReport)
-    if(bugSize === 4){
+    if (bugSize === 4) {
       setBugSize(12)
     } else {
       setBugSize(4)
@@ -229,7 +229,7 @@ function HomeManagement() {
   const handleResizeContact = () => {
     setResizedBug(!resizedBug)
     setResizedReport(!resizedReport)
-    if(contactSize === 4){
+    if (contactSize === 4) {
       setContactSize(12)
     } else {
       setContactSize(4)
@@ -238,19 +238,55 @@ function HomeManagement() {
   const handleResizeReport = () => {
     setResizedBug(!resizedBug)
     setResizedContact(!resizedContact)
-    if(reportSize === 4){
+    if (reportSize === 4) {
       setReportSize(12)
     } else {
       setReportSize(4)
     }
   }
+  
+  const handleChangePageBug = (event, newPage) => {
+    ManagementService.getBugMessages(createStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * 5) ,5).then((response) => {
+      setMessageFlowBug(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+  const handleChangePageContact = (event, newPage) => {
+    ManagementService.getContactMessages(createStatus(checkedContactSolved, checkedContactUnSolved), ((newPage - 1) * 5), 5).then((response) => {
+      setMessageFlowContacts(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
+  const handleChangePageReport = (event, newPage) => {
+    console.log(newPage)
+    //fetchPosts(((newPage - 1) * 5))
+  }
+
   return (
     <div>
       <Grid container spacing={1}>
         {(currentUser?.rights.includes('READ_BUG_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
           <Grid className="management__home__message__container" item sm={bugSize} hidden={resizedBug}>
             <h2>Bug Reports</h2>
-
             <div>
               <IconButton onClick={handleResizeBug}>
                 <Tooltip title="resize window" aria-label="resize_window">
@@ -272,7 +308,7 @@ function HomeManagement() {
               />
               solved
             </div>
-            <div>
+            <div className="management__home__message__container">
               {messageFlowBug?.length === 0 ? (
                 <div className='write__posts'>
                   <h2>No data available</h2>
@@ -294,7 +330,9 @@ function HomeManagement() {
                   </div>
                 )}
             </div>
-            <p>{amountBug}</p>
+            <Grid container justify="center">
+              <Pagination className="page__number" count={amountBug} variant="outlined" shape="rounded" onChange={handleChangePageBug} />
+            </Grid>
           </Grid>
         )}
         {(currentUser?.rights.includes('READ_CONTACT_REQUESTS') || currentUser?.rights.includes('ADMIN')) && (
@@ -321,7 +359,7 @@ function HomeManagement() {
               />
           solved
           </div>
-            <div>
+            <div className="management__home__message__container">
               {messageFlowContacts?.length === 0 ? (
                 <div className='write__posts'>
                   <h2>No data available</h2>
@@ -344,7 +382,9 @@ function HomeManagement() {
                   </div>
                 )}
             </div>
-            <p>{amountContacts}</p>
+            <Grid container justify="center">
+              <Pagination className="page__number" count={amountContacts} variant="outlined" shape="rounded" onChange={handleChangePageContact} />
+            </Grid>
           </Grid>
         )}
         {(currentUser?.rights.includes('READ_POST_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
@@ -378,7 +418,12 @@ function HomeManagement() {
               />
           deleted
           </div>
-            <p>{amountReports}</p>
+          <div className="management__home__message__container">
+            reports
+          </div>
+            <Grid container justify="center">
+              <Pagination className="page__number" count={amountReports} variant="outlined" shape="rounded" onChange={handleChangePageReport} />
+            </Grid>
           </Grid>
         )}
       </Grid>
