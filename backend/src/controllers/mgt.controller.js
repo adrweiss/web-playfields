@@ -177,11 +177,11 @@ const getReportedPosts = (req, res, next) => {
   if (req.query.filter === "unsolved") {
     query["solved"] = false;
   }
-  if (req.query.deleted === "deleted") {
-    query["deleted"] = true
+  if (req.query.blocked === "blocked") {
+    query["blocked"] = true
   }
-  if (req.query.deleted === "undeleted") {
-    query["deleted"] = false
+  if (req.query.blocked === "unblocked") {
+    query["blocked"] = false
   }
 
   User.findAll({
@@ -192,7 +192,7 @@ const getReportedPosts = (req, res, next) => {
     })
 
     BlogPost.find(query,
-      ['title', 'date', 'body', 'userid', 'reported', 'solved', 'deleted', 'changed'],
+      ['title', 'date', 'body', 'userid', 'reported', 'solved', 'blocked', 'changed'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -219,7 +219,7 @@ const getReportedPosts = (req, res, next) => {
               title: doc.title,
               reported: doc.reported,
               solved: doc.solved,               
-              deleted: doc.deleted,
+              blocked: doc.blocked,
               changed: doc.changed,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
@@ -240,11 +240,11 @@ const getAmountReportedPosts = (req, res, next) => {
   if (req.query.filter === "unsolved") {
     query["solved"] = false;
   }
-  if (req.query.deleted === "deleted") {
-    query["deleted"] = true
+  if (req.query.blocked === "blocked") {
+    query["blocked"] = true
   }
-  if (req.query.deleted === "undeleted") {
-    query["deleted"] = false
+  if (req.query.blocked === "unblocked") {
+    query["blocked"] = false
   }
 
 

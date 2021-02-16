@@ -66,7 +66,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getAmountReportedPosts("unsolved", "undeleted").then((response) => {
+    ManagementService.getAmountReportedPosts("unsolved", "unblocked").then((response) => {
       setAmountReports(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {

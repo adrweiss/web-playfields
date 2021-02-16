@@ -10,7 +10,7 @@ function insertPosts() {
     "body": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut",
     "reported": true,
     "solved": true,
-    "deleted": true
+    "blocked": true
   })
 
   BlogPost.create({
@@ -19,7 +19,7 @@ function insertPosts() {
     "body": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et",
     "reported": true,
     "solved": true,
-    "deleted": true
+    "blocked": true
   })
 
   BlogPost.create({

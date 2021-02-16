@@ -13,7 +13,7 @@ function getPost(req, res, next) {
       return [user.id, user.username]
     })
 
-    BlogPost.find({deleted: false},
+    BlogPost.find({blocked: false},
       ['title', 'date', 'body', 'userid', 'reported', 'solved'],
       {
         skip: parseInt(req.query.skip),
@@ -62,7 +62,7 @@ function getDescriptions(req, res, next) {
 }
 
 function getAmount(req, res, next) {
-  BlogPost.countDocuments({deleted: false}, function (err, data) {
+  BlogPost.countDocuments({blocked: false}, function (err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
