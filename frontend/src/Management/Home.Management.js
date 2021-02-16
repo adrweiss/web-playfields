@@ -11,6 +11,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { getCurrentUser } from "../services/auth.service";
 import ManagementService from "../services/mgt.service"
 import HomeMessageManagement from "./Home.Message.Management";
+import HomeReportedManagement from "./Home.Reported.Management"
 
 function HomeManagement() {
   const [checkedBugSolved, setCheckedBugSolved] = useState(false);
@@ -19,7 +20,8 @@ function HomeManagement() {
   const [checkedBugUnSolved, setCheckedBugUnSolved] = useState(true);
   const [checkedContactUnSolved, setCheckedContactUnSolved] = useState(true);
   const [checkedReportUnSolved, setCheckedReportUnSolved] = useState(true);
-  const [checkedReportDeleted, setCheckedReportDeleted] = useState(false);
+  const [checkedReportBlocked, setCheckedReportBlocked] = useState(false);
+  const [checkedReportUnBlocked, setCheckedReportUnBlocked] = useState(true);
 
   const [resizedBug, setResizedBug] = useState(false)
   const [resizedContact, setResizedContact] = useState(false)
@@ -145,7 +147,7 @@ function HomeManagement() {
         console.log(_content);
       })
 
-    ManagementService.getBugMessages(status, 0 ,5).then((response) => {
+    ManagementService.getBugMessages(status, 0, 5).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -212,9 +214,11 @@ function HomeManagement() {
     setCheckedReportUnSolved(event.target.checked)
     console.log(createStatus(checkedReportSolved, event.target.checked))
   };
-  const handleChangeReportDeleted = (event) => {
-    setCheckedReportDeleted(event.target.checked)
-
+  const handleChangeReportBlocked = (event) => {
+    setCheckedReportBlocked(event.target.checked)
+  };
+  const handleChangeReportUnBlocked = (event) => {
+    setCheckedReportUnBlocked(event.target.checked)
   };
 
   const handleResizeBug = () => {
@@ -244,9 +248,9 @@ function HomeManagement() {
       setReportSize(4)
     }
   }
-  
+
   const handleChangePageBug = (event, newPage) => {
-    ManagementService.getBugMessages(createStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * 5) ,5).then((response) => {
+    ManagementService.getBugMessages(createStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * 5), 5).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -275,7 +279,6 @@ function HomeManagement() {
         console.log(_content);
       })
   }
-
   const handleChangePageReport = (event, newPage) => {
     console.log(newPage)
     //fetchPosts(((newPage - 1) * 5))
@@ -410,17 +413,45 @@ function HomeManagement() {
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
           solved
-            <Checkbox
-                checked={checkedReportDeleted}
-                onChange={handleChangeReportDeleted}
+          <Checkbox
+                checked={checkedReportUnBlocked}
+                onChange={handleChangeReportUnBlocked}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
-          deleted
+          unblocked
+            <Checkbox
+                checked={checkedReportBlocked}
+                onChange={handleChangeReportBlocked}
+                color="primary"
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+              />
+          blocked
           </div>
-          <div className="management__home__message__container">
-            reports
-          </div>
+            <div className="management__home__message__container">
+              {messageFlowReports?.length === 0 ? (
+                <div className='write__posts'>
+                  <h2>No data available</h2>
+                </div>
+              ) : (
+                  <div>
+                    {messageFlowReports?.map(item => (                              
+                      <HomeReportedManagement
+                        key={item.id}
+                        id={item.id}
+                        username={item.username}
+                        body={item.body}
+                        title={item.title}
+                        solved={item.solved}
+                        blocked={item.blocked}
+                        changed={item.changed}
+                        date={item.date}
+                      />
+                    ))}
+                  </div>
+                )}
+            </div>
+
             <Grid container justify="center">
               <Pagination className="page__number" count={amountReports} variant="outlined" shape="rounded" onChange={handleChangePageReport} />
             </Grid>

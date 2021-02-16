@@ -192,7 +192,7 @@ const getReportedPosts = (req, res, next) => {
     })
 
     BlogPost.find(query,
-      ['title', 'date', 'body', 'userid', 'reported', 'solved', 'blocked', 'changed'],
+      ['title', 'date', 'body', 'solved', 'blocked', 'changed'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -214,10 +214,8 @@ const getReportedPosts = (req, res, next) => {
             {
               id: doc._id,
               username: username,
-              userid: doc.userid,
               body: doc.body,
               title: doc.title,
-              reported: doc.reported,
               solved: doc.solved,               
               blocked: doc.blocked,
               changed: doc.changed,

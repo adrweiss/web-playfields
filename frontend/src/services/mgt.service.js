@@ -10,9 +10,9 @@ const getAmountPostedBugs = (filter) => {
     { headers: authHeader(), params: { "filter": filter } });
 };
 
-const getAmountReportedPosts = (filter, deleted) => {
+const getAmountReportedPosts = (filter, blocked) => {
   return axios.get("/mgt/report/amount",
-    { headers: authHeader(), params: { "filter": filter, "deleted": deleted } });
+    { headers: authHeader(), params: { "filter": filter, "blocked": blocked } });
 };
 
 const getAmountContactMessages = (filter) => {
@@ -25,9 +25,9 @@ const getBugMessages = (filter, skip, limit) => {
     { headers: authHeader(), params: { "filter": filter, "skip": skip, "limit": limit } });
 };
 
-const getReportMessages = (filter, deleted, skip, limit) => {
+const getReportMessages = (filter, blocked, skip, limit) => {
   return axios.get("/mgt/report/messages",
-    { headers: authHeader(), params: { "filter": filter, "deleted": deleted, "skip": skip, "limit": limit } });
+    { headers: authHeader(), params: { "filter": filter, "blocked": blocked, "skip": skip, "limit": limit } });
 };
 
 const getContactMessages = (filter, skip, limit) => {
