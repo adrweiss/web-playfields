@@ -3,6 +3,8 @@ import './Home.Management.css'
 
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 //import Pagination from '@material-ui/lab/Pagination';
 
@@ -18,6 +20,14 @@ function HomeManagement() {
   const [checkedContactUnSolved, setCheckedContactUnSolved] = useState(true);
   const [checkedReportUnSolved, setCheckedReportUnSolved] = useState(true);
   const [checkedReportDeleted, setCheckedReportDeleted] = useState(false);
+
+  const [resizedBug, setResizedBug] = useState(false)
+  const [resizedContact, setResizedContact] = useState(false)
+  const [resizedReport, setResizedReport] = useState(false)
+
+  const [bugSize, setBugSize] = useState(4)
+  const [contactSize, setContactSize] = useState(4)
+  const [reportSize, setReportSize] = useState(4)
 
   const [amountBug, setAmountBug] = useState([]);
   const [amountContacts, setAmountContacts] = useState([]);
@@ -207,15 +217,46 @@ function HomeManagement() {
 
   };
 
-
+  const handleResizeBug = () => {
+    setResizedContact(!resizedContact)
+    setResizedReport(!resizedReport)
+    if(bugSize === 4){
+      setBugSize(12)
+    } else {
+      setBugSize(4)
+    }
+  }
+  const handleResizeContact = () => {
+    setResizedBug(!resizedBug)
+    setResizedReport(!resizedReport)
+    if(contactSize === 4){
+      setContactSize(12)
+    } else {
+      setContactSize(4)
+    }
+  }
+  const handleResizeReport = () => {
+    setResizedBug(!resizedBug)
+    setResizedContact(!resizedContact)
+    if(reportSize === 4){
+      setReportSize(12)
+    } else {
+      setReportSize(4)
+    }
+  }
   return (
     <div>
       <Grid container spacing={1}>
         {(currentUser?.rights.includes('READ_BUG_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
-          <Grid className="management__home__message__container" item sm={4}>
+          <Grid className="management__home__message__container" item sm={bugSize} hidden={resizedBug}>
             <h2>Bug Reports</h2>
 
             <div>
+              <IconButton onClick={handleResizeBug}>
+                <Tooltip title="resize window" aria-label="resize_window">
+                  <AspectRatioIcon />
+                </Tooltip>
+              </IconButton>
               <Checkbox
                 checked={checkedBugUnSolved}
                 onChange={handleChangeBugUnSolved}
@@ -257,9 +298,14 @@ function HomeManagement() {
           </Grid>
         )}
         {(currentUser?.rights.includes('READ_CONTACT_REQUESTS') || currentUser?.rights.includes('ADMIN')) && (
-          <Grid className="management__home__message__container" item sm={4}>
+          <Grid className="management__home__message__container" item sm={contactSize} hidden={resizedContact}>
             <h2>Contact Requests</h2>
             <div>
+              <IconButton onClick={handleResizeContact}>
+                <Tooltip title="resize window" aria-label="resize_window">
+                  <AspectRatioIcon />
+                </Tooltip>
+              </IconButton>
               <Checkbox
                 checked={checkedContactUnSolved}
                 onChange={handleChangeContactUnSolved}
@@ -302,9 +348,14 @@ function HomeManagement() {
           </Grid>
         )}
         {(currentUser?.rights.includes('READ_POST_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
-          <Grid className="management__home__message__container" item sm={4}>
+          <Grid className="management__home__message__container" item sm={reportSize} hidden={resizedReport}>
             <h2>Reported Posts</h2>
             <div>
+              <IconButton onClick={handleResizeReport}>
+                <Tooltip title="resize window" aria-label="resize_window">
+                  <AspectRatioIcon />
+                </Tooltip>
+              </IconButton>
               <Checkbox
                 checked={checkedReportUnSolved}
                 onChange={handleChangeReportUnSolved}

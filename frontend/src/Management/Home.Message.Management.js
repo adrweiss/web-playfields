@@ -68,7 +68,7 @@ function HomeMessageManagement({ id, date, body, reason, solved, mail, type, sta
               {date}
             </div>
             <IconButton onClick={handleSolvedStatus}>
-              <Tooltip title="Change password from user" aria-label="change_user_password">
+              <Tooltip title="Change solve status" aria-label="change_solve_status">
                 {solvedStatus ? <CheckBoxOutlinedIcon fontSize='small' /> : <CheckBoxOutlineBlankOutlinedIcon fontSize='small' />}
               </Tooltip>
             </IconButton>
