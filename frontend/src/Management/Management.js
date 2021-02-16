@@ -167,7 +167,11 @@ function Management() {
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true">Views</MenuItem>)}
             {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
-              <MenuItem onClick={handleTriggerModal}>Trigger build process</MenuItem>)}
+              <MenuItem onClick={handleTriggerModal}>
+                <div className="trigger__build__button" >
+                Trigger build process
+                </div>
+              </MenuItem>)}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>

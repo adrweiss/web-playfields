@@ -3,6 +3,7 @@ import './Home.Management.css'
 
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
+import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 //import Pagination from '@material-ui/lab/Pagination';
 
 import { getCurrentUser } from "../services/auth.service";
@@ -213,6 +214,7 @@ function HomeManagement() {
         {(currentUser?.rights.includes('READ_BUG_REPORTS') || currentUser?.rights.includes('ADMIN')) && (
           <Grid className="management__home__message__container" item sm={4}>
             <h2>Bug Reports</h2>
+
             <div>
               <Checkbox
                 checked={checkedBugUnSolved}
