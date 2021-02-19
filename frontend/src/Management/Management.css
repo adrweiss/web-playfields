@@ -25,3 +25,7 @@
     color: red;
     font-weight: bold;
 }
+
+.management__container {
+    margin-right: 20px;
+}

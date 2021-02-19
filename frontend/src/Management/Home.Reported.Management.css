@@ -47,3 +47,7 @@
     justify-content: left;
     margin-left: 10px;
 }
+
+.home__management__message__edit {
+    padding: 10px;
+}

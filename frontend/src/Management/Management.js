@@ -113,7 +113,7 @@ function Management() {
     }
     handleClose()
   }
-  
+
   const triggerBuild = () => {
     handleTriggerModal()
     removeMessage()
@@ -169,7 +169,7 @@ function Management() {
             {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleTriggerModal}>
                 <div className="trigger__build__button" >
-                Trigger build process
+                  Trigger build process
                 </div>
               </MenuItem>)}
           </MenuList>
@@ -195,21 +195,23 @@ function Management() {
           </Popper>
         </Grid>
         <Grid item sm={10}>
-          {subPage === 0 && (
-            <HomeManagement />
-          )}
-          {subPage === 1 && (
-            <UserOverview />
-          )}
-          {subPage === 2 && (
-            <RolesOverview />
-          )}
-          {subPage === 3 && (
-            <LoginManagement />
-          )}
-          {subPage === 4 && (
-            <DeleteManagement />
-          )}
+          <div className="management__container">
+            {subPage === 0 && (
+              <HomeManagement />
+            )}
+            {subPage === 1 && (
+              <UserOverview />
+            )}
+            {subPage === 2 && (
+              <RolesOverview />
+            )}
+            {subPage === 3 && (
+              <LoginManagement />
+            )}
+            {subPage === 4 && (
+              <DeleteManagement />
+            )}
+          </div>
         </Grid>
       </Grid>
       <Modal

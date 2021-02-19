@@ -38,6 +38,10 @@ function HomeManagement() {
   const [messageFlowContacts, setMessageFlowContacts] = useState([]);
   const [messageFlowReports, setMessageFlowReports] = useState([]);
 
+  const [pageBug, setPageBug] = useState(1);
+  const [pageContacts, setPageContacts] = useState(1);
+  const [pageReports, setPageReports] = useState(1);
+
   const currentUser = getCurrentUser();
   const postPSide = 5
 
@@ -131,7 +135,6 @@ function HomeManagement() {
       return "unsolved"
     }
   }
-
   function createBlockStatus(blocked, unblocked) {
     if (blocked && unblocked) {
       return "all"
@@ -157,7 +160,7 @@ function HomeManagement() {
         console.log(_content);
       })
 
-    ManagementService.getBugMessages(status, 0, postPSide).then((response) => {
+    ManagementService.getBugMessages(status, ((pageBug - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -185,7 +188,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getContactMessages(status, 0, postPSide).then((response) => {
+    ManagementService.getContactMessages(status, ((pageContacts - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowContacts(response.data);
     },
       (error) => {
@@ -199,24 +202,22 @@ function HomeManagement() {
         console.log(_content);
       })
   }
-  function getReportPosts(filter, block) {
-    setAmountReports()
-    ManagementService.getReportMessages(filter, block, 0, postPSide).then((response) => {
+  function getReportPosts(filter, block) {    
+    ManagementService.getReportMessages(filter, block, ((pageReports - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowReports(response.data);
-      ManagementService.getAmountReportedPosts(filter, block).then((response) => {
-        setAmountReports(Math.ceil(response.data.amount / postPSide));
-      },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-  
-          console.log(_content);
-        })
-  
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+    ManagementService.getAmountReportedPosts(filter, block).then((response) => {
+      setAmountReports(Math.ceil(response.data.amount / postPSide));
     },
       (error) => {
         const _content =
@@ -293,6 +294,7 @@ function HomeManagement() {
   }
 
   const handleChangePageBug = (event, newPage) => {
+    setPageBug(newPage)
     ManagementService.getBugMessages(createSolveStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowBug(response.data);
     },
@@ -308,6 +310,7 @@ function HomeManagement() {
       })
   }
   const handleChangePageContact = (event, newPage) => {
+    setPageContacts(newPage)
     ManagementService.getContactMessages(createSolveStatus(checkedContactSolved, checkedContactUnSolved), ((newPage - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowContacts(response.data);
     },
@@ -323,6 +326,7 @@ function HomeManagement() {
       })
   }
   const handleChangePageReport = (event, newPage) => {
+    setPageReports(newPage)
     ManagementService.getReportMessages(createSolveStatus(checkedReportSolved, checkedReportUnSolved), createBlockStatus(checkedReportBlocked, checkedReportUnBlocked), ((newPage - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowReports(response.data);
     },
@@ -509,7 +513,13 @@ function HomeManagement() {
                 )}
             </div>
             <Grid container justify="center">
-              <Pagination className="page__number" count={amountReports} variant="outlined" shape="rounded" onChange={handleChangePageReport} />
+              <Pagination
+                className="page__number"
+                defaultPage={1}
+                count={amountReports}
+                variant="outlined"
+                shape="rounded"
+                onChange={handleChangePageReport} />
             </Grid>
           </Grid>
         )}
