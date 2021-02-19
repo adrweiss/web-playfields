@@ -146,8 +146,9 @@ function EditAnyPost(req, res, next) {
     '_id': req.body.postId,
   },
     {
-      body: req.body.body,
-      title: req.body.title
+      'body': req.body.body,
+      'title': req.body.title,
+      'changed': true
     },
     { upsert: false },
     function (err, doc) {
@@ -171,7 +172,8 @@ function EditPost(req, res, next) {
     $and: [{
       '_id': req.body.postId,
       'userid': req.userId,
-      'solved': false
+      'solved': false,
+      'changed': true
     }]
   },
     {
