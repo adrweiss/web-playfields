@@ -81,7 +81,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getBugMessages("unsolved", 0, 5).then((response) => {
+    ManagementService.getBugMessages("unsolved", 0, postPSide).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -94,7 +94,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getContactMessages("unsolved", 0, 5).then((response) => {
+    ManagementService.getContactMessages("unsolved", 0, postPSide).then((response) => {
       setMessageFlowContacts(response.data);
     },
       (error) => {
@@ -107,7 +107,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getReportMessages("unsolved", "undeleted", 0, 5).then((response) => {
+    ManagementService.getReportMessages("unsolved", "undeleted", 0, postPSide).then((response) => {
       setMessageFlowReports(response.data);
     },
       (error) => {
@@ -122,13 +122,23 @@ function HomeManagement() {
       })
   }, [])
 
-  function createStatus(solved, unsolved) {
+  function createSolveStatus(solved, unsolved) {
     if (solved && unsolved) {
       return "all"
     } else if (solved) {
       return "solved"
     } else {
       return "unsolved"
+    }
+  }
+
+  function createBlockStatus(blocked, unblocked) {
+    if (blocked && unblocked) {
+      return "all"
+    } else if (blocked) {
+      return "blocked"
+    } else {
+      return "unblocked"
     }
   }
 
@@ -147,7 +157,7 @@ function HomeManagement() {
         console.log(_content);
       })
 
-    ManagementService.getBugMessages(status, 0, 5).then((response) => {
+    ManagementService.getBugMessages(status, 0, postPSide).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -175,7 +185,7 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getContactMessages(status, 0, 5).then((response) => {
+    ManagementService.getContactMessages(status, 0, postPSide).then((response) => {
       setMessageFlowContacts(response.data);
     },
       (error) => {
@@ -189,36 +199,69 @@ function HomeManagement() {
         console.log(_content);
       })
   }
+  function getReportPosts(filter, block) {
+    setAmountReports()
+    ManagementService.getReportMessages(filter, block, 0, postPSide).then((response) => {
+      setMessageFlowReports(response.data);
+      ManagementService.getAmountReportedPosts(filter, block).then((response) => {
+        setAmountReports(Math.ceil(response.data.amount / postPSide));
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+  
+          console.log(_content);
+        })
+  
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+  }
 
   const handleChangeBugSolved = (event) => {
     setCheckedBugSolved(event.target.checked)
-    getBugReports(createStatus(event.target.checked, checkedBugUnSolved))
+    getBugReports(createSolveStatus(event.target.checked, checkedBugUnSolved))
   };
   const handleChangeContactSolved = (event) => {
     setCheckedContactSolved(event.target.checked)
-    getContactRequests(createStatus(event.target.checked, checkedContactUnSolved))
+    getContactRequests(createSolveStatus(event.target.checked, checkedContactUnSolved))
   };
   const handleChangeReportSolved = (event) => {
     setCheckedReportSolved(event.target.checked)
-    console.log(createStatus(event.target.checked, checkedReportUnSolved))
+    getReportPosts(createSolveStatus(event.target.checked, checkedReportUnSolved), createBlockStatus(checkedReportBlocked, checkedReportUnBlocked))
   };
   const handleChangeBugUnSolved = (event) => {
     setCheckedBugUnSolved(event.target.checked)
-    getBugReports(createStatus(checkedBugSolved, event.target.checked))
+    getBugReports(createSolveStatus(checkedBugSolved, event.target.checked))
   };
   const handleChangeContactUnSolved = (event) => {
     setCheckedContactUnSolved(event.target.checked)
-    getContactRequests(createStatus(checkedContactSolved, event.target.checked))
+    getContactRequests(createSolveStatus(checkedContactSolved, event.target.checked))
   };
   const handleChangeReportUnSolved = (event) => {
     setCheckedReportUnSolved(event.target.checked)
-    console.log(createStatus(checkedReportSolved, event.target.checked))
+    getReportPosts(createSolveStatus(checkedReportSolved, event.target.checked), createBlockStatus(checkedReportBlocked, checkedReportUnBlocked))
   };
   const handleChangeReportBlocked = (event) => {
     setCheckedReportBlocked(event.target.checked)
+    getReportPosts(createSolveStatus(checkedReportSolved, checkedReportUnSolved), createBlockStatus(event.target.checked, checkedReportUnBlocked))
   };
   const handleChangeReportUnBlocked = (event) => {
     setCheckedReportUnBlocked(event.target.checked)
+    getReportPosts(createSolveStatus(checkedReportSolved, checkedReportUnSolved), createBlockStatus(checkedReportBlocked, event.target.checked))
   };
 
   const handleResizeBug = () => {
@@ -250,7 +293,7 @@ function HomeManagement() {
   }
 
   const handleChangePageBug = (event, newPage) => {
-    ManagementService.getBugMessages(createStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * 5), 5).then((response) => {
+    ManagementService.getBugMessages(createSolveStatus(checkedBugSolved, checkedBugUnSolved), ((newPage - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowBug(response.data);
     },
       (error) => {
@@ -265,7 +308,7 @@ function HomeManagement() {
       })
   }
   const handleChangePageContact = (event, newPage) => {
-    ManagementService.getContactMessages(createStatus(checkedContactSolved, checkedContactUnSolved), ((newPage - 1) * 5), 5).then((response) => {
+    ManagementService.getContactMessages(createSolveStatus(checkedContactSolved, checkedContactUnSolved), ((newPage - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowContacts(response.data);
     },
       (error) => {
@@ -280,8 +323,19 @@ function HomeManagement() {
       })
   }
   const handleChangePageReport = (event, newPage) => {
-    console.log(newPage)
-    //fetchPosts(((newPage - 1) * 5))
+    ManagementService.getReportMessages(createSolveStatus(checkedReportSolved, checkedReportUnSolved), createBlockStatus(checkedReportBlocked, checkedReportUnBlocked), ((newPage - 1) * postPSide), postPSide).then((response) => {
+      setMessageFlowReports(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
   return (
@@ -327,7 +381,7 @@ function HomeManagement() {
                         reason={item.reason}
                         solved={item.solved}
                         type="bug"
-                        status={createStatus(checkedBugSolved, checkedBugUnSolved)}
+                        status={createSolveStatus(checkedBugSolved, checkedBugUnSolved)}
                       />
                     ))}
                   </div>
@@ -379,7 +433,7 @@ function HomeManagement() {
                         solved={item.solved}
                         mail={item.mail}
                         type="contact"
-                        status={createStatus(checkedContactSolved, checkedContactUnSolved)}
+                        status={createSolveStatus(checkedContactSolved, checkedContactUnSolved)}
                       />
                     ))}
                   </div>
@@ -426,6 +480,7 @@ function HomeManagement() {
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
+
           blocked
           </div>
             <div className="management__home__message__container">
@@ -435,7 +490,7 @@ function HomeManagement() {
                 </div>
               ) : (
                   <div>
-                    {messageFlowReports?.map(item => (                              
+                    {messageFlowReports?.map(item => (
                       <HomeReportedManagement
                         key={item.id}
                         id={item.id}
@@ -451,7 +506,6 @@ function HomeManagement() {
                   </div>
                 )}
             </div>
-
             <Grid container justify="center">
               <Pagination className="page__number" count={amountReports} variant="outlined" shape="rounded" onChange={handleChangePageReport} />
             </Grid>

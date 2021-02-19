@@ -213,7 +213,7 @@ function Message({ id, title, post, userId, usr, timestamp, reported, solved }) 
 
           <div hidden={reportedPost} className="box__delete__post">
             <IconButton onClick={handleReportPost}>
-              <Tooltip title="Repoprt post" aria-label="delete_user">
+              <Tooltip title="Report post" aria-label="report__post">
                 <FlagIcon />
               </Tooltip>
             </IconButton>
@@ -221,7 +221,7 @@ function Message({ id, title, post, userId, usr, timestamp, reported, solved }) 
 
           <div hidden={!solved} className="box__delete__post">
             <IconButton>
-              <Tooltip title="This reported post is marked as solved." aria-label="delete_user">
+              <Tooltip title="This reported post is marked as solved." aria-label="report__post">
                 <FlagIcon />
               </Tooltip>
             </IconButton>
