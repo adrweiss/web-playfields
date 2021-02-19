@@ -4,6 +4,7 @@ import './Home.Message.Management.css'
 import CheckBoxOutlineBlankOutlinedIcon from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
 import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import MailIcon from '@material-ui/icons/Mail';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import ManagementService from "../services/mgt.service"
@@ -61,7 +62,12 @@ function HomeMessageManagement({ id, date, body, reason, solved, mail, type, sta
           <h3 className="home__management__message__reason">{reason}</h3>
           <div className="home__management__message__body">{body}</div>
           {mail && (
-            <div className="home__management_message__mail">{mail}</div>
+            <div className="home__management_message__mail">
+              <MailIcon fontSize='small' />
+              <div>
+                {mail}
+              </div>
+            </div>
           )}
           <div className="home__management__message__footer">
             <div className="home__management__message__date">

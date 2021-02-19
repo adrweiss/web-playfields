@@ -86,7 +86,7 @@ const setSolvedStatusContactMessages = (req, res, next) => {
     { upsert: false },
     function (err, doc) {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
-      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No Bug in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No contact status in database found.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
     });
 }
@@ -192,7 +192,7 @@ const getReportedPosts = (req, res, next) => {
     })
 
     BlogPost.find(query,
-      ['title', 'date', 'body', 'solved', 'blocked', 'changed'],
+      ['userid', 'title', 'date', 'body', 'solved', 'blocked', 'changed'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -245,7 +245,6 @@ const getAmountReportedPosts = (req, res, next) => {
     query["blocked"] = false
   }
 
-
   BlogPost.countDocuments(query, function (err, data) {
     if (err) {
       return res.status(500).send(err);
@@ -265,7 +264,22 @@ const setSolvedStatusReportedPosts = (req, res, next) => {
     { upsert: false },
     function (err, doc) {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
-      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No Bug in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
+      return res.status(200).send({ message: 'Succesfully edited.' });
+    });
+}
+
+const setBlockedStatusReportedPosts = (req, res, next) => {
+  BlogPost.updateOne({
+    '_id': req.body.id,
+  },
+    {
+      blocked: req.body.blockedstatus,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No Post in database found.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
     });
 }
@@ -281,6 +295,7 @@ const mgtController = {
   setSolvedStatusContactMessages,
   setSolvedStatusPostedBugs,
   setSolvedStatusReportedPosts,
+  setBlockedStatusReportedPosts,
 };
 
 export default mgtController;

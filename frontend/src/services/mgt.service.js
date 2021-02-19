@@ -49,6 +49,13 @@ const putReportStatus = (id, solvedStatus) => {
     { headers: authHeader() });
 };
 
+const putReportStatusBlocked = (id, blockedstatus) => {
+  return axios.put("/mgt/report/blocked",
+    { id, 
+      blockedstatus },
+    { headers: authHeader() });
+};
+
 const putContactStatus = (id, solvedStatus) => {
   return axios.put("/mgt/contact/status",
     { id,
@@ -67,7 +74,8 @@ const ManagementService = {
   getContactMessages,
   putBugStatus,
   putReportStatus,
-  putContactStatus
+  putContactStatus,
+  putReportStatusBlocked
 }
 
 export default ManagementService;

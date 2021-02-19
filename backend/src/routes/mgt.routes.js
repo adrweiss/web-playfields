@@ -58,6 +58,14 @@ export function routsMgt(app) {
     mgtController.setSolvedStatusReportedPosts,
   );
 
+  app.put(
+    "/api/mgt/report/blocked",
+    [authJwt.verifyToken,
+    authJwt.getReadPostReports,
+    authJwt.hasRights],
+    mgtController.setBlockedStatusReportedPosts,
+  );
+
   app.get(
     "/api/mgt/report/amount",
     [authJwt.verifyToken,
@@ -90,4 +98,3 @@ export function routsMgt(app) {
     mgtController.getAmountContactMessages,
   );
 };
-

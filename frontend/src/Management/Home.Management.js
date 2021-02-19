@@ -501,6 +501,8 @@ function HomeManagement() {
                         blocked={item.blocked}
                         changed={item.changed}
                         date={item.date}
+                        statusSolved={createSolveStatus(checkedReportSolved, checkedReportUnSolved)}
+                        statusBlocked={createBlockStatus(checkedReportBlocked, checkedReportUnBlocked)}
                       />
                     ))}
                   </div>
