@@ -430,27 +430,28 @@ function right(Right, Role) {
     }
   })
 
-    //----------------------------
-    Right.findOne({
-      where: { name: 'READ_CONTACT_REQUESTS' }
-    }).then(right => {
-      if (!right) {
-        Right.create({
-          name: "READ_CONTACT_REQUESTS",
-          description: "You can handle the contact requests.",
-        }).then(right => {
-          Role.findOne({
-            where: { name: 'MANAGER' }
-          }).then(role => {
-            right.setRoles(role)
-          })
-        }).catch(function (err) {
-          console.log('Error creating "READ_CONTACT_REQUESTS" right.')
-        });
-      } else {
-        console.log('right "READ_CONTACT_REQUESTS" already exists.')
-      }
-    })
+  //----------------------------
+
+  Right.findOne({
+    where: { name: 'READ_CONTACT_REQUESTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_CONTACT_REQUESTS",
+        description: "You can handle the contact requests.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_CONTACT_REQUESTS" right.')
+      });
+    } else {
+      console.log('right "READ_CONTACT_REQUESTS" already exists.')
+    }
+  })
 
   return right
 }

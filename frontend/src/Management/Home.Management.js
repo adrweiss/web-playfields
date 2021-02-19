@@ -27,9 +27,9 @@ function HomeManagement() {
   const [resizedContact, setResizedContact] = useState(false)
   const [resizedReport, setResizedReport] = useState(false)
 
-  const [bugSize, setBugSize] = useState(4)
-  const [contactSize, setContactSize] = useState(4)
-  const [reportSize, setReportSize] = useState(4)
+  const [bugSize, setBugSize] = useState()
+  const [contactSize, setContactSize] = useState()
+  const [reportSize, setReportSize] = useState()
 
   const [amountBug, setAmountBug] = useState();
   const [amountContacts, setAmountContacts] = useState();
@@ -42,10 +42,15 @@ function HomeManagement() {
   const [pageContacts, setPageContacts] = useState(1);
   const [pageReports, setPageReports] = useState(1);
 
+  const [baseSize, setBaseSize] = useState()
+
   const currentUser = getCurrentUser();
   const postPSide = 5
 
+
   useEffect(() => {
+    const currentUserTemp = getCurrentUser();
+
     ManagementService.getAmountContactMessages("unsolved").then((response) => {
       setAmountContacts(Math.ceil(response.data.amount / postPSide));
     },
@@ -124,6 +129,24 @@ function HomeManagement() {
 
         console.log(_content);
       })
+
+    if (currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS') && currentUserTemp?.rights.includes('READ_BUG_REPORTS')) {
+      setBaseSize(4)
+      setBugSize(4)
+      setContactSize(4)
+      setReportSize(4)
+    } else if ((currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS')) || (currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_BUG_REPORTS')) ||
+      (currentUserTemp?.rights.includes('READ_BUG_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS'))) {
+      setBaseSize(6)
+      setBugSize(6)
+      setContactSize(6)
+      setReportSize(6)
+    } else {
+      setBaseSize(12)
+      setBugSize(12)
+      setContactSize(12)
+      setReportSize(12)
+    }
   }, [])
 
   function createSolveStatus(solved, unsolved) {
@@ -202,7 +225,7 @@ function HomeManagement() {
         console.log(_content);
       })
   }
-  function getReportPosts(filter, block) {    
+  function getReportPosts(filter, block) {
     ManagementService.getReportMessages(filter, block, ((pageReports - 1) * postPSide), postPSide).then((response) => {
       setMessageFlowReports(response.data);
     },
@@ -268,28 +291,28 @@ function HomeManagement() {
   const handleResizeBug = () => {
     setResizedContact(!resizedContact)
     setResizedReport(!resizedReport)
-    if (bugSize === 4) {
+    if (bugSize === baseSize) {
       setBugSize(12)
     } else {
-      setBugSize(4)
+      setBugSize(baseSize)
     }
   }
   const handleResizeContact = () => {
     setResizedBug(!resizedBug)
     setResizedReport(!resizedReport)
-    if (contactSize === 4) {
+    if (contactSize === baseSize) {
       setContactSize(12)
     } else {
-      setContactSize(4)
+      setContactSize(baseSize)
     }
   }
   const handleResizeReport = () => {
     setResizedBug(!resizedBug)
     setResizedContact(!resizedContact)
-    if (reportSize === 4) {
+    if (reportSize === baseSize) {
       setReportSize(12)
     } else {
-      setReportSize(4)
+      setReportSize(baseSize)
     }
   }
 
@@ -349,11 +372,13 @@ function HomeManagement() {
           <Grid className="management__home__message__container" item sm={bugSize} hidden={resizedBug}>
             <h2>Bug Reports</h2>
             <div>
-              <IconButton onClick={handleResizeBug}>
-                <Tooltip title="resize window" aria-label="resize_window">
-                  <AspectRatioIcon />
-                </Tooltip>
-              </IconButton>
+              {(baseSize !== 12) && (
+                <IconButton onClick={handleResizeBug}>
+                  <Tooltip title="resize window" aria-label="resize_window">
+                    <AspectRatioIcon />
+                  </Tooltip>
+                </IconButton>
+              )}
               <Checkbox
                 checked={checkedBugUnSolved}
                 onChange={handleChangeBugUnSolved}
