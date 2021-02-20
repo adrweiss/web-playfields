@@ -3,8 +3,7 @@
     display: flex;
     align-items: center;
     position: sticky;
-    height: 50px;
-    border-radius: 3px;
+    height: 60px;
 }
 
 .header__Nav {
