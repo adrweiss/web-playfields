@@ -51,85 +51,92 @@ function HomeManagement() {
   useEffect(() => {
     const currentUserTemp = getCurrentUser();
 
-    ManagementService.getAmountContactMessages("unsolved").then((response) => {
-      setAmountContacts(Math.ceil(response.data.amount / postPSide));
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+    if (currentUserTemp?.rights.includes('READ_BUG_REPORTS')) {
+      ManagementService.getAmountPostedBugs("unsolved").then((response) => {
+        setAmountBug(Math.ceil(response.data.amount / postPSide));
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        console.log(_content);
-      })
-    ManagementService.getAmountPostedBugs("unsolved").then((response) => {
-      setAmountBug(Math.ceil(response.data.amount / postPSide));
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+          console.log(_content);
+        })
 
-        console.log(_content);
-      })
-    ManagementService.getAmountReportedPosts("unsolved", "unblocked").then((response) => {
-      setAmountReports(Math.ceil(response.data.amount / postPSide));
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+      ManagementService.getBugMessages("unsolved", 0, postPSide).then((response) => {
+        setMessageFlowBug(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        console.log(_content);
-      })
-    ManagementService.getBugMessages("unsolved", 0, postPSide).then((response) => {
-      setMessageFlowBug(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+          console.log(_content);
+        })
+    }
+    if (currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS')) {
+      ManagementService.getAmountContactMessages("unsolved").then((response) => {
+        setAmountContacts(Math.ceil(response.data.amount / postPSide));
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        console.log(_content);
-      })
-    ManagementService.getContactMessages("unsolved", 0, postPSide).then((response) => {
-      setMessageFlowContacts(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+          console.log(_content);
+        })
 
-        console.log(_content);
-      })
-    ManagementService.getReportMessages("unsolved", "undeleted", 0, postPSide).then((response) => {
-      setMessageFlowReports(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+      ManagementService.getContactMessages("unsolved", 0, postPSide).then((response) => {
+        setMessageFlowContacts(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        console.log(_content);
-      })
+          console.log(_content);
+        })
+    }
+    if (currentUserTemp?.rights.includes('READ_POST_REPORTS')) {
+      ManagementService.getAmountReportedPosts("unsolved", "unblocked").then((response) => {
+        setAmountReports(Math.ceil(response.data.amount / postPSide));
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
+          console.log(_content);
+        })
+      ManagementService.getReportMessages("unsolved", "undeleted", 0, postPSide).then((response) => {
+        setMessageFlowReports(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    }
     if (currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS') && currentUserTemp?.rights.includes('READ_BUG_REPORTS')) {
       setBaseSize(4)
       setBugSize(4)
