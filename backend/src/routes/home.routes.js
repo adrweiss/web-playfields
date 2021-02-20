@@ -31,6 +31,11 @@ export function routsHome(app) {
   );
 
   app.post(
+    "/api/home/report",
+    homeController.putReportPost,
+  );
+
+  app.post(
     "/api/home/post/user",
     [authJwt.verifyToken,
     authJwt.getWritePost,

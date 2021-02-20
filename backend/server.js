@@ -11,6 +11,7 @@ import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
 import { routsViews } from './src/routes/view.routes.js';
 import { routsMgt } from './src/routes/mgt.routes.js';
 import { routsHome } from './src/routes/home.routes.js'
+import { routsFooter } from './src/routes/footer.routes.js'
 
 import { initialNoSQLLoad } from './src/models/initial.noSQL.load.js'
 
@@ -52,6 +53,7 @@ routsMgtUsers(app)
 routsViews(app)
 routsMgt(app)
 routsHome(app)
+routsFooter(app) 
 
 // Listeners
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

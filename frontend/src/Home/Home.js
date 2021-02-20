@@ -182,7 +182,7 @@ function Home() {
               </Button>
             </div>
 
-            <div className="test">
+            <div>
               {messageFlow?.length === 0 ? (
                 <div className='write__posts'>
                   <h2>No post available</h2>
@@ -198,6 +198,8 @@ function Home() {
                         userId={item.userid}
                         usr={item.username}
                         timestamp={item.date}
+                        reported={item.reported}
+                        solved={item.solved}
                       />
                     ))}
                   </div>
