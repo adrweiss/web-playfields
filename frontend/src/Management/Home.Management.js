@@ -51,7 +51,7 @@ function HomeManagement() {
   useEffect(() => {
     const currentUserTemp = getCurrentUser();
 
-    if (currentUserTemp?.rights.includes('READ_BUG_REPORTS')) {
+    if (currentUserTemp?.rights.includes('READ_BUG_REPORTS') || currentUser?.rights.includes('ADMIN')) {
       ManagementService.getAmountPostedBugs("unsolved").then((response) => {
         setAmountBug(Math.ceil(response.data.amount / postPSide));
       },
@@ -80,7 +80,7 @@ function HomeManagement() {
           console.log(_content);
         })
     }
-    if (currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS')) {
+    if (currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS') || currentUser?.rights.includes('ADMIN')) {
       ManagementService.getAmountContactMessages("unsolved").then((response) => {
         setAmountContacts(Math.ceil(response.data.amount / postPSide));
       },
@@ -109,7 +109,7 @@ function HomeManagement() {
           console.log(_content);
         })
     }
-    if (currentUserTemp?.rights.includes('READ_POST_REPORTS')) {
+    if (currentUserTemp?.rights.includes('READ_POST_REPORTS') || currentUser?.rights.includes('ADMIN')) {
       ManagementService.getAmountReportedPosts("unsolved", "unblocked").then((response) => {
         setAmountReports(Math.ceil(response.data.amount / postPSide));
       },
@@ -137,7 +137,7 @@ function HomeManagement() {
           console.log(_content);
         })
     }
-    if (currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS') && currentUserTemp?.rights.includes('READ_BUG_REPORTS')) {
+    if ((currentUserTemp?.rights.includes('READ_POST_REPORTS') && currentUserTemp?.rights.includes('READ_CONTACT_REQUESTS') && currentUserTemp?.rights.includes('READ_BUG_REPORTS')) || currentUser?.rights.includes('ADMIN')) {
       setBaseSize(4)
       setBugSize(4)
       setContactSize(4)
