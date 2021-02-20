@@ -171,20 +171,35 @@ function HomeManagement() {
   function getBugReports(status) {
     ManagementService.getAmountPostedBugs(status).then((response) => {
       setAmountBug(Math.ceil(response.data.amount / postPSide));
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+      if (response.data.amount < ((pageBug - 1) * 5)) {
+        ManagementService.getBugMessages(status, 0, postPSide).then((response) => {
+          setMessageFlowBug(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
 
-        console.log(_content);
-      })
+            console.log(_content);
+          })
+      } else {
+        ManagementService.getBugMessages(status, ((pageBug - 1) * postPSide), postPSide).then((response) => {
+          setMessageFlowBug(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
 
-    ManagementService.getBugMessages(status, ((pageBug - 1) * postPSide), postPSide).then((response) => {
-      setMessageFlowBug(response.data);
+            console.log(_content);
+          })
+      }
     },
       (error) => {
         const _content =
@@ -200,6 +215,35 @@ function HomeManagement() {
   function getContactRequests(status) {
     ManagementService.getAmountContactMessages(status).then((response) => {
       setAmountContacts(Math.ceil(response.data.amount / postPSide));
+      if (response.data.amount < ((pageContacts - 1) * 5)) {
+        ManagementService.getContactMessages(status, 0, postPSide).then((response) => {
+          setMessageFlowContacts(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(_content);
+          })
+      } else {
+        ManagementService.getContactMessages(status, ((pageContacts - 1) * postPSide), postPSide).then((response) => {
+          setMessageFlowContacts(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(_content);
+          })
+      }
     },
       (error) => {
         const _content =
@@ -211,36 +255,41 @@ function HomeManagement() {
 
         console.log(_content);
       })
-    ManagementService.getContactMessages(status, ((pageContacts - 1) * postPSide), postPSide).then((response) => {
-      setMessageFlowContacts(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
 
-        console.log(_content);
-      })
   }
   function getReportPosts(filter, block) {
-    ManagementService.getReportMessages(filter, block, ((pageReports - 1) * postPSide), postPSide).then((response) => {
-      setMessageFlowReports(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        console.log(_content);
-      })
     ManagementService.getAmountReportedPosts(filter, block).then((response) => {
       setAmountReports(Math.ceil(response.data.amount / postPSide));
+
+      if (response.data.amount < ((pageReports - 1) * 5)) {
+        ManagementService.getReportMessages(filter, block, 0, postPSide).then((response) => {
+          setMessageFlowReports(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(_content);
+          })
+      } else {
+        ManagementService.getReportMessages(filter, block, ((pageReports - 1) * postPSide), postPSide).then((response) => {
+          setMessageFlowReports(response.data);
+        },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(_content);
+          })
+      }
     },
       (error) => {
         const _content =
