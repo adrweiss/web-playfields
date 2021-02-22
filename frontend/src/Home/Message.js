@@ -33,7 +33,7 @@ function Message({ id, title, post, userId, usr, timestamp, reported, solved }) 
   const deletePost = () => {
     removeMessage()
     clearTimeout(timerId)
-
+ 
     if (currentUser?.rights.includes('DELETE_ANY_POST') || currentUser?.rights.includes('ADMIN')) {
       HomeService.deletePostAny(id).then((response) => {
         setMessage(response.data.message)
@@ -235,9 +235,18 @@ function Message({ id, title, post, userId, usr, timestamp, reported, solved }) 
             </IconButton>
           </div>
 
-          <div className="box__delete__post">
+          <div className="box__delete__post" hidden={(solved && currentUser?.rights.includes('WRITE_POST') && !(currentUser?.rights.includes('EDIT_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
+          
             <IconButton onClick={editPost} disabled={!(currentUser && (currentUser?.id === userId || currentUser?.rights.includes('EDIT_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
               <Tooltip title="Edit post" aria-label="delete_user">
+                <EditIcon />
+              </Tooltip>
+            </IconButton>
+          </div>
+
+          <div className="box__delete__post" hidden={!(currentUser && currentUser?.id === userId  && solved && !(currentUser?.rights.includes('EDIT_ANY_POST') || currentUser?.rights.includes('ADMIN')))}>
+            <IconButton>
+              <Tooltip title="It is not possible to edit your post when its marked as solved." aria-label="delete_user">
                 <EditIcon />
               </Tooltip>
             </IconButton>
