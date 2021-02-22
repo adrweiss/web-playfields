@@ -10,7 +10,6 @@ export function routsMgtRoles(app) {
     next();
   });
 
-
   app.get(
     "/api/mgt/role",
     [authJwt.verifyToken,

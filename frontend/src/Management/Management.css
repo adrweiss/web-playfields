@@ -20,3 +20,12 @@
 .search__bar__management {
     width: 40%;
 }
+
+.trigger__build__button {
+    color: red;
+    font-weight: bold;
+}
+
+.management__container {
+    margin-right: 20px;
+}

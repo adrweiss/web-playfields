@@ -13,8 +13,8 @@ function getPost(req, res, next) {
       return [user.id, user.username]
     })
 
-    BlogPost.find({},
-      ['title', 'date', 'body', 'userid'],
+    BlogPost.find({blocked: false},
+      ['title', 'date', 'body', 'userid', 'reported', 'solved'],
       {
         skip: parseInt(req.query.skip),
         limit: parseInt(req.query.limit),
@@ -30,7 +30,7 @@ function getPost(req, res, next) {
           } else {
             username = null
           }
-
+          
           return Object.assign(
             {},
             {
@@ -39,6 +39,8 @@ function getPost(req, res, next) {
               userid: doc.userid,
               body: doc.body,
               title: doc.title,
+              reported: doc.reported,
+              solved: doc.solved,               
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
           )
@@ -60,7 +62,7 @@ function getDescriptions(req, res, next) {
 }
 
 function getAmount(req, res, next) {
-  BlogPost.countDocuments({}, function (err, data) {
+  BlogPost.countDocuments({blocked: false}, function (err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -144,8 +146,9 @@ function EditAnyPost(req, res, next) {
     '_id': req.body.postId,
   },
     {
-      body: req.body.body,
-      title: req.body.title
+      'body': req.body.body,
+      'title': req.body.title,
+      'changed': true
     },
     { upsert: false },
     function (err, doc) {
@@ -168,7 +171,9 @@ function EditPost(req, res, next) {
   BlogPost.updateOne({
     $and: [{
       '_id': req.body.postId,
-      'userid': req.userId
+      'userid': req.userId,
+      'solved': false,
+      'changed': true
     }]
   },
     {
@@ -178,9 +183,27 @@ function EditPost(req, res, next) {
     { upsert: false },
     function (err, doc) {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
-      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'No post in database found.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Its not allowed to edit posts which are marked as solved or post not found.' }) };
       if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already updated.' }) };
       return res.status(200).send({ message: 'Succesfully edited.' });
+    });
+}
+
+const putReportPost = (req, res, next) => {
+  BlogPost.updateOne({
+    $and: [{
+      '_id': req.body.postId,
+    }]
+  },
+    {
+      reported: true,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Post not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Post already reported.' }) };
+      return res.status(200).send({ message: 'Succesfully reported.' });
     });
 }
 
@@ -193,6 +216,7 @@ const homeController = {
   writePost,
   EditAnyPost,
   EditPost,
+  putReportPost
 };
 
 export default homeController;

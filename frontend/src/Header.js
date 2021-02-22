@@ -20,7 +20,6 @@ function Header() {
     currentUser = getCurrentUser();
   } 
 
-
   const handleClickLogout = () => {
     logout()
     setAnchorEl(null);

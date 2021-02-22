@@ -206,9 +206,9 @@ function User() {
   };
 
   return (
-    <div>
+    <div className="user__self__service__container">
       <h1>User Self Service for&nbsp;<em>{currUsername}</em></h1>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item sm={4} hidden={!(currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN'))}>
           <div className="container__user">
             <h2>Change your user settings</h2>
@@ -236,8 +236,8 @@ function User() {
               </Button>
             </div>
             <div className="middleline"></div>
-
-            <p>Here you can change your current password.</p>
+            
+            <p>Here you can change your current password.</p>
 
             <div className='change__password__section'>
 
