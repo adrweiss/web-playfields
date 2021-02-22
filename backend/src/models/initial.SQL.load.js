@@ -364,6 +364,95 @@ function right(Right, Role) {
     }
   })
 
+  //----------------------------
+  Right.findOne({
+    where: { name: 'EDIT_ANY_POST' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "EDIT_ANY_POST",
+        description: "You can edit each post.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "EDIT_ANY_POST" right.')
+      });
+    } else {
+      console.log('right "EDIT_ANY_POST" already exists.')
+    }
+  })
+
+  //----------------------------
+  Right.findOne({
+    where: { name: 'READ_BUG_REPORTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_BUG_REPORTS",
+        description: "You can handle the reported bugs.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_BUG_REPORTS" right.')
+      });
+    } else {
+      console.log('right "READ_BUG_REPORTS" already exists.')
+    }
+  })
+
+  //----------------------------
+  Right.findOne({
+    where: { name: 'READ_POST_REPORTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_POST_REPORTS",
+        description: "You can handle the reported posts.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_POST_REPORTS" right.')
+      });
+    } else {
+      console.log('right "READ_POST_REPORTS" already exists.')
+    }
+  })
+
+  //----------------------------
+
+  Right.findOne({
+    where: { name: 'READ_CONTACT_REQUESTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_CONTACT_REQUESTS",
+        description: "You can handle the contact requests.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_CONTACT_REQUESTS" right.')
+      });
+    } else {
+      console.log('right "READ_CONTACT_REQUESTS" already exists.')
+    }
+  })
+
   return right
 }
 

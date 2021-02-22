@@ -25,6 +25,16 @@ export function routsHome(app) {
     homeController.getPost,
   );
 
+  app.get(
+    "/api/home/desc",
+    homeController.getDescriptions,
+  );
+
+  app.post(
+    "/api/home/report",
+    homeController.putReportPost,
+  );
+
   app.post(
     "/api/home/post/user",
     [authJwt.verifyToken,
@@ -51,4 +61,23 @@ export function routsHome(app) {
     ],
     homeController.deleteAnyPost,
   );
+
+  app.put(
+    "/api/home/post/user",
+    [authJwt.verifyToken,
+    authJwt.getWritePost,
+    authJwt.hasRights
+    ],
+    homeController.EditPost,
+  );
+
+  app.put(
+    "/api/home/post/any",
+    [authJwt.verifyToken,
+    authJwt.getEditAnyPost,
+    authJwt.hasRights
+    ],
+    homeController.EditAnyPost,
+  );
+  
 };

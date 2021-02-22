@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Message from './Message'
+import Welcome from './Welcome'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
 
@@ -13,6 +14,7 @@ import Button from '@material-ui/core/Button'
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
+  const [descriptionText, setDescriptionText] = useState([]);
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
   const [title, setTitle] = useState("");
@@ -42,6 +44,20 @@ function Home() {
 
     HomeService.getPosts(0, postPSide).then((response) => {
       setMessageFlow(response.data)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
+    HomeService.getDescriptions().then((response) => {
+      setDescriptionText(response.data)
     },
       (error) => {
         const _content =
@@ -163,10 +179,10 @@ function Home() {
                 onClick={sendPost}
               >
                 Send
-            </Button>
+              </Button>
             </div>
 
-            <div className="test">
+            <div>
               {messageFlow?.length === 0 ? (
                 <div className='write__posts'>
                   <h2>No post available</h2>
@@ -182,6 +198,8 @@ function Home() {
                         userId={item.userid}
                         usr={item.username}
                         timestamp={item.date}
+                        reported={item.reported}
+                        solved={item.solved}
                       />
                     ))}
                   </div>
@@ -202,12 +220,14 @@ function Home() {
         </Grid>
         <Grid item sm={6}>
           <div>
-            <h2>What is playfield?</h2>
-            <p>Storry about the plan</p>
-            <h2>Who am I?</h2>
-            <p>Storry about me</p>
-            <h2>What is the plan</h2>
-            <p>The plan with this webpage</p>
+            {descriptionText?.map(item => (
+              <Welcome
+                key={item._id}
+                id={item._id}
+                title={item.title}
+                body={item.body}
+              />
+            ))}
           </div>
         </Grid>
       </Grid>

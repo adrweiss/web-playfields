@@ -205,6 +205,30 @@ function getDeleteAnyPost(req, res, next) {
   next();
 }
 
+// EDIT_ANY_POST
+function getEditAnyPost(req, res, next) {
+  req.right = ['EDIT_ANY_POST', 'ADMIN'];
+  next();
+}
+
+// READ_BUG_REPORTS
+function getReadBugReports(req, res, next) {
+  req.right = ['READ_BUG_REPORTS', 'ADMIN'];
+  next();
+}
+
+// READ_POST_REPORTS
+function getReadPostReports(req, res, next) {
+  req.right = ['READ_POST_REPORTS', 'ADMIN'];
+  next();
+}
+
+// READ_CONTACT_REQUESTS
+function getReadContactRequests(req, res, next) {
+  req.right = ['READ_CONTACT_REQUESTS', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -223,6 +247,10 @@ const authJwt = {
   getTriggerBuild,
   getWritePost,
   getDeleteAnyPost,
+  getEditAnyPost,
+  getReadBugReports,
+  getReadPostReports,
+  getReadContactRequests,
 };
 
 export { authJwt };

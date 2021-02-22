@@ -8,8 +8,15 @@ const getAmount = () => {
 const getPosts = (skip, limit) => {
   return axios.get("/home/post",
     { params: { "skip": skip, "limit": limit } }
-
   );
+};
+
+const getDescriptions = () => {
+  return axios.get("/home/desc");
+};
+
+const reportPost = (postId) => {
+  return axios.post("/home/report", {postId} );
 };
 
 const addPostAny = (title, body) => {
@@ -31,22 +38,41 @@ const addPostUser = (title, body) => {
 };
 
 const deletePostAny = (postId) => {
-  return axios.delete("/home/post/any", { headers: authHeader() , data: { "postId": postId }});
+  return axios.delete("/home/post/any", { headers: authHeader(), data: { "postId": postId } });
 };
 
 const deletePostUser = (postId) => {
-  return axios.delete("/home/post/user",{ headers: authHeader() , data: { "postId": postId }});
+  return axios.delete("/home/post/user", { headers: authHeader(), data: { "postId": postId } });
 };
 
+const editPostAny = (postId, title, body) => {
+  return axios.put("/home/post/any", {
+    postId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
+
+const editPostUser = (postId, title, body) => {
+  return axios.put("/home/post/user", {
+    postId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
 
 // delete post any 
 const HomeService = {
   getAmount,
   getPosts,
+  getDescriptions,
   addPostAny,
   addPostUser,
   deletePostAny,
-  deletePostUser
+  deletePostUser,
+  editPostAny,
+  editPostUser,
+  reportPost,
 }
 
 export default HomeService;

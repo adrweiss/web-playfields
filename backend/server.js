@@ -11,6 +11,7 @@ import { routsMgtUsers } from './src/routes/mgt.users.routes.js';
 import { routsViews } from './src/routes/view.routes.js';
 import { routsMgt } from './src/routes/mgt.routes.js';
 import { routsHome } from './src/routes/home.routes.js'
+import { routsFooter } from './src/routes/footer.routes.js'
 
 import { initialNoSQLLoad } from './src/models/initial.noSQL.load.js'
 
@@ -32,6 +33,7 @@ if (mode === 'dev') {
         dataDevInit();
     });
     initialNoSQLLoad.insertPosts()
+    initialNoSQLLoad.insertDescription()
 } else if (mode === 'prod') {
     db.sequelize.sync({ force: false }).then(() => {
         console.log('Load data for production mode');
@@ -51,6 +53,7 @@ routsMgtUsers(app)
 routsViews(app)
 routsMgt(app)
 routsHome(app)
+routsFooter(app) 
 
 // Listeners
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

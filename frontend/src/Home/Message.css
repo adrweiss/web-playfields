@@ -23,6 +23,18 @@
     margin-bottom: 10px;
 }
 
+.box__edit__container {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: justify;
+    text-align: center;
+}
+
+.edit__button {
+    width: 100px;
+}
+
 .user__date__container {
     border-top: 1px solid #aaa;
     display: flex;
