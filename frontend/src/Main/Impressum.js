@@ -42,7 +42,7 @@ const AntSwitch = withStyles((theme) => ({
 }))(Switch);
 
 function Impressum() {
-  const [state, setState] = useState(false)
+  const [state, setState] = useState(true)
 
   const handleChange = (event) => {
     setState(!state);
@@ -55,19 +55,19 @@ function Impressum() {
           
             <Typography component="div">
               <Grid component="label" container alignItems="center" spacing={1}>
-              <div className="impressum__language__slider">
-                <Grid item>German</Grid>
-                <Grid item>
-                  <AntSwitch checked={state} onChange={handleChange} name="checked" />
-                </Grid>
-                <Grid item>English</Grid>
+                <div className="impressum__language__slider">
+                  <Grid item>German</Grid>
+                    <Grid item>
+                      <AntSwitch checked={state} onChange={handleChange} name="checked" />
+                    </Grid>
+                  <Grid item>English</Grid>
                 </div>
               </Grid>
             </Typography>
           
         </div>
 
-        <div hidden={state}>
+        <div hidden={!state}>
           <h1>Legal Disclosure</h1>
           <h2>Information in accordance with Section 5 TMG</h2>
           <p>
@@ -104,7 +104,7 @@ function Impressum() {
           <i>Quelle: </i><a href="http://www.translate-24h.de" >translate-24h Übersetzungen</a> <br /><br />
         </div>
 
-        <div hidden={!state}>
+        <div hidden={state}>
           <h1>Impressum</h1>
 
           <h2>Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
