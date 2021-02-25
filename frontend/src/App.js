@@ -12,6 +12,7 @@ import ForgottPassword from './User/ForgottPassword'
 import ValidateUser from './User/ValidateUser'
 import Unauthorized from './Main/Unauthorized'
 import Impressum from './Main/Impressum'
+import DataPrivacy from './Main/DataPrivacy'
 
 function App() {
   return (
@@ -61,6 +62,11 @@ function App() {
           <Route path="/impressum">
             <Header />
             <Impressum />
+            <Footer />
+          </Route>
+          <Route path="/dataprivacy">
+            <Header />
+            <DataPrivacy />
             <Footer />
           </Route>
           <Route path="/">
