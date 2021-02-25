@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
-
 import FooterService from './services/footer.service';
 
 Modal.setAppElement('body')
@@ -32,7 +31,6 @@ function Footer() {
   const [modalContactDescription, setModalContactDescription] = useState("");
   const [modalBugReason, setModalBugReason] = useState("");
   const [modalBugDescription, setModalBugDescription] = useState("");
-
 
   const handlerModalContactForm = () => {
     setModalContactForm(!modalContactForm)
@@ -102,21 +100,19 @@ function Footer() {
   return (
     <div className='footer'>
       <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalContactForm}>
-        <div className='footer__entity'>
-          Contact Form
-        </div>
+        <div className='footer__entity'>Contact Form</div>
       </Button>
 
       <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalReportBug}>
-        <div className='footer__entity'>
-          Report Bug
-        </div>
+        <div className='footer__entity'>Report Bug </div>
       </Button>
 
       <div>
-        <Link to="/impressum" className='footer__entity'>
-          {'Impressum'}
-        </Link>
+        <Button style={{ textTransform: 'none' }} className='footer__entity'>
+          <Link to="/impressum" className='footer__entity'>
+            {'Impressum'}
+          </Link>
+        </Button>
       </div>
 
       <Modal
