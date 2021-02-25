@@ -99,21 +99,19 @@ function Footer() {
 
   return (
     <div className='footer'>
-      <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalContactForm}>
+      <Button style={{ textTransform: 'none' }} onClick={handlerModalContactForm}>
         <div className='footer__entity'>Contact Form</div>
       </Button>
 
-      <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalReportBug}>
+      <Button style={{ textTransform: 'none' }} onClick={handlerModalReportBug}>
         <div className='footer__entity'>Report Bug </div>
       </Button>
 
-      <div>
-        <Button style={{ textTransform: 'none' }} className='footer__entity'>
-          <Link to="/impressum" className='footer__entity'>
-            {'Impressum'}
-          </Link>
-        </Button>
-      </div>
+      <Button style={{ textTransform: 'none' }}>
+        <Link to="/impressum" className='footer__entity'>
+          {'Impressum'}
+        </Link>
+      </Button>
 
       <Modal
         isOpen={modalContactForm}
