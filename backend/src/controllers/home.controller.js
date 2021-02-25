@@ -173,7 +173,7 @@ function EditPost(req, res, next) {
       '_id': req.body.postId,
       'userid': req.userId,
       'solved': false,
-      'changed': true
+      'changed': false
     }]
   },
     {
