@@ -1,17 +1,16 @@
 .footer {
-    background-color: #6b8795;
-    width: 100%;
     height: 50px;
     margin-top: 20px;
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    border-top: rgb(160, 155, 155) solid 1px;
 }
 
 .footer__entity {
     text-decoration: none;
-    font: 18px 'Arial';
-    color: black;
+    font: 14px 'Arial';
+    margin-left: 15px;
+    color: rgb(160, 155, 155);
 }
 
 .modal__footer {
