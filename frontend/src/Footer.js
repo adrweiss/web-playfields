@@ -113,6 +113,12 @@ function Footer() {
         </Link>
       </Button>
 
+      <Button style={{ textTransform: 'none' }}>
+        <Link to="/dataprivacy" className='footer__entity'>
+          {'Data Privacy'}
+        </Link>
+      </Button>
+
       <Modal
         isOpen={modalContactForm}
         onRequestClose={handlerModalContactForm}
