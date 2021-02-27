@@ -302,7 +302,7 @@ const deleteContactRequest = (req, res, next) => {
     type: "Contact"
   }, function (err) {
     if (!err) {
-      return res.status(200).send({ message: "Bug successfull deleted." });
+      return res.status(200).send({ message: "Contact successfull deleted." });
     }
     return res.status(400).send({ message: "Deletion was not successfull." })
   });
