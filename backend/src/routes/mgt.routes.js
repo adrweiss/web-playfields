@@ -42,6 +42,14 @@ export function routsMgt(app) {
     mgtController.getAmountPostedBugs,
   );
 
+  app.delete(
+    "/api/mgt/bug",
+    [authJwt.verifyToken,
+    authJwt.getReadBugReports,
+    authJwt.hasRights],
+    mgtController.deleteBugReport,
+  );
+
   app.get(
     "/api/mgt/report/messages",
     [authJwt.verifyToken,
@@ -96,5 +104,13 @@ export function routsMgt(app) {
     authJwt.getReadContactRequests,
     authJwt.hasRights],
     mgtController.getAmountContactMessages,
+  );
+
+  app.delete(
+    "/api/mgt/contact",
+    [authJwt.verifyToken,
+    authJwt.getReadContactRequests,
+    authJwt.hasRights],
+    mgtController.deleteContactRequest,
   );
 };
