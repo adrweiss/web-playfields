@@ -68,6 +68,14 @@ function Impressum() {
         </div>
 
         <div hidden={!state}>
+
+          <div className="impressum__note">        
+            <h3>Note</h3>                  
+            This is a private project. It is a technology playground that is used to try out concepts and technologies. 
+            The findings will be shared (no personal data) and published where applicable. All implementations and publications are always implemented to the best of our knowledge. 
+            However, if you notice any errors, please let me know. I will always try to correct the errors immediately. If this is not possible the  website will be taken offline temporarily.
+          </div>
+          
           <h1>Legal Disclosure</h1>
           <h2>Information in accordance with Section 5 TMG</h2>
           <p>
@@ -105,6 +113,15 @@ function Impressum() {
         </div>
 
         <div hidden={state}>
+          
+          <div className="impressum__note">        
+            <h3>Notiz</h3>                  
+            Es handelt sich hierbei um ein privates Projekt. Dabei geht es um eine Technologie-Spielwiese, die dazu genuzt wird, Konzepte und Technologien auszuprobieren. 
+            Die Erkentnisse daraus werden ggf. geteilt und veröffentlicht (keine persönlichen Daten). Sämtliche Implementierungen und Veröffentlichungen sind stets nach bestem Wissen und Gewissen umgesetzt. 
+            Falls Ihnen dennoch Fehler auffallen, bitte ich Sie mir diese zu melden. Ich werde stets versuchen, die Fehler umgehend zu beseitigen. Falls das nicht möglich ist würde die 
+            Webseite temporär auch offline genommen werden.
+          </div>
+              
           <h1>Impressum</h1>
 
           <h2>Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
