@@ -284,6 +284,16 @@ const setBlockedStatusReportedPosts = (req, res, next) => {
     });
 }
 
+const deleteBugReport = (req, res, next) => {
+  console.log(req.body.id)
+  return res.status(200).send({ message: 'delete Bug.' });
+}
+
+const deleteContactRequest = (req, res, next) => {
+  console.log(req.body.id)
+  return res.status(200).send({ message: 'delete Contact.' });
+}
+
 const mgtController = {
   buildProd,
   getReportedPosts,
@@ -296,6 +306,8 @@ const mgtController = {
   setSolvedStatusPostedBugs,
   setSolvedStatusReportedPosts,
   setBlockedStatusReportedPosts,
+  deleteBugReport,
+  deleteContactRequest,
 };
 
 export default mgtController;

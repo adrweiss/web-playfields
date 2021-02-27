@@ -37,32 +37,57 @@ const getContactMessages = (filter, skip, limit) => {
 
 const putBugStatus = (id, solvedStatus) => {
   return axios.put("/mgt/bug/status",
-    { id,
-      solvedStatus },
+    {
+      id,
+      solvedStatus
+    },
     { headers: authHeader(), });
 };
 
 const putReportStatus = (id, solvedStatus) => {
   return axios.put("/mgt/report/status",
-    { id, 
-      solvedStatus },
+    {
+      id,
+      solvedStatus
+    },
     { headers: authHeader() });
 };
 
 const putReportStatusBlocked = (id, blockedstatus) => {
   return axios.put("/mgt/report/blocked",
-    { id, 
-      blockedstatus },
+    {
+      id,
+      blockedstatus
+    },
     { headers: authHeader() });
 };
 
 const putContactStatus = (id, solvedStatus) => {
   return axios.put("/mgt/contact/status",
-    { id,
-      solvedStatus },
+    {
+      id,
+      solvedStatus
+    },
     { headers: authHeader() });
 };
 
+const deleteContact = (id) => {
+  return axios.delete("/mgt/contact",
+    {
+      headers: authHeader(),
+      data: { id }
+    }
+  );
+};
+
+const deleteBug = (id) => {
+  return axios.delete("/mgt/bug",
+    {
+      headers: authHeader(),
+      data: { id }
+    }
+  );
+};
 
 const ManagementService = {
   triggerBuild,
@@ -75,7 +100,9 @@ const ManagementService = {
   putBugStatus,
   putReportStatus,
   putContactStatus,
-  putReportStatusBlocked
+  putReportStatusBlocked,
+  deleteContact,
+  deleteBug,
 }
 
 export default ManagementService;

@@ -6,6 +6,7 @@ import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import MailIcon from '@material-ui/icons/Mail';
 import Tooltip from '@material-ui/core/Tooltip';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import ManagementService from "../services/mgt.service"
 
@@ -73,6 +74,20 @@ function HomeMessageManagement({ id, date, body, reason, solved, mail, type, sta
             <div className="home__management__message__date">
               {date}
             </div>
+            {(type === "bug") ?
+            <IconButton>
+              <Tooltip title="Delete bug report" aria-label="change_solve_status">
+                <DeleteIcon fontSize='small' />
+              </Tooltip>
+            </IconButton>
+            :
+            <IconButton>
+              <Tooltip title="Delete contact request" aria-label="change_solve_status">
+                <DeleteIcon fontSize='small' />
+              </Tooltip>
+            </IconButton>
+          }
+
             <IconButton onClick={handleSolvedStatus}>
               <Tooltip title="Change solve status" aria-label="change_solve_status">
                 {solvedStatus ? <CheckBoxOutlinedIcon fontSize='small' /> : <CheckBoxOutlineBlankOutlinedIcon fontSize='small' />}
