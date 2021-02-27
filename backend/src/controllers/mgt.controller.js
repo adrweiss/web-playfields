@@ -208,7 +208,7 @@ const getReportedPosts = (req, res, next) => {
           } else {
             username = null
           }
-          
+
           return Object.assign(
             {},
             {
@@ -216,7 +216,7 @@ const getReportedPosts = (req, res, next) => {
               username: username,
               body: doc.body,
               title: doc.title,
-              solved: doc.solved,               
+              solved: doc.solved,
               blocked: doc.blocked,
               changed: doc.changed,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
@@ -285,13 +285,27 @@ const setBlockedStatusReportedPosts = (req, res, next) => {
 }
 
 const deleteBugReport = (req, res, next) => {
-  console.log(req.body.id)
-  return res.status(200).send({ message: 'delete Bug.' });
+  InternalMessage.deleteOne({
+    _id: req.body.id, 
+    type: "Bug"
+  }, function (err) {
+    if (!err) {
+      return res.status(200).send({ message: "Bug successfull deleted." });
+    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
+  });
 }
 
 const deleteContactRequest = (req, res, next) => {
-  console.log(req.body.id)
-  return res.status(200).send({ message: 'delete Contact.' });
+  InternalMessage.deleteOne({
+    _id: req.body.id, 
+    type: "Contact"
+  }, function (err) {
+    if (!err) {
+      return res.status(200).send({ message: "Bug successfull deleted." });
+    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
+  });
 }
 
 const mgtController = {

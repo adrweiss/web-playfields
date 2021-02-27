@@ -109,7 +109,7 @@ export function routsMgt(app) {
   app.delete(
     "/api/mgt/contact",
     [authJwt.verifyToken,
-    authJwt.getReadBugReports,
+    authJwt.getReadContactRequests,
     authJwt.hasRights],
     mgtController.deleteContactRequest,
   );
