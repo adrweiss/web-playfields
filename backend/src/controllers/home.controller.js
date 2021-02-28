@@ -51,7 +51,12 @@ function getPost(req, res, next) {
 }
 
 function getDescriptions(req, res, next) {
-  Description.find({}, ['_id', 'title', 'body'], function (err, docs) {
+  Description.find({}, 
+    ['_id', 'serial_number', 'title', 'body'],
+    {sort: {
+      serial_number: 1
+    }}, 
+  function (err, docs) {
     if (!err) {
       return res.status(200).send(docs)
     }
