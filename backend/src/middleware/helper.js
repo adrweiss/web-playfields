@@ -30,7 +30,7 @@ function sendMailWithContent(url, mail, subject) {
 
 
   var mailOptions = {
-    from: "Playfield",
+    from: "Playfields",
     to: mail,
     subject: subject,
     text: url
