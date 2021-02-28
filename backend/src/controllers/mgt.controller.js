@@ -208,7 +208,7 @@ const getReportedPosts = (req, res, next) => {
           } else {
             username = null
           }
-          
+
           return Object.assign(
             {},
             {
@@ -216,7 +216,7 @@ const getReportedPosts = (req, res, next) => {
               username: username,
               body: doc.body,
               title: doc.title,
-              solved: doc.solved,               
+              solved: doc.solved,
               blocked: doc.blocked,
               changed: doc.changed,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
@@ -284,6 +284,30 @@ const setBlockedStatusReportedPosts = (req, res, next) => {
     });
 }
 
+const deleteBugReport = (req, res, next) => {
+  InternalMessage.deleteOne({
+    _id: req.body.id, 
+    type: "Bug"
+  }, function (err) {
+    if (!err) {
+      return res.status(200).send({ message: "Bug successfull deleted." });
+    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
+  });
+}
+
+const deleteContactRequest = (req, res, next) => {
+  InternalMessage.deleteOne({
+    _id: req.body.id, 
+    type: "Contact"
+  }, function (err) {
+    if (!err) {
+      return res.status(200).send({ message: "Contact successfull deleted." });
+    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
+  });
+}
+
 const mgtController = {
   buildProd,
   getReportedPosts,
@@ -296,6 +320,8 @@ const mgtController = {
   setSolvedStatusPostedBugs,
   setSolvedStatusReportedPosts,
   setBlockedStatusReportedPosts,
+  deleteBugReport,
+  deleteContactRequest,
 };
 
 export default mgtController;

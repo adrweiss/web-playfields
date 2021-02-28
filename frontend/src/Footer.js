@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 
-
 import FooterService from './services/footer.service';
 
 Modal.setAppElement('body')
@@ -32,7 +31,6 @@ function Footer() {
   const [modalContactDescription, setModalContactDescription] = useState("");
   const [modalBugReason, setModalBugReason] = useState("");
   const [modalBugDescription, setModalBugDescription] = useState("");
-
 
   const handlerModalContactForm = () => {
     setModalContactForm(!modalContactForm)
@@ -101,23 +99,25 @@ function Footer() {
 
   return (
     <div className='footer'>
-      <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalContactForm}>
-        <div className='footer__entity'>
-          Contact Form
-        </div>
+      <Button style={{ textTransform: 'none' }} onClick={handlerModalContactForm}>
+        <div className='footer__entity'>Contact Form</div>
       </Button>
 
-      <Button style={{ textTransform: 'none' }} className='footer__entity' onClick={handlerModalReportBug}>
-        <div className='footer__entity'>
-          Report Bug
-        </div>
+      <Button style={{ textTransform: 'none' }} onClick={handlerModalReportBug}>
+        <div className='footer__entity'>Report Bug </div>
       </Button>
 
-      <div>
+      <Button style={{ textTransform: 'none' }}>
         <Link to="/impressum" className='footer__entity'>
           {'Impressum'}
         </Link>
-      </div>
+      </Button>
+
+      <Button style={{ textTransform: 'none' }}>
+        <Link to="/dataprivacy" className='footer__entity'>
+          {'Data Privacy'}
+        </Link>
+      </Button>
 
       <Modal
         isOpen={modalContactForm}

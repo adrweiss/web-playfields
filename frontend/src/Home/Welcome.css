@@ -1,3 +1,7 @@
 .welcomme__container {
     margin-right: 10%;
 }
+
+.welcomme__container>div {
+    white-space: pre-line;
+}
