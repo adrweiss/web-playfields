@@ -19,6 +19,14 @@ export function routsMgt(app) {
   );
 
   app.get(
+    "/api/mgt/build/status",
+    [authJwt.verifyToken,
+    authJwt.getTriggerBuild,
+    authJwt.hasRights],
+    mgtController.getLastBuildStatus,
+  );
+
+  app.get(
     "/api/mgt/bug/messages",
     [authJwt.verifyToken,
     authJwt.getReadBugReports,

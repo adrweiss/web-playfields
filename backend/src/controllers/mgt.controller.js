@@ -1,6 +1,8 @@
 import request from 'request'
 import { db, mongodb } from '../models/index.js'
 import { format } from 'date-fns';
+import http from 'http';
+import convert from 'xml-js';
 
 const User = db.user;
 const InternalMessage = mongodb.internalMessage;
@@ -14,6 +16,35 @@ function buildProd(req, res, next) {
     .on('error', function (err) {
       return res.status(400).send({ message: "Build is not available." });
     })
+}
+
+function getLastBuildStatus(req, res, next) {
+  http.get('http://adrian:110c5f392d5b55df4400ca7be9bfade855@192.168.0.59:8080/rssLatest', (resp) => {
+    let data = '';
+
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    resp.on('end', () => {
+      var options = { ignoreComment: true, alwaysChildren: true };
+      var result = convert.xml2js(data, options); // or convert.xml2json(xml, options)
+
+      let response_data_jenkins = [[], []]
+      response_data_jenkins[0][0] = result.elements[0].elements[5].elements[0].elements[0].text
+      response_data_jenkins[0][1] = result.elements[0].elements[5].elements[3].elements[0].text
+
+      response_data_jenkins[1][0] = result.elements[0].elements[7].elements[0].elements[0].text
+      response_data_jenkins[1][1] = result.elements[0].elements[7].elements[3].elements[0].text
+
+      //response_data_jenkins[2][0] = result.elements[0].elements[7].elements[0].elements[0].text
+      //response_data_jenkins[2][1] = result.elements[0].elements[7].elements[3].elements[0].text
+    
+      return res.status(200).send(response_data_jenkins);
+    });
+  }).on("error", (err) => {
+    return res.status(400).send({ message: "Status information from Jenkins are not available." });
+  });
 }
 
 const getContactMessages = (req, res, next) => {
@@ -286,7 +317,7 @@ const setBlockedStatusReportedPosts = (req, res, next) => {
 
 const deleteBugReport = (req, res, next) => {
   InternalMessage.deleteOne({
-    _id: req.body.id, 
+    _id: req.body.id,
     type: "Bug"
   }, function (err) {
     if (!err) {
@@ -298,7 +329,7 @@ const deleteBugReport = (req, res, next) => {
 
 const deleteContactRequest = (req, res, next) => {
   InternalMessage.deleteOne({
-    _id: req.body.id, 
+    _id: req.body.id,
     type: "Contact"
   }, function (err) {
     if (!err) {
@@ -310,6 +341,7 @@ const deleteContactRequest = (req, res, next) => {
 
 const mgtController = {
   buildProd,
+  getLastBuildStatus,
   getReportedPosts,
   getPostedBugs,
   getContactMessages,
