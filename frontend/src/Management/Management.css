@@ -29,3 +29,26 @@
 .management__container {
     margin-right: 20px;
 }
+
+.modal__trigger__build {
+    text-align: center;
+    justify-content: center;
+    width: 500px;
+}
+
+.modal__trigger__build>div {
+    margin-top: 10px;
+    border-top: solid lightgrey;
+}
+
+.modal__trigger__build>Button {
+    margin: 0 auto;
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 50%;
+}
+
+.modal__trigger__build>table {
+    width: 100%;
+}

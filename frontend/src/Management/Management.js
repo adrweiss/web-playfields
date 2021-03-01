@@ -236,9 +236,10 @@ function Management() {
         style={customStyles}
         contentLabel="Trigger__Build"
       >
-        <div className='modal__delete'>
+        <div className='modal__trigger__build'>
           <h3>Trigger build process</h3>
           <p>Are you sure that you want to trigger the build process?</p>
+
 
           <table border="1" cellPadding="5" cellSpacing="5">
             <thead>
@@ -256,12 +257,14 @@ function Management() {
               ))}
             </tbody>
           </table>
+
+
           <div />
           <Button variant="contained" onClick={triggerBuild} color="primary">Trigger</Button>
           <Button variant="contained" onClick={handleTriggerModal}>Cancel</Button>
         </div>
       </Modal>
-        </div>
+    </div>
   )
 }
 
