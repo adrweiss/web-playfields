@@ -37,6 +37,7 @@ const customStyles = {
 
 function Management() {
   const [open, setOpen] = useState(false);
+  const [jenkinsStatusData, setJenkinsStatusData] = useState();
   const [triggerBuildModal, setTriggerBuildModal] = useState(false);
   const [subPage, setSubPage] = useState(0);
   const [message, setMessage] = useState("");
@@ -137,6 +138,21 @@ function Management() {
   }
 
   const handleTriggerModal = () => {
+    if (!triggerBuildModal) {
+      ManagementService.getBuildStatus().then((response) => {
+        setJenkinsStatusData(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+          console.log(_content);
+        })
+    }
+
     setTriggerBuildModal(!triggerBuildModal)
   }
 
@@ -223,12 +239,29 @@ function Management() {
         <div className='modal__delete'>
           <h3>Trigger build process</h3>
           <p>Are you sure that you want to trigger the build process?</p>
+
+          <table border="1" cellPadding="5" cellSpacing="5">
+            <thead>
+              <tr>
+                <th>Pipeline Name</th>
+                <th>Last Run</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jenkinsStatusData?.map((item, i) => (
+                <tr key={i}>
+                  <td>{item[0]}</td>
+                  <td>{item[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <div />
           <Button variant="contained" onClick={triggerBuild} color="primary">Trigger</Button>
           <Button variant="contained" onClick={handleTriggerModal}>Cancel</Button>
         </div>
       </Modal>
-    </div>
+        </div>
   )
 }
 

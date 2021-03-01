@@ -30,12 +30,14 @@ function getLastBuildStatus(req, res, next) {
       var options = { ignoreComment: true, alwaysChildren: true };
       var result = convert.xml2js(data, options); // or convert.xml2json(xml, options)
 
+      
+
       let response_data_jenkins = [[], []]
       response_data_jenkins[0][0] = result.elements[0].elements[5].elements[0].elements[0].text
-      response_data_jenkins[0][1] = result.elements[0].elements[5].elements[3].elements[0].text
+      response_data_jenkins[0][1] = format(Date.parse(result.elements[0].elements[5].elements[3].elements[0].text), 'dd.MM.yyy HH:mm')
 
       response_data_jenkins[1][0] = result.elements[0].elements[7].elements[0].elements[0].text
-      response_data_jenkins[1][1] = result.elements[0].elements[7].elements[3].elements[0].text
+      response_data_jenkins[1][1] = format(Date.parse(result.elements[0].elements[7].elements[3].elements[0].text), 'dd.MM.yyy HH:mm')
 
       //response_data_jenkins[2][0] = result.elements[0].elements[7].elements[0].elements[0].text
       //response_data_jenkins[2][1] = result.elements[0].elements[7].elements[3].elements[0].text
