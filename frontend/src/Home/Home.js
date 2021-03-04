@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
 //import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
@@ -247,16 +248,27 @@ function Home() {
               <div key={item._id} className="home__description__container">
                 <div className="home__move__button">
                   <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+                    <div>                      
+                      <IconButton >
+                        <Tooltip title="Delete Description">
+                          <DeleteIcon fontSize='small' />
+                        </Tooltip>
+                      </IconButton>
+                    </div>
+                    <div>
                     <IconButton>
                       <Tooltip title="Move up" aria-label="move__up">
                         <ExpandLessIcon fontSize='small' />
                       </Tooltip>
                     </IconButton>
+                    </div>
+                    <div>
                     <IconButton>
                       <Tooltip title="Move down" aria-label="move__down">
                         <ExpandMoreIcon fontSize='small' />
                       </Tooltip>
                     </IconButton>
+                    </div>
                   </div>
                 </div>
                 <Welcome

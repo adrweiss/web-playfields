@@ -72,14 +72,7 @@ function Welcome({ id, title, body, visible }) {
                 {visibleStatus ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlankOutlinedIcon />}
               </Tooltip>
             </IconButton>
-          </div>
-          <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
-            <IconButton >
-              <Tooltip title="Delete Description">
-                <DeleteIcon />
-              </Tooltip>
-            </IconButton>
-          </div>
+          </div>        
           <div hidden={(edited || !(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')))}>
             <IconButton onClick={editDescription}>
               <Tooltip title="Edit description">
