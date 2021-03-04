@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './Welcome.css'
 import { getCurrentUser } from "../services/auth.service"
 
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -69,6 +70,13 @@ function Welcome({ id, title, body, visible }) {
             <IconButton onClick={handleVisibleStatus}>
               <Tooltip title="Change visible status">
                 {visibleStatus ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlankOutlinedIcon />}
+              </Tooltip>
+            </IconButton>
+          </div>
+          <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+            <IconButton >
+              <Tooltip title="Delete Description">
+                <DeleteIcon />
               </Tooltip>
             </IconButton>
           </div>

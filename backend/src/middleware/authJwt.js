@@ -229,6 +229,12 @@ function getReadContactRequests(req, res, next) {
   next();
 }
 
+// READ_CONTACT_REQUESTS
+function getEditDescriptionHome(req, res, next) {
+  req.right = ['EDIT_DISCRIPTION_HOME', 'ADMIN'];
+  next();
+}
+
 const authJwt = {
   verifyToken,
   hasRights,
@@ -251,6 +257,7 @@ const authJwt = {
   getReadBugReports,
   getReadPostReports,
   getReadContactRequests,
+  getEditDescriptionHome,
 };
 
 export { authJwt };

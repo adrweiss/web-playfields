@@ -61,6 +61,9 @@ const editPostUser = (postId, title, body) => {
   }, { headers: authHeader() });
 };
 
+const getAllDescriptions = () => {
+  return axios.get("/home/desc/all", { headers: authHeader() });
+};
 // delete post any 
 const HomeService = {
   getAmount,
@@ -73,6 +76,7 @@ const HomeService = {
   editPostAny,
   editPostUser,
   reportPost,
+  getAllDescriptions,
 }
 
 export default HomeService;

@@ -34,6 +34,8 @@ function Home() {
   }
 
   useEffect(() => {
+    const currentUser = getCurrentUser();
+
     HomeService.getAmount().then((response) => {
       setAmountPosts(Math.ceil(response.data.amount / postPSide));
     },
@@ -61,20 +63,35 @@ function Home() {
 
         console.log(_content);
       })
+    if (currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')) {
+      HomeService.getAllDescriptions().then((response) => {
+        setDescriptionText(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-    HomeService.getDescriptions().then((response) => {
-      setDescriptionText(response.data);
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+          console.log(_content);
+        })
+    } else {
+      HomeService.getDescriptions().then((response) => {
+        setDescriptionText(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        console.log(_content);
-      })
+          console.log(_content);
+        })
+    }
   }, [])
 
   function fetchPosts(skip) {

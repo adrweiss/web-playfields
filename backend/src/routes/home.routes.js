@@ -79,6 +79,15 @@ export function routsHome(app) {
     ],
     homeController.EditAnyPost,
   );
+
+  app.get(
+    "/api/home/desc/all",
+    [authJwt.verifyToken,
+    authJwt.getEditDescriptionHome,
+    authJwt.hasRights
+    ],
+    homeController.getAllDescriptions,
+  );
   // re-order description 
   // add description 
   // change description 

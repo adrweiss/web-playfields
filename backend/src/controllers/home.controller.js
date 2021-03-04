@@ -51,8 +51,23 @@ function getPost(req, res, next) {
 }
 
 function getDescriptions(req, res, next) {
-  //blocked: true
   Description.find({visible: true}, 
+    ['_id', 'serial_number','visible', 'title', 'body'],
+    {sort: {
+      serial_number: 1
+    }}, 
+  function (err, docs) {
+    if (!err) {
+      return res.status(200).send(docs)
+    }
+    else {
+      return res.status(400).send({ message: "An error has occurred." })
+    }
+  });
+}
+
+function getAllDescriptions(req, res, next) {
+  Description.find({}, 
     ['_id', 'serial_number','visible', 'title', 'body'],
     {sort: {
       serial_number: 1
@@ -217,6 +232,7 @@ const homeController = {
   getPost,
   getAmount,
   getDescriptions,
+  getAllDescriptions,
   deletePost,
   deleteAnyPost,
   writePost,
