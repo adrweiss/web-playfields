@@ -23,6 +23,7 @@ function Home() {
   const [messageFlow, setMessageFlow] = useState([]);
   const [descriptionText, setDescriptionText] = useState([]);
   const [message, setMessage] = useState("");
+  const [messageDesc, setMessageDesc] = useState("");
   const [timerId, setTimerId] = useState();
   const [title, setTitle] = useState("");
   const [post, setPost] = useState("");
@@ -32,6 +33,7 @@ function Home() {
 
   function removeMessage() {
     setMessage("")
+    setMessageDesc("")
   }
 
   useEffect(() => {
@@ -156,6 +158,21 @@ function Home() {
         })
     }
   }
+  function getDesc(){
+    HomeService.getAllDescriptions().then((response) => {
+      setDescriptionText(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
 
   const handleChangeTitle = (event) => {
     setTitle(event.target.value);
@@ -163,6 +180,28 @@ function Home() {
   const handleChangePost = (event) => {
     setPost(event.target.value);
   };
+
+  const deleteDescription = (descId) => {
+    removeMessage()
+    clearTimeout(timerId)
+
+    HomeService.deleteDescription(descId).then((response) => {
+      setMessageDesc(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
+      getDesc();
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessageDesc(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
+      })
+  }
 
   return (
     <div>
@@ -244,30 +283,36 @@ function Home() {
         </Grid>
         <Grid item sm={6}>
           <div>
+            {messageDesc && (
+              <div className="response">
+                {messageDesc}
+              </div>
+            )}
+
             {descriptionText?.map(item => (
               <div key={item._id} className="home__description__container">
                 <div className="home__move__button">
                   <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
-                    <div>                      
-                      <IconButton >
+                    <div>
+                      <IconButton onClick={(event) => deleteDescription(item._id)}>
                         <Tooltip title="Delete Description">
                           <DeleteIcon fontSize='small' />
                         </Tooltip>
                       </IconButton>
                     </div>
                     <div>
-                    <IconButton>
-                      <Tooltip title="Move up" aria-label="move__up">
-                        <ExpandLessIcon fontSize='small' />
-                      </Tooltip>
-                    </IconButton>
+                      <IconButton>
+                        <Tooltip title="Move up" aria-label="move__up">
+                          <ExpandLessIcon fontSize='small' />
+                        </Tooltip>
+                      </IconButton>
                     </div>
                     <div>
-                    <IconButton>
-                      <Tooltip title="Move down" aria-label="move__down">
-                        <ExpandMoreIcon fontSize='small' />
-                      </Tooltip>
-                    </IconButton>
+                      <IconButton>
+                        <Tooltip title="Move down" aria-label="move__down">
+                          <ExpandMoreIcon fontSize='small' />
+                        </Tooltip>
+                      </IconButton>
                     </div>
                   </div>
                 </div>

@@ -88,9 +88,19 @@ export function routsHome(app) {
     ],
     homeController.getAllDescriptions,
   );
+
+  app.delete(
+    "/api/home/desc",
+    [authJwt.verifyToken,
+    authJwt.getEditDescriptionHome,
+    authJwt.hasRights
+    ],
+    homeController.deleteDescriptions,
+  );
+
+  
   // re-order description 
   // add description 
   // change description 
-  // delete description 
-  // Block description
+  // visible description
 };
