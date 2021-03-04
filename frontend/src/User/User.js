@@ -213,7 +213,7 @@ function User() {
           <div className="container__user">
             <h2>Change your user settings</h2>
 
-            <p>Here you can change your username. It is  necessary that your username is unique.</p>
+            <p>Here you can change your username. It is necessary that your username is unique.</p>
 
             <div className="change__nickname">
               {messageUN && (

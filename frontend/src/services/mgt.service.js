@@ -5,6 +5,10 @@ const triggerBuild = () => {
   return axios.get("/mgt/build", { headers: authHeader() });
 };
 
+const getBuildStatus = () => {
+  return axios.get("/mgt/build/status", { headers: authHeader() });
+};
+
 const getAmountPostedBugs = (filter) => {
   return axios.get("/mgt/bug/amount",
     { headers: authHeader(), params: { "filter": filter } });
@@ -91,6 +95,7 @@ const deleteBug = (id) => {
 
 const ManagementService = {
   triggerBuild,
+  getBuildStatus,
   getAmountPostedBugs,
   getAmountReportedPosts,
   getAmountContactMessages,
