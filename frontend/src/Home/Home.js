@@ -229,7 +229,7 @@ function Home() {
             {descriptionText?.map(item => (
               <div key={item._id} className="home__description__container">
                 <div className="home__move__button">
-                  <div>
+                  <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
                     <IconButton>
                       <Tooltip title="Move up" aria-label="move__up">
                         <ExpandLessIcon fontSize='small' />

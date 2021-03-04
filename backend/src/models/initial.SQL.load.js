@@ -431,7 +431,6 @@ function right(Right, Role) {
   })
 
   //----------------------------
-
   Right.findOne({
     where: { name: 'READ_CONTACT_REQUESTS' }
   }).then(right => {
@@ -452,6 +451,28 @@ function right(Right, Role) {
       console.log('right "READ_CONTACT_REQUESTS" already exists.')
     }
   })
+
+    //----------------------------
+    Right.findOne({
+      where: { name: 'EDIT_DISCRIPTION_HOME' }
+    }).then(right => {
+      if (!right) {
+        Right.create({
+          name: "EDIT_DISCRIPTION_HOME",
+          description: "You can edit the description on the home page.",
+        }).then(right => {
+          Role.findOne({
+            where: { name: 'MANAGER' }
+          }).then(role => {
+            right.setRoles(role)
+          })
+        }).catch(function (err) {
+          console.log('Error creating "EDIT_DISCRIPTION_HOME" right.')
+        });
+      } else {
+        console.log('right "EDIT_DISCRIPTION_HOME" already exists.')
+      }
+    })
 
   return right
 }

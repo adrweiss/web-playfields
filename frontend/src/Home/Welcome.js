@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './Welcome.css'
+import { getCurrentUser } from "../services/auth.service"
 
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,7 +18,7 @@ function Welcome({ id, title, body, visible }) {
   const [dispBody, setDispBody] = useState(body)
   const [editedBody, setEditedBody] = useState(body)
 
-  body = body.replace(/\\n/g, "\n");
+  const currentUser = getCurrentUser();
 
   const handleChangeTitle = (event) => {
     setEditedTitle(event.target.value);
@@ -64,14 +65,14 @@ function Welcome({ id, title, body, visible }) {
           </div>
         </div>
         <div className="edit__and__blocked__sign" >
-          <div>
+          <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
             <IconButton onClick={handleVisibleStatus}>
               <Tooltip title="Change visible status">
-                {visibleStatus ? <CheckBoxOutlinedIcon fontSize='small' /> : <CheckBoxOutlineBlankOutlinedIcon fontSize='small' />}
+                {visibleStatus ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlankOutlinedIcon />}
               </Tooltip>
             </IconButton>
           </div>
-          <div hidden={edited}>
+          <div hidden={(edited || !(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')))}>
             <IconButton onClick={editDescription}>
               <Tooltip title="Edit description">
                 <EditIcon fontSize="small" />
