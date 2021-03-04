@@ -95,6 +95,24 @@ function deleteDescriptions(req, res, next) {
   });
 }
 
+const putVisibleStatus = (req, res, next) => {
+  Description.updateOne({
+    $and: [{
+      '_id': req.body.descId,
+    }]
+  },
+    {
+      visible: req.body.status,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Description not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Description already reported.' }) };
+      return res.status(200).send({ message: 'Succesfully reported.' });
+    });
+}
+
 
 function getAmount(req, res, next) {
   BlogPost.countDocuments({ blocked: false }, function (err, data) {
@@ -253,7 +271,8 @@ const homeController = {
   writePost,
   EditAnyPost,
   EditPost,
-  putReportPost
+  putReportPost,
+  putVisibleStatus
 };
 
 export default homeController;

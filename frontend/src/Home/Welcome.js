@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import './Welcome.css'
-import { getCurrentUser } from "../services/auth.service"
 
-import DeleteIcon from '@material-ui/icons/Delete';
+import { getCurrentUser } from "../services/auth.service"
+import HomeService from "../services/home.service.js"
+
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -46,7 +47,19 @@ function Welcome({ id, title, body, visible }) {
   }
 
   const handleVisibleStatus = () => {
-    setVisibleStatus(!visibleStatus)
+    HomeService.setStatusVisibleDesc(id, !visibleStatus).then((response) => {
+      setVisibleStatus(!visibleStatus)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
   return (
@@ -72,7 +85,7 @@ function Welcome({ id, title, body, visible }) {
                 {visibleStatus ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlankOutlinedIcon />}
               </Tooltip>
             </IconButton>
-          </div>        
+          </div>
           <div hidden={(edited || !(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')))}>
             <IconButton onClick={editDescription}>
               <Tooltip title="Edit description">

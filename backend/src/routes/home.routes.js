@@ -98,6 +98,16 @@ export function routsHome(app) {
     homeController.deleteDescriptions,
   );
 
+  app.put(
+    "/api/home/desc/status",
+    [authJwt.verifyToken,
+    authJwt.getEditDescriptionHome,
+    authJwt.hasRights
+    ],
+    homeController.putVisibleStatus,
+  );
+
+  
   
   // re-order description 
   // add description 

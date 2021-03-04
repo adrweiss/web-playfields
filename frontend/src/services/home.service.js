@@ -69,6 +69,13 @@ const deleteDescription = (descId) => {
   return axios.delete("/home/desc", { headers: authHeader(), data: { descId } });
 };
 
+const setStatusVisibleDesc = (descId, status) => {
+  return axios.put("/home/desc/status", {
+    descId,
+    status
+  }, { headers: authHeader() });
+};
+
 const HomeService = {
   getAmount,
   getPosts,
@@ -82,6 +89,7 @@ const HomeService = {
   editPostUser,
   reportPost,
   getAllDescriptions,
+  setStatusVisibleDesc,
 }
 
 export default HomeService;
