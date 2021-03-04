@@ -51,8 +51,9 @@ function getPost(req, res, next) {
 }
 
 function getDescriptions(req, res, next) {
+  //blocked: true
   Description.find({}, 
-    ['_id', 'serial_number', 'title', 'body'],
+    ['_id', 'serial_number','visible', 'title', 'body'],
     {sort: {
       serial_number: 1
     }}, 

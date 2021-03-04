@@ -24,7 +24,6 @@
 
 .home__description__container {
     display: flex;
-    border: black solid;
 }
 
 .home__move__button {

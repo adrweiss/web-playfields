@@ -11,6 +11,7 @@ import HomeService from "../services/home.service.js"
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
+//import AddIcon from '@material-ui/icons/Add';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from '@material-ui/core/IconButton';
@@ -243,6 +244,7 @@ function Home() {
                 </div>
                 <Welcome
                   id={item._id}
+                  visible={item.visible}
                   title={item.title}
                   body={item.body}
                 />
@@ -251,7 +253,7 @@ function Home() {
           </div>
         </Grid>
       </Grid>
-    </div>
+    </div >
   )
 }
 

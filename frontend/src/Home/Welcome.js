@@ -4,11 +4,13 @@ import './Welcome.css'
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import CheckBoxOutlineBlankOutlinedIcon from '@material-ui/icons/CheckBoxOutlineBlankOutlined';
+import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 import TextField from '@material-ui/core/TextField';
-//import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button'
 
-function Welcome({ id, title, body }) {
+function Welcome({ id, title, body, visible }) {
+  const [visibleStatus, setVisibleStatus] = useState(visible)
   const [edited, setEdited] = useState(false)
   const [dispTitle, setDispTitle] = useState(title)
   const [editedTitle, setEditedTitle] = useState(title)
@@ -25,8 +27,24 @@ function Welcome({ id, title, body }) {
     setEditedBody(event.target.value);
   };
 
-  const editPost = () => {
+  const editDescription = () => {
     setEdited(!edited)
+  }
+
+  const saveEdit = () => {
+    setDispTitle(editedTitle)
+    setDispBody(editedBody)
+    setEdited(!edited)
+  }
+
+  const cancelEdit = () => {
+    setEditedTitle(dispTitle)
+    setEditedBody(dispBody)
+    setEdited(!edited)
+  }
+
+  const handleVisibleStatus = () => {
+    setVisibleStatus(!visibleStatus)
   }
 
   return (
@@ -45,12 +63,21 @@ function Welcome({ id, title, body }) {
             />
           </div>
         </div>
-        <div>
-          <IconButton onClick={editPost}>
-            <Tooltip title="Edit description" aria-label="edit_description">
-              <EditIcon fontSize="small" />
-            </Tooltip>
-          </IconButton>
+        <div className="edit__and__blocked__sign" >
+          <div>
+            <IconButton onClick={handleVisibleStatus}>
+              <Tooltip title="Change visible status">
+                {visibleStatus ? <CheckBoxOutlinedIcon fontSize='small' /> : <CheckBoxOutlineBlankOutlinedIcon fontSize='small' />}
+              </Tooltip>
+            </IconButton>
+          </div>
+          <div hidden={edited}>
+            <IconButton onClick={editDescription}>
+              <Tooltip title="Edit description">
+                <EditIcon fontSize="small" />
+              </Tooltip>
+            </IconButton>
+          </div>
         </div>
       </div>
       <div hidden={edited} className="welcome__body__box">{dispBody}</div>
@@ -64,6 +91,27 @@ function Welcome({ id, title, body }) {
           value={editedBody}
           onChange={handleChangeBody}
         />
+      </div>
+      <div className='welcome__edit__container' hidden={!edited}>
+        <p hidden={!edited}>
+          <Button
+            className='edit__button'
+            variant="contained"
+            color="primary"
+            onClick={saveEdit}
+          >
+            Save
+        </Button>
+        </p>
+        <p hidden={!edited}>
+          <Button
+            className='edit__button'
+            variant="contained"
+            onClick={cancelEdit}
+          >
+            Cancel
+        </Button>
+        </p>
       </div>
     </div>
   )
