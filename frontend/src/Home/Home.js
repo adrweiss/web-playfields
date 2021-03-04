@@ -11,6 +11,11 @@ import HomeService from "../services/home.service.js"
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
@@ -57,7 +62,7 @@ function Home() {
       })
 
     HomeService.getDescriptions().then((response) => {
-      setDescriptionText(response.data)
+      setDescriptionText(response.data);
     },
       (error) => {
         const _content =
@@ -221,12 +226,27 @@ function Home() {
         <Grid item sm={6}>
           <div>
             {descriptionText?.map(item => (
-              <Welcome
-                key={item._id}
-                id={item._id}
-                title={item.title}
-                body={item.body}
-              />
+              <div key={item._id} className="home__description__container">
+                <div className="home__move__button">
+                  <div>
+                    <IconButton>
+                      <Tooltip title="Move up" aria-label="move__up">
+                        <ExpandLessIcon fontSize='small' />
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton>
+                      <Tooltip title="Move down" aria-label="move__down">
+                        <ExpandMoreIcon fontSize='small' />
+                      </Tooltip>
+                    </IconButton>
+                  </div>
+                </div>
+                <Welcome
+                  id={item._id}
+                  title={item.title}
+                  body={item.body}
+                />
+              </div>
             ))}
           </div>
         </Grid>

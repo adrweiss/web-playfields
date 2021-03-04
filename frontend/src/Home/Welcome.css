@@ -1,7 +1,21 @@
 .welcomme__container {
     margin-right: 10%;
+    width: 90%;
 }
 
-.welcomme__container>div {
+.welcome__body__box {
     white-space: pre-line;
+}
+
+.welcome__title__box {
+    display: flex;
+    align-items: center;
+}
+
+.input__description {
+    width: 100%;
+}
+
+.box__description {
+    width: 100%;
 }

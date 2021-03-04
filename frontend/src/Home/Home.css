@@ -21,3 +21,14 @@
     min-width: 100px;
     width: 75%;
 }
+
+.home__description__container {
+    display: flex;
+    border: black solid;
+}
+
+.home__move__button {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
