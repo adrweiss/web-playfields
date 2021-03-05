@@ -109,7 +109,7 @@ const putVisibleStatus = (req, res, next) => {
       if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
       if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Description not found.' }) };
       if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Description already reported.' }) };
-      return res.status(200).send({ message: 'Succesfully reported.' });
+      return res.status(200).send({ message: 'Succesfully changed visible status.' });
     });
 }
 
@@ -186,7 +186,7 @@ function writePost(req, res, next) {
   })
 }
 
-function EditAnyPost(req, res, next) {
+function editAnyPost(req, res, next) {
   if (!req.body.title) {
     return res.status(400).send({ message: "No Title was provided." })
   }
@@ -212,7 +212,7 @@ function EditAnyPost(req, res, next) {
     });
 }
 
-function EditPost(req, res, next) {
+function editPost(req, res, next) {
   if (!req.body.title) {
     return res.status(400).send({ message: "No Title was provided." })
   }
@@ -260,6 +260,23 @@ const putReportPost = (req, res, next) => {
     });
 }
 
+const editDescription = (req, res, next) => {
+  Description.updateOne({  
+      '_id': req.body.descId, 
+  },
+    {
+      title: req.body.title,
+      body: req.body.body,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Description not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Description already reported.' }) };
+      return res.status(200).send({ message: 'Description succesfull editted.' });
+    });
+}
+
 const homeController = {
   getPost,
   getAmount,
@@ -269,8 +286,9 @@ const homeController = {
   deleteAnyPost,
   deleteDescriptions,
   writePost,
-  EditAnyPost,
-  EditPost,
+  editAnyPost,
+  editPost,
+  editDescription,
   putReportPost,
   putVisibleStatus
 };

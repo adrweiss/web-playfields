@@ -38,6 +38,20 @@ function Welcome({ id, title, body, visible }) {
     setDispTitle(editedTitle)
     setDispBody(editedBody)
     setEdited(!edited)
+    
+    HomeService.editDescription(id, editedTitle, editedBody).then((response) => {
+      console.log(response.data.message)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
   const cancelEdit = () => {

@@ -76,6 +76,14 @@ const setStatusVisibleDesc = (descId, status) => {
   }, { headers: authHeader() });
 };
 
+const editDescription = (descId, title, body) => {
+  return axios.put("/home/desc", {
+    descId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
+
 const HomeService = {
   getAmount,
   getPosts,
@@ -87,6 +95,7 @@ const HomeService = {
   deleteDescription,
   editPostAny,
   editPostUser,
+  editDescription,
   reportPost,
   getAllDescriptions,
   setStatusVisibleDesc,

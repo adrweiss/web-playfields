@@ -68,7 +68,7 @@ export function routsHome(app) {
     authJwt.getWritePost,
     authJwt.hasRights
     ],
-    homeController.EditPost,
+    homeController.editPost,
   );
 
   app.put(
@@ -77,7 +77,7 @@ export function routsHome(app) {
     authJwt.getEditAnyPost,
     authJwt.hasRights
     ],
-    homeController.EditAnyPost,
+    homeController.editAnyPost,
   );
 
   app.get(
@@ -107,10 +107,15 @@ export function routsHome(app) {
     homeController.putVisibleStatus,
   );
 
-  
+  app.put(
+    "/api/home/desc",
+    [authJwt.verifyToken,
+    authJwt.getEditDescriptionHome,
+    authJwt.hasRights
+    ],
+    homeController.editDescription,
+  );  
   
   // re-order description 
   // add description 
-  // change description 
-  // visible description
 };
