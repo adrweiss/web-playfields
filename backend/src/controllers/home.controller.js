@@ -327,33 +327,6 @@ function writeDescriptionEntity(req, res, next) {
         return res.status(400).send({ message: "An error has occurred." })
       }
     });
-
-
-
-
-  /*var dbCard = {}
-  if (req.userId) {
-    dbCard = {
-      "userid": req.userId,
-      "title": req.body.title,
-      "body": req.body.body
-    }
-  } else {
-    dbCard = {
-      "userid": null,
-      "title": req.body.title,
-      "body": req.body.body
-    }
-  }
-
-  BlogPost.create(dbCard, (err, data) => {
-    if (err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(201).send({ message: "Successfull posted." })
-    }
-  })
-  */
 }
 
 const homeController = {

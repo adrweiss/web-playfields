@@ -72,7 +72,6 @@ function Welcome({ id, title, body, visible, newItem, serial_number }) {
 
         console.log(_content);
       })
-
   }
 
   const cancelEdit = () => {
@@ -168,7 +167,5 @@ function Welcome({ id, title, body, visible, newItem, serial_number }) {
     </div>
   )
 }
-
-
 
 export default Welcome
