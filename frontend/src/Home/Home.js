@@ -31,7 +31,7 @@ function Home() {
 
   const currentUser = getCurrentUser();
   const postPSide = 5
-  
+
 
   function removeMessage() {
     setMessage("")
@@ -70,7 +70,14 @@ function Home() {
       })
     if (currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')) {
       HomeService.getAllDescriptions().then((response) => {
-        setDescriptionText(response.data);
+        let description = response.data
+
+        var i
+        for (i = 0; i < description.length; i++) {
+          description[i].serial_number = (i + 1)
+        }
+
+        setDescriptionText(description);
       },
         (error) => {
           const _content =
@@ -160,6 +167,7 @@ function Home() {
         })
     }
   }
+
   function getDesc() {
     HomeService.getAllDescriptions().then((response) => {
       setDescriptionText(response.data);
@@ -179,14 +187,30 @@ function Home() {
   const handleChangeTitle = (event) => {
     setTitle(event.target.value);
   };
+
   const handleChangePost = (event) => {
     setPost(event.target.value);
   };
 
-  const deleteDescription = (descId) => {
+  const deleteDescription = (descId, posNum) => {
     removeMessage()
     clearTimeout(timerId)
 
+    let toRemove = descriptionText
+    if (Number.isInteger(descId)) {
+      toRemove.splice(posNum, 1);
+
+      var i
+      for (i = 0; i < toRemove.length; i++) {
+        toRemove[i].serial_number = (i + 1)
+      }
+      let sorted = [...toRemove].sort((a, b) => {
+        return a.serial_number - b.serial_number;
+      });
+
+      setDescriptionText(sorted)
+      return 
+    }
     HomeService.deleteDescription(descId).then((response) => {
       setMessageDesc(response.data.message);
       setTimerId(setTimeout(removeMessage, 10000));
@@ -209,14 +233,18 @@ function Home() {
     let newDescription = {
       "_id": idCounter,
       "visible": false,
-      "title": 'test',
+      "title": undefined,
       "serial_number": posNum + 1,
-      "body": 'test'
+      "body": undefined,
+      "newItem": true
     }
     setIdCounter(idCounter + 1)
 
     let combined = descriptionText
     var i;
+    for (i = 0; i < combined.length; i++) {
+      combined[i].serial_number = (i + 1)
+    }
     for (i = posNum; i < combined.length; i++) {
       combined[i].serial_number = (combined[i].serial_number + 1)
     }
@@ -225,7 +253,7 @@ function Home() {
     let sorted = [...combined].sort((a, b) => {
       return a.serial_number - b.serial_number;
     });
-  
+
     setDescriptionText(sorted)
   }
 
@@ -326,14 +354,14 @@ function Home() {
               </div>
             </div>
 
-            {descriptionText?.map((item, i)  => (
+            {descriptionText?.map((item, i) => (
               <div key={item._id}>
                 {item.serial_number}
                 <div className="home__description__container">
                   <div className="home__move__button">
                     <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
                       <div>
-                        <IconButton onClick={(event) => deleteDescription(item._id)}>
+                        <IconButton onClick={(event) => deleteDescription(item._id, i)}>
                           <Tooltip title="Delete Description">
                             <DeleteIcon fontSize='small' />
                           </Tooltip>
@@ -354,12 +382,13 @@ function Home() {
                         </IconButton>
                       </div>
                     </div>
-                  </div>                  
+                  </div>
                   <Welcome
                     id={item._id}
                     visible={item.visible}
                     title={item.title}
                     body={item.body}
+                    newItem={item.newItem}
                   />
                 </div>
                 <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Welcome.css'
 
 import { getCurrentUser } from "../services/auth.service"
@@ -12,9 +12,9 @@ import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-function Welcome({ id, title, body, visible }) {
+function Welcome({ id, title, body, visible, newItem }) {
   const [visibleStatus, setVisibleStatus] = useState(visible)
-  const [edited, setEdited] = useState(false)
+  const [edited, setEdited] = useState(newItem ? true : false)
   const [dispTitle, setDispTitle] = useState(title)
   const [editedTitle, setEditedTitle] = useState(title)
   const [dispBody, setDispBody] = useState(body)
@@ -38,7 +38,7 @@ function Welcome({ id, title, body, visible }) {
     setDispTitle(editedTitle)
     setDispBody(editedBody)
     setEdited(!edited)
-    
+
     HomeService.editDescription(id, editedTitle, editedBody).then((response) => {
       console.log(response.data.message)
     },
