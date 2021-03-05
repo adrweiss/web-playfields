@@ -61,18 +61,64 @@ const editPostUser = (postId, title, body) => {
   }, { headers: authHeader() });
 };
 
-// delete post any 
+const getAllDescriptions = () => {
+  return axios.get("/home/desc/all", { headers: authHeader() });
+};
+
+const deleteDescription = (descId) => {
+  return axios.delete("/home/desc", { headers: authHeader(), data: { descId } });
+};
+
+const setStatusVisibleDesc = (descId, status) => {
+  return axios.put("/home/desc/status", {
+    descId,
+    status
+  }, { headers: authHeader() });
+};
+
+const editDescription = (descId, title, body) => {
+  return axios.put("/home/desc", {
+    descId,
+    title,
+    body
+  }, { headers: authHeader() });
+};
+
+const addDescription = (title, body, serial_number, visible) => {    
+  return axios.post("/home/desc", {    
+    title,
+    body,
+    serial_number, 
+    visible
+  }, { headers: authHeader() });
+};
+
+
+const setPosition = (descIdUp, descIdDown) => {
+  return axios.put("home/desc/position", {
+    descIdUp,
+    descIdDown,
+  }, { headers: authHeader() });
+};
+
+
 const HomeService = {
   getAmount,
   getPosts,
   getDescriptions,
   addPostAny,
   addPostUser,
+  addDescription,
   deletePostAny,
   deletePostUser,
+  deleteDescription,
   editPostAny,
   editPostUser,
+  editDescription,
   reportPost,
+  getAllDescriptions,
+  setStatusVisibleDesc,
+  setPosition,
 }
 
 export default HomeService;

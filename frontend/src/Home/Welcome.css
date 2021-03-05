@@ -1,7 +1,39 @@
 .welcomme__container {
     margin-right: 10%;
+    width: 90%;
 }
 
-.welcomme__container>div {
+.welcome__body__box {
     white-space: pre-line;
+}
+
+.welcome__title__box {
+    display: flex;
+    align-items: center;
+}
+
+.input__description {
+    border-top: solid black;
+    width: 100%;
+}
+
+.box__description {
+    width: 100%;
+}
+
+.box__description>div {
+    margin-top: 25px;
+}
+
+.welcome__edit__container {
+    justify-content: center;
+    display: flex;
+}
+
+p+p {
+    margin-left: 10px;
+}
+
+.edit__and__blocked__sign {
+    display: flex;
 }

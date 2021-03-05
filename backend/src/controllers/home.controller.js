@@ -13,7 +13,7 @@ function getPost(req, res, next) {
       return [user.id, user.username]
     })
 
-    BlogPost.find({blocked: false},
+    BlogPost.find({ blocked: false },
       ['title', 'date', 'body', 'userid', 'reported', 'solved'],
       {
         skip: parseInt(req.query.skip),
@@ -30,7 +30,7 @@ function getPost(req, res, next) {
           } else {
             username = null
           }
-          
+
           return Object.assign(
             {},
             {
@@ -40,7 +40,7 @@ function getPost(req, res, next) {
               body: doc.body,
               title: doc.title,
               reported: doc.reported,
-              solved: doc.solved,               
+              solved: doc.solved,
               date: format(doc.date, 'dd.MM.yyy HH:mm')
             }
           )
@@ -51,23 +51,70 @@ function getPost(req, res, next) {
 }
 
 function getDescriptions(req, res, next) {
-  Description.find({}, 
-    ['_id', 'serial_number', 'title', 'body'],
-    {sort: {
-      serial_number: 1
-    }}, 
-  function (err, docs) {
+  Description.find({ visible: true },
+    ['_id', 'serial_number', 'visible', 'title', 'body'],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {
+        return res.status(200).send(docs)
+      }
+      else {
+        return res.status(400).send({ message: "An error has occurred." })
+      }
+    });
+}
+
+function getAllDescriptions(req, res, next) {
+  Description.find({},
+    ['_id', 'serial_number', 'visible', 'title', 'body'],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {
+        return res.status(200).send(docs)
+      }
+      else {
+        return res.status(400).send({ message: "An error has occurred." })
+      }
+    });
+}
+
+function deleteDescriptions(req, res, next) {
+  Description.deleteOne({ _id: req.body.descId }, function (err) {
     if (!err) {
-      return res.status(200).send(docs)
+      return res.status(200).send({ message: "Description was deleted." });
     }
-    else {
-      return res.status(400).send({ message: "An error has occurred." })
-    }
+    return res.status(400).send({ message: "Deletion was not successfull." })
   });
 }
 
+const putVisibleStatus = (req, res, next) => {
+  Description.updateOne({
+    $and: [{
+      '_id': req.body.descId,
+    }]
+  },
+    {
+      visible: req.body.status,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Description not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Description already reported.' }) };
+      return res.status(200).send({ message: 'Succesfully changed visible status.' });
+    });
+}
+
 function getAmount(req, res, next) {
-  BlogPost.countDocuments({blocked: false}, function (err, data) {
+  BlogPost.countDocuments({ blocked: false }, function (err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
@@ -138,7 +185,7 @@ function writePost(req, res, next) {
   })
 }
 
-function EditAnyPost(req, res, next) {
+function editAnyPost(req, res, next) {
   if (!req.body.title) {
     return res.status(400).send({ message: "No Title was provided." })
   }
@@ -164,7 +211,7 @@ function EditAnyPost(req, res, next) {
     });
 }
 
-function EditPost(req, res, next) {
+function editPost(req, res, next) {
   if (!req.body.title) {
     return res.status(400).send({ message: "No Title was provided." })
   }
@@ -212,16 +259,123 @@ const putReportPost = (req, res, next) => {
     });
 }
 
+const editDescription = (req, res, next) => {
+  Description.updateOne({
+    '_id': req.body.descId,
+  },
+    {
+      title: req.body.title,
+      body: req.body.body,
+    },
+    { upsert: false },
+    function (err, doc) {
+      if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+      if (doc.nModified === 0 && doc.n === 0) { return res.status(400).send({ message: 'Description not found.' }) };
+      if (doc.nModified === 0 && doc.n === 1) { return res.status(400).send({ message: 'Description already reported.' }) };
+      return res.status(200).send({ message: 'Description succesfull editted.' });
+    });
+}
+
+function writeDescriptionEntity(req, res, next) {
+  if (!req.body.title) { return res.status(400).send({ message: "No Title was provided." }) }
+  if (!req.body.body) { return res.status(400).send({ message: "No Description was provided." }) }
+  if (!req.body.serial_number) { return res.status(400).send({ message: "No serial_number is provided." }) }
+
+  Description.find({},
+    ['_id'],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {
+        var i;
+        for (i = 0; i < (req.body.serial_number - 1); i++) {
+          Description.findOneAndUpdate(
+            { _id: docs[i]._id },
+            { serial_number: i + 1 },
+            function (err, doc) {
+              if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+            });
+        }
+        var j = 1;
+        for (i = (req.body.serial_number - 1); i < docs.length; i++) {
+          Description.findOneAndUpdate(
+            { _id: docs[i]._id },
+            { serial_number: req.body.serial_number + j },
+            function (err, doc) {
+              if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+            });
+          j++;
+        }
+
+        Description.create({
+          title: req.body.title,
+          body: req.body.body,
+          serial_number: req.body.serial_number,
+          visible: req.body.visible
+        }, (err, data) => {
+          if (err) {
+            return res.status(500).send(err)
+          } else {
+            return res.status(200).send({ message: "Successfull created." })
+          }
+        })
+      }
+      else {
+        return res.status(400).send({ message: "An error has occurred." })
+      }
+    });
+}
+
+
+function setPositionDescription(req, res, next) {
+
+  Description.findOne({ _id: req.body.descIdUp },
+    ["_id", "serial_number"],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {            
+        Description.findOneAndUpdate(
+          { _id: req.body.descIdUp },
+          { serial_number: docs.serial_number - 1 },
+          function (err, doc) {
+            if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+          });
+
+        Description.findOneAndUpdate(
+          { _id: req.body.descIdDown },
+          { serial_number: docs.serial_number },
+          function (err, doc) {
+            if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+          });
+      }
+      return res.status(200).send({ message: "Successfull moved." })
+    })
+
+}
+
 const homeController = {
   getPost,
   getAmount,
   getDescriptions,
+  getAllDescriptions,
   deletePost,
   deleteAnyPost,
+  deleteDescriptions,
   writePost,
-  EditAnyPost,
-  EditPost,
-  putReportPost
+  writeDescriptionEntity,
+  editAnyPost,
+  editPost,
+  editDescription,
+  putReportPost,
+  putVisibleStatus,
+  setPositionDescription
 };
 
 export default homeController;

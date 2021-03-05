@@ -21,3 +21,19 @@
     min-width: 100px;
     width: 75%;
 }
+
+.home__description__container {
+    display: flex;
+}
+
+.home__move__button {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.description__add__new {
+    text-align: center;
+}

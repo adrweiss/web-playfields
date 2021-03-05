@@ -11,23 +11,36 @@ import HomeService from "../services/home.service.js"
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 function Home() {
   const [amountPosts, setAmountPosts] = useState([]);
   const [messageFlow, setMessageFlow] = useState([]);
   const [descriptionText, setDescriptionText] = useState([]);
   const [message, setMessage] = useState("");
+  const [messageDesc, setMessageDesc] = useState("");
   const [timerId, setTimerId] = useState();
   const [title, setTitle] = useState("");
   const [post, setPost] = useState("");
+  const [idCounter, setIdCounter] = useState(0);
 
   const currentUser = getCurrentUser();
   const postPSide = 5
 
+
   function removeMessage() {
     setMessage("")
-  }
+    setMessageDesc("")
+  };
 
   useEffect(() => {
+    const currentUser = getCurrentUser();
+
     HomeService.getAmount().then((response) => {
       setAmountPosts(Math.ceil(response.data.amount / postPSide));
     },
@@ -55,21 +68,43 @@ function Home() {
 
         console.log(_content);
       })
+    if (currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN')) {
+      HomeService.getAllDescriptions().then((response) => {
+        let description = response.data
 
-    HomeService.getDescriptions().then((response) => {
-      setDescriptionText(response.data)
-    },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+        var i
+        for (i = 0; i < description.length; i++) {
+          description[i].serial_number = (i + 1)
+        }
 
-        console.log(_content);
-      })
-  }, [])
+        setDescriptionText(description);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    } else {
+      HomeService.getDescriptions().then((response) => {
+        setDescriptionText(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    }
+  }, []);
 
   function fetchPosts(skip) {
     removeMessage()
@@ -86,11 +121,11 @@ function Home() {
 
         setMessage(_content);
       })
-  }
+  };
 
   const handleChangePage = (event, newPage) => {
     fetchPosts(((newPage - 1) * 5))
-  }
+  };
 
   const sendPost = () => {
     removeMessage()
@@ -131,14 +166,149 @@ function Home() {
           setTimerId(setTimeout(removeMessage, 10000));
         })
     }
-  }
+  };
+
+  function getDesc() {
+    HomeService.getAllDescriptions().then((response) => {
+      setDescriptionText(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  };
 
   const handleChangeTitle = (event) => {
     setTitle(event.target.value);
   };
+
   const handleChangePost = (event) => {
     setPost(event.target.value);
   };
+
+  const deleteDescription = (descId, posNum) => {
+    removeMessage()
+    clearTimeout(timerId)
+
+    let toRemove = descriptionText
+    if (Number.isInteger(descId)) {
+      toRemove.splice(posNum, 1);
+
+      var i
+      for (i = 0; i < toRemove.length; i++) {
+        toRemove[i].serial_number = (i + 1)
+      }
+      let sorted = [...toRemove].sort((a, b) => {
+        return a.serial_number - b.serial_number;
+      });
+
+      setDescriptionText(sorted)
+      return
+    }
+    HomeService.deleteDescription(descId).then((response) => {
+      setMessageDesc(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
+      getDesc();
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessageDesc(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
+      })
+  };
+
+  const addNewDescription = (posNum) => {
+    let newDescription = {
+      "_id": idCounter,
+      "visible": false,
+      "title": "",
+      "serial_number": posNum + 1,
+      "body": "",
+      "newItem": true
+    }
+    setIdCounter(idCounter + 1)
+
+    let combined = descriptionText
+    var i;
+    for (i = 0; i < combined.length; i++) {
+      combined[i].serial_number = (i + 1)
+    }
+    for (i = posNum; i < combined.length; i++) {
+      combined[i].serial_number = (combined[i].serial_number + 1)
+    }
+
+    combined = [...descriptionText, newDescription]
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+
+    setDescriptionText(sorted)
+  };
+
+  const moveUp = (descId, posNum) => {
+    let combined = descriptionText
+
+    combined[posNum - 1].serial_number = posNum + 1
+    combined[posNum].serial_number = posNum
+
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+
+    HomeService.setPosition(descId, combined[posNum - 1]._id).then((response) => {
+      console.log(response.data.message);
+      setDescriptionText(sorted)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
+
+  const moveDown = (descId, posNum) => {
+    let combined = descriptionText
+
+    combined[posNum + 1].serial_number = posNum + 1
+    combined[posNum].serial_number = posNum + 2
+
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+
+
+    HomeService.setPosition(combined[posNum + 1]._id, descId).then((response) => {
+      console.log(response.data.message);
+      setDescriptionText(sorted)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
 
   return (
     <div>
@@ -188,22 +358,22 @@ function Home() {
                   <h2>No post available</h2>
                 </div>
               ) : (
-                  <div>
-                    {messageFlow?.map(item => (
-                      <Message
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        post={item.body}
-                        userId={item.userid}
-                        usr={item.username}
-                        timestamp={item.date}
-                        reported={item.reported}
-                        solved={item.solved}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div>
+                  {messageFlow?.map(item => (
+                    <Message
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      post={item.body}
+                      userId={item.userid}
+                      usr={item.username}
+                      timestamp={item.date}
+                      reported={item.reported}
+                      solved={item.solved}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {amountPosts > 0 ? (
@@ -211,27 +381,87 @@ function Home() {
                 <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
               </Grid>
             ) : (
-                <Grid container justify="center">
-                  <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
-                </Grid>
-              )}
+              <Grid container justify="center">
+                <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
+              </Grid>
+            )}
 
           </div>
         </Grid>
         <Grid item sm={6}>
           <div>
-            {descriptionText?.map(item => (
-              <Welcome
-                key={item._id}
-                id={item._id}
-                title={item.title}
-                body={item.body}
-              />
+            {messageDesc && (
+              <div className="response">
+                {messageDesc}
+              </div>
+            )}
+
+            <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+              <div className="description__add__new">
+                <IconButton onClick={(event) => addNewDescription(0)}>
+                  <Tooltip title="Add new Discription" aria-label="move__down">
+                    <AddIcon fontSize='small' />
+                  </Tooltip>
+                </IconButton>
+              </div>
+            </div>
+
+            {descriptionText?.map((item, i) => (
+              <div key={item._id}>                
+                <div className="home__description__container">
+                  <div className="home__move__button">
+                    <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+                      <div>
+                        <IconButton onClick={(event) => deleteDescription(item._id, i)}>
+                          <Tooltip title="Delete Description">
+                            <DeleteIcon fontSize='small' />
+                          </Tooltip>
+                        </IconButton>
+                      </div>
+                      {i > 0 && (
+                        <div >
+                          <IconButton onClick={(event) => moveUp(item._id, i)}>
+                            <Tooltip title="Move up" aria-label="move__up">
+                              <ExpandLessIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </div>
+                      )}
+                      {i < descriptionText?.length - 1 && (
+                        <div>
+                          <IconButton onClick={(event) => moveDown(item._id, i)}>
+                            <Tooltip title="Move down" aria-label="move__down">
+                              <ExpandMoreIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <Welcome
+                    id={item._id}
+                    visible={item.visible}
+                    title={item.title}
+                    body={item.body}
+                    serial_number={item.serial_number}
+                    newItem={item.newItem}
+                  />
+                </div>
+                <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+                  <div className="description__add__new">
+                    <IconButton onClick={(event) => addNewDescription(item.serial_number)}>
+                      <Tooltip title="Add new Discription" aria-label="move__down">
+                        <AddIcon fontSize='small' />
+                      </Tooltip>
+                    </IconButton>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </Grid>
       </Grid>
-    </div>
+    </div >
   )
 }
 
