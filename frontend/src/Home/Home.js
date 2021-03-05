@@ -11,7 +11,7 @@ import HomeService from "../services/home.service.js"
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-//import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -158,7 +158,7 @@ function Home() {
         })
     }
   }
-  function getDesc(){
+  function getDesc() {
     HomeService.getAllDescriptions().then((response) => {
       setDescriptionText(response.data);
     },
@@ -251,22 +251,22 @@ function Home() {
                   <h2>No post available</h2>
                 </div>
               ) : (
-                  <div>
-                    {messageFlow?.map(item => (
-                      <Message
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        post={item.body}
-                        userId={item.userid}
-                        usr={item.username}
-                        timestamp={item.date}
-                        reported={item.reported}
-                        solved={item.solved}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div>
+                  {messageFlow?.map(item => (
+                    <Message
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      post={item.body}
+                      userId={item.userid}
+                      usr={item.username}
+                      timestamp={item.date}
+                      reported={item.reported}
+                      solved={item.solved}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {amountPosts > 0 ? (
@@ -274,10 +274,10 @@ function Home() {
                 <Pagination className="page__number" count={amountPosts} variant="outlined" shape="rounded" onChange={handleChangePage} />
               </Grid>
             ) : (
-                <Grid container justify="center">
-                  <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
-                </Grid>
-              )}
+              <Grid container justify="center">
+                <Pagination className="page__number" count={0} variant="outlined" shape="rounded" onChange={handleChangePage} />
+              </Grid>
+            )}
 
           </div>
         </Grid>
@@ -289,39 +289,60 @@ function Home() {
               </div>
             )}
 
+            <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+              <div className="description__add__new">
+                <IconButton>
+                  <Tooltip title="Add new Discription" aria-label="move__down">
+                    <AddIcon fontSize='small' />
+                  </Tooltip>
+                </IconButton>
+              </div>
+            </div>
+
             {descriptionText?.map(item => (
-              <div key={item._id} className="home__description__container">
-                <div className="home__move__button">
-                  <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
-                    <div>
-                      <IconButton onClick={(event) => deleteDescription(item._id)}>
-                        <Tooltip title="Delete Description">
-                          <DeleteIcon fontSize='small' />
-                        </Tooltip>
-                      </IconButton>
-                    </div>
-                    <div>
-                      <IconButton>
-                        <Tooltip title="Move up" aria-label="move__up">
-                          <ExpandLessIcon fontSize='small' />
-                        </Tooltip>
-                      </IconButton>
-                    </div>
-                    <div>
-                      <IconButton>
-                        <Tooltip title="Move down" aria-label="move__down">
-                          <ExpandMoreIcon fontSize='small' />
-                        </Tooltip>
-                      </IconButton>
+              <div>
+                <div key={item._id} className="home__description__container">
+                  <div className="home__move__button">
+                    <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+                      <div>
+                        <IconButton onClick={(event) => deleteDescription(item._id)}>
+                          <Tooltip title="Delete Description">
+                            <DeleteIcon fontSize='small' />
+                          </Tooltip>
+                        </IconButton>
+                      </div>
+                      <div>
+                        <IconButton>
+                          <Tooltip title="Move up" aria-label="move__up">
+                            <ExpandLessIcon fontSize='small' />
+                          </Tooltip>
+                        </IconButton>
+                      </div>
+                      <div>
+                        <IconButton>
+                          <Tooltip title="Move down" aria-label="move__down">
+                            <ExpandMoreIcon fontSize='small' />
+                          </Tooltip>
+                        </IconButton>
+                      </div>
                     </div>
                   </div>
+                  <Welcome
+                    id={item._id}
+                    visible={item.visible}
+                    title={item.title}
+                    body={item.body}
+                  />
                 </div>
-                <Welcome
-                  id={item._id}
-                  visible={item.visible}
-                  title={item.title}
-                  body={item.body}
-                />
+                <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
+                  <div className="description__add__new">
+                    <IconButton>
+                      <Tooltip title="Add new Discription" aria-label="move__down">
+                        <AddIcon fontSize='small' />
+                      </Tooltip>
+                    </IconButton>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
