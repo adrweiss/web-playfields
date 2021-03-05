@@ -27,9 +27,11 @@ function Home() {
   const [timerId, setTimerId] = useState();
   const [title, setTitle] = useState("");
   const [post, setPost] = useState("");
+  const [idCounter, setIdCounter] = useState(0);
 
   const currentUser = getCurrentUser();
   const postPSide = 5
+  
 
   function removeMessage() {
     setMessage("")
@@ -203,6 +205,31 @@ function Home() {
       })
   }
 
+  const addNewDescription = (posNum) => {
+    let newDescription = {
+      "_id": idCounter,
+      "visible": false,
+      "title": 'test',
+      "serial_number": posNum + 1,
+      "body": 'test'
+    }
+    setIdCounter(idCounter + 1)
+
+    let combined = descriptionText
+    var i;
+    for (i = posNum; i < combined.length; i++) {
+      combined[i].serial_number = (combined[i].serial_number + 1)
+    }
+
+    combined = [...descriptionText, newDescription]
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+  
+    setDescriptionText(sorted)
+  }
+
+
   return (
     <div>
       <h1>Welcome to&nbsp;<i>Playfields</i></h1>
@@ -291,7 +318,7 @@ function Home() {
 
             <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
               <div className="description__add__new">
-                <IconButton>
+                <IconButton onClick={(event) => addNewDescription(0)}>
                   <Tooltip title="Add new Discription" aria-label="move__down">
                     <AddIcon fontSize='small' />
                   </Tooltip>
@@ -299,9 +326,10 @@ function Home() {
               </div>
             </div>
 
-            {descriptionText?.map(item => (
-              <div>
-                <div key={item._id} className="home__description__container">
+            {descriptionText?.map((item, i)  => (
+              <div key={item._id}>
+                {item.serial_number}
+                <div className="home__description__container">
                   <div className="home__move__button">
                     <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
                       <div>
@@ -326,7 +354,7 @@ function Home() {
                         </IconButton>
                       </div>
                     </div>
-                  </div>
+                  </div>                  
                   <Welcome
                     id={item._id}
                     visible={item.visible}
@@ -336,7 +364,7 @@ function Home() {
                 </div>
                 <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
                   <div className="description__add__new">
-                    <IconButton>
+                    <IconButton onClick={(event) => addNewDescription(item.serial_number)}>
                       <Tooltip title="Add new Discription" aria-label="move__down">
                         <AddIcon fontSize='small' />
                       </Tooltip>
