@@ -309,12 +309,12 @@ function writeDescriptionEntity(req, res, next) {
             });
           j++;
         }
-        
+
         Description.create({
           title: req.body.title,
           body: req.body.body,
           serial_number: req.body.serial_number,
-          visible: req.body.visible          
+          visible: req.body.visible
         }, (err, data) => {
           if (err) {
             return res.status(500).send(err)
@@ -327,6 +327,37 @@ function writeDescriptionEntity(req, res, next) {
         return res.status(400).send({ message: "An error has occurred." })
       }
     });
+}
+
+
+function setPositionDescription(req, res, next) {
+
+  Description.findOne({ _id: req.body.descIdUp },
+    ["_id", "serial_number"],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {            
+        Description.findOneAndUpdate(
+          { _id: req.body.descIdUp },
+          { serial_number: docs.serial_number - 1 },
+          function (err, doc) {
+            if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+          });
+
+        Description.findOneAndUpdate(
+          { _id: req.body.descIdDown },
+          { serial_number: docs.serial_number },
+          function (err, doc) {
+            if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+          });
+      }
+      return res.status(200).send({ message: "Successfull moved." })
+    })
+
 }
 
 const homeController = {
@@ -343,7 +374,8 @@ const homeController = {
   editPost,
   editDescription,
   putReportPost,
-  putVisibleStatus
+  putVisibleStatus,
+  setPositionDescription
 };
 
 export default homeController;

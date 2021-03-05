@@ -124,6 +124,13 @@ export function routsHome(app) {
     ],
     homeController.writeDescriptionEntity,
   );  
-  
-  // re-order description     
+
+  app.put(
+    "/api/home/desc/position",
+    [authJwt.verifyToken,
+    authJwt.getEditDescriptionHome,
+    authJwt.hasRights
+    ],
+    homeController.setPositionDescription,
+  );  
 };

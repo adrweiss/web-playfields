@@ -36,7 +36,7 @@ function Home() {
   function removeMessage() {
     setMessage("")
     setMessageDesc("")
-  }
+  };
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -104,7 +104,7 @@ function Home() {
           console.log(_content);
         })
     }
-  }, [])
+  }, []);
 
   function fetchPosts(skip) {
     removeMessage()
@@ -121,11 +121,11 @@ function Home() {
 
         setMessage(_content);
       })
-  }
+  };
 
   const handleChangePage = (event, newPage) => {
     fetchPosts(((newPage - 1) * 5))
-  }
+  };
 
   const sendPost = () => {
     removeMessage()
@@ -166,7 +166,7 @@ function Home() {
           setTimerId(setTimeout(removeMessage, 10000));
         })
     }
-  }
+  };
 
   function getDesc() {
     HomeService.getAllDescriptions().then((response) => {
@@ -182,7 +182,7 @@ function Home() {
 
         console.log(_content);
       })
-  }
+  };
 
   const handleChangeTitle = (event) => {
     setTitle(event.target.value);
@@ -209,7 +209,7 @@ function Home() {
       });
 
       setDescriptionText(sorted)
-      return 
+      return
     }
     HomeService.deleteDescription(descId).then((response) => {
       setMessageDesc(response.data.message);
@@ -227,7 +227,7 @@ function Home() {
         setMessageDesc(_content);
         setTimerId(setTimeout(removeMessage, 10000));
       })
-  }
+  };
 
   const addNewDescription = (posNum) => {
     let newDescription = {
@@ -255,8 +255,60 @@ function Home() {
     });
 
     setDescriptionText(sorted)
+  };
+
+  const moveUp = (descId, posNum) => {
+    let combined = descriptionText
+
+    combined[posNum - 1].serial_number = posNum + 1
+    combined[posNum].serial_number = posNum
+
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+
+    HomeService.setPosition(descId, combined[posNum - 1]._id).then((response) => {
+      console.log(response.data.message);
+      setDescriptionText(sorted)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
   }
 
+  const moveDown = (descId, posNum) => {
+    let combined = descriptionText
+
+    combined[posNum + 1].serial_number = posNum + 1
+    combined[posNum].serial_number = posNum + 2
+
+    let sorted = [...combined].sort((a, b) => {
+      return a.serial_number - b.serial_number;
+    });
+
+
+    HomeService.setPosition(combined[posNum + 1]._id, descId).then((response) => {
+      console.log(response.data.message);
+      setDescriptionText(sorted)
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+  }
 
   return (
     <div>
@@ -355,8 +407,7 @@ function Home() {
             </div>
 
             {descriptionText?.map((item, i) => (
-              <div key={item._id}>
-                {item.serial_number}
+              <div key={item._id}>                
                 <div className="home__description__container">
                   <div className="home__move__button">
                     <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
@@ -367,20 +418,24 @@ function Home() {
                           </Tooltip>
                         </IconButton>
                       </div>
-                      <div>
-                        <IconButton>
-                          <Tooltip title="Move up" aria-label="move__up">
-                            <ExpandLessIcon fontSize='small' />
-                          </Tooltip>
-                        </IconButton>
-                      </div>
-                      <div>
-                        <IconButton>
-                          <Tooltip title="Move down" aria-label="move__down">
-                            <ExpandMoreIcon fontSize='small' />
-                          </Tooltip>
-                        </IconButton>
-                      </div>
+                      {i > 0 && (
+                        <div >
+                          <IconButton onClick={(event) => moveUp(item._id, i)}>
+                            <Tooltip title="Move up" aria-label="move__up">
+                              <ExpandLessIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </div>
+                      )}
+                      {i < descriptionText?.length - 1 && (
+                        <div>
+                          <IconButton onClick={(event) => moveDown(item._id, i)}>
+                            <Tooltip title="Move down" aria-label="move__down">
+                              <ExpandMoreIcon fontSize='small' />
+                            </Tooltip>
+                          </IconButton>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <Welcome

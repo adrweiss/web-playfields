@@ -94,6 +94,14 @@ const addDescription = (title, body, serial_number, visible) => {
 };
 
 
+const setPosition = (descIdUp, descIdDown) => {
+  return axios.put("home/desc/position", {
+    descIdUp,
+    descIdDown,
+  }, { headers: authHeader() });
+};
+
+
 const HomeService = {
   getAmount,
   getPosts,
@@ -110,6 +118,7 @@ const HomeService = {
   reportPost,
   getAllDescriptions,
   setStatusVisibleDesc,
+  setPosition,
 }
 
 export default HomeService;
