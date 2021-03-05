@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './Welcome.css'
 
 import { getCurrentUser } from "../services/auth.service"
@@ -12,7 +12,7 @@ import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 
-function Welcome({ id, title, body, visible, newItem }) {
+function Welcome({ id, title, body, visible, newItem, serial_number }) {
   const [visibleStatus, setVisibleStatus] = useState(visible)
   const [edited, setEdited] = useState(newItem ? true : false)
   const [dispTitle, setDispTitle] = useState(title)
@@ -54,15 +54,13 @@ function Welcome({ id, title, body, visible, newItem }) {
       })
   }
 
-  const cancelEdit = () => {
-    setEditedTitle(dispTitle)
-    setEditedBody(dispBody)
+  const addDescription = () => {
+    setDispTitle(editedTitle)
+    setDispBody(editedBody)
     setEdited(!edited)
-  }
 
-  const handleVisibleStatus = () => {
-    HomeService.setStatusVisibleDesc(id, !visibleStatus).then((response) => {
-      setVisibleStatus(!visibleStatus)
+    HomeService.addDescription(editedTitle, editedBody, serial_number, visibleStatus).then((response) => {
+      console.log(response.data.message)
     },
       (error) => {
         const _content =
@@ -74,6 +72,31 @@ function Welcome({ id, title, body, visible, newItem }) {
 
         console.log(_content);
       })
+
+  }
+
+  const cancelEdit = () => {
+    setEditedTitle(dispTitle)
+    setEditedBody(dispBody)
+    setEdited(!edited)
+  }
+
+  const handleVisibleStatus = () => {
+    (newItem ? setVisibleStatus(!visibleStatus) :
+      HomeService.setStatusVisibleDesc(id, !visibleStatus).then((response) => {
+        setVisibleStatus(!visibleStatus)
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    )
   }
 
   return (
@@ -127,7 +150,7 @@ function Welcome({ id, title, body, visible, newItem }) {
             className='edit__button'
             variant="contained"
             color="primary"
-            onClick={saveEdit}
+            onClick={(newItem ? addDescription : saveEdit)}
           >
             Save
         </Button>

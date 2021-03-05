@@ -233,9 +233,9 @@ function Home() {
     let newDescription = {
       "_id": idCounter,
       "visible": false,
-      "title": undefined,
+      "title": "",
       "serial_number": posNum + 1,
-      "body": undefined,
+      "body": "",
       "newItem": true
     }
     setIdCounter(idCounter + 1)
@@ -388,6 +388,7 @@ function Home() {
                     visible={item.visible}
                     title={item.title}
                     body={item.body}
+                    serial_number={item.serial_number}
                     newItem={item.newItem}
                   />
                 </div>

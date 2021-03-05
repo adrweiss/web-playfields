@@ -84,12 +84,23 @@ const editDescription = (descId, title, body) => {
   }, { headers: authHeader() });
 };
 
+const addDescription = (title, body, serial_number, visible) => {    
+  return axios.post("/home/desc", {    
+    title,
+    body,
+    serial_number, 
+    visible
+  }, { headers: authHeader() });
+};
+
+
 const HomeService = {
   getAmount,
   getPosts,
   getDescriptions,
   addPostAny,
   addPostUser,
+  addDescription,
   deletePostAny,
   deletePostUser,
   deleteDescription,

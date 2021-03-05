@@ -113,7 +113,6 @@ const putVisibleStatus = (req, res, next) => {
     });
 }
 
-
 function getAmount(req, res, next) {
   BlogPost.countDocuments({ blocked: false }, function (err, data) {
     if (err) {
@@ -261,8 +260,8 @@ const putReportPost = (req, res, next) => {
 }
 
 const editDescription = (req, res, next) => {
-  Description.updateOne({  
-      '_id': req.body.descId, 
+  Description.updateOne({
+    '_id': req.body.descId,
   },
     {
       title: req.body.title,
@@ -277,6 +276,86 @@ const editDescription = (req, res, next) => {
     });
 }
 
+function writeDescriptionEntity(req, res, next) {
+  if (!req.body.title) { return res.status(400).send({ message: "No Title was provided." }) }
+  if (!req.body.body) { return res.status(400).send({ message: "No Description was provided." }) }
+  if (!req.body.serial_number) { return res.status(400).send({ message: "No serial_number is provided." }) }
+
+  Description.find({},
+    ['_id'],
+    {
+      sort: {
+        serial_number: 1
+      }
+    },
+    function (err, docs) {
+      if (!err) {
+        var i;
+        for (i = 0; i < (req.body.serial_number - 1); i++) {
+          Description.findOneAndUpdate(
+            { _id: docs[i]._id },
+            { serial_number: i + 1 },
+            function (err, doc) {
+              if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+            });
+        }
+        var j = 1;
+        for (i = (req.body.serial_number - 1); i < docs.length; i++) {
+          Description.findOneAndUpdate(
+            { _id: docs[i]._id },
+            { serial_number: req.body.serial_number + j },
+            function (err, doc) {
+              if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
+            });
+          j++;
+        }
+        
+        Description.create({
+          title: req.body.title,
+          body: req.body.body,
+          serial_number: req.body.serial_number,
+          visible: req.body.visible          
+        }, (err, data) => {
+          if (err) {
+            return res.status(500).send(err)
+          } else {
+            return res.status(200).send({ message: "Successfull created." })
+          }
+        })
+      }
+      else {
+        return res.status(400).send({ message: "An error has occurred." })
+      }
+    });
+
+
+
+
+  /*var dbCard = {}
+  if (req.userId) {
+    dbCard = {
+      "userid": req.userId,
+      "title": req.body.title,
+      "body": req.body.body
+    }
+  } else {
+    dbCard = {
+      "userid": null,
+      "title": req.body.title,
+      "body": req.body.body
+    }
+  }
+
+  BlogPost.create(dbCard, (err, data) => {
+    if (err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(201).send({ message: "Successfull posted." })
+    }
+  })
+  */
+}
+
 const homeController = {
   getPost,
   getAmount,
@@ -286,6 +365,7 @@ const homeController = {
   deleteAnyPost,
   deleteDescriptions,
   writePost,
+  writeDescriptionEntity,
   editAnyPost,
   editPost,
   editDescription,
