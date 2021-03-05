@@ -74,6 +74,19 @@ function Management() {
       anchorRef.current.focus();
     }
 
+    ManagementService.getBuildStatus().then((response) => {
+      setJenkinsStatusData(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        console.log(_content);
+      })
+  
     prevOpen.current = open;
   }, [open]);
 
@@ -138,21 +151,6 @@ function Management() {
   }
 
   const handleTriggerModal = () => {
-    if (!triggerBuildModal) {
-      ManagementService.getBuildStatus().then((response) => {
-        setJenkinsStatusData(response.data);
-      },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          console.log(_content);
-        })
-    }
-
     setTriggerBuildModal(!triggerBuildModal)
   }
 
