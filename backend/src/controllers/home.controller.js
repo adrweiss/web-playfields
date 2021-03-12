@@ -339,8 +339,8 @@ function setPositionDescription(req, res, next) {
         serial_number: 1
       }
     },
-    function (err, docs) {
-      if (!err) {            
+    function (err, docs) {            
+      if (!err) {
         Description.findOneAndUpdate(
           { _id: req.body.descIdUp },
           { serial_number: docs.serial_number - 1 },
@@ -354,8 +354,11 @@ function setPositionDescription(req, res, next) {
           function (err, doc) {
             if (err) { return res.status(500).send({ message: 'An error has occurred.' }) };
           });
+
+        return res.status(200).send({ message: "Successfull moved." })
       }
-      return res.status(200).send({ message: "Successfull moved." })
+
+      return res.status(400).send({ message: "It occured a general error." })
     })
 
 }

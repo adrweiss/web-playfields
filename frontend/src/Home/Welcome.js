@@ -61,6 +61,8 @@ function Welcome({ id, title, body, visible, newItem, serial_number }) {
 
     HomeService.addDescription(editedTitle, editedBody, serial_number, visibleStatus).then((response) => {
       console.log(response.data.message)
+      window.location.reload()
+
     },
       (error) => {
         const _content =

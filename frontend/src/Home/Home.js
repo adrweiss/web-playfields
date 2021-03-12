@@ -257,7 +257,7 @@ function Home() {
     setDescriptionText(sorted)
   };
 
-  const moveUp = (descId, posNum) => {
+  const moveUp = (descId, posNum, newItem) => {
     let combined = descriptionText
 
     combined[posNum - 1].serial_number = posNum + 1
@@ -266,6 +266,8 @@ function Home() {
     let sorted = [...combined].sort((a, b) => {
       return a.serial_number - b.serial_number;
     });
+
+    if (newItem) { return setDescriptionText(sorted) }
 
     HomeService.setPosition(descId, combined[posNum - 1]._id).then((response) => {
       console.log(response.data.message);
@@ -283,7 +285,7 @@ function Home() {
       })
   }
 
-  const moveDown = (descId, posNum) => {
+  const moveDown = (descId, posNum, newItem) => {
     let combined = descriptionText
 
     combined[posNum + 1].serial_number = posNum + 1
@@ -293,6 +295,7 @@ function Home() {
       return a.serial_number - b.serial_number;
     });
 
+    if (newItem) { return setDescriptionText(sorted) }
 
     HomeService.setPosition(combined[posNum + 1]._id, descId).then((response) => {
       console.log(response.data.message);
@@ -407,7 +410,7 @@ function Home() {
             </div>
 
             {descriptionText?.map((item, i) => (
-              <div key={item._id}>                
+              <div key={item._id}>
                 <div className="home__description__container">
                   <div className="home__move__button">
                     <div hidden={!(currentUser?.rights.includes('EDIT_DISCRIPTION_HOME') || currentUser?.rights.includes('ADMIN'))}>
@@ -420,7 +423,7 @@ function Home() {
                       </div>
                       {i > 0 && (
                         <div >
-                          <IconButton onClick={(event) => moveUp(item._id, i)}>
+                          <IconButton onClick={(event) => moveUp(item._id, i, item.newItem)}>
                             <Tooltip title="Move up" aria-label="move__up">
                               <ExpandLessIcon fontSize='small' />
                             </Tooltip>
@@ -429,7 +432,7 @@ function Home() {
                       )}
                       {i < descriptionText?.length - 1 && (
                         <div>
-                          <IconButton onClick={(event) => moveDown(item._id, i)}>
+                          <IconButton onClick={(event) => moveDown(item._id, i, item.newItem)}>
                             <Tooltip title="Move down" aria-label="move__down">
                               <ExpandMoreIcon fontSize='small' />
                             </Tooltip>
