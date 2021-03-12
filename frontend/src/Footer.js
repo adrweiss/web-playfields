@@ -32,6 +32,8 @@ function Footer() {
   const [modalBugReason, setModalBugReason] = useState("");
   const [modalBugDescription, setModalBugDescription] = useState("");
 
+  localStorage.removeItem("newDesc");
+
   const handlerModalContactForm = () => {
     setModalContactForm(!modalContactForm)
   }

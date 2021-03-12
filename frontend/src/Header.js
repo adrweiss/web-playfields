@@ -15,7 +15,6 @@ function Header() {
   const history = useHistory();
   var currentUser =getCurrentUser();
 
-  localStorage.removeItem("newDesc");
 
   if (currentUser?.expire <= Math.floor(new Date().getTime() / 1000)) {
     logout()
