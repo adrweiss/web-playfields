@@ -64,7 +64,7 @@ function App() {
             <Impressum />
             <Footer />
           </Route>
-          <Route path="/dataprivacy">
+          <Route path="/privacy">
             <Header />
             <DataPrivacy />
             <Footer />
