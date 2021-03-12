@@ -32,9 +32,16 @@ export const validate = (userId, token) => {
 
 export const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("newDesc");
   console.log('successfull logout')
 };
 
 export const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
+
+export const getTempDescription = () => {
+  return JSON.parse(localStorage.getItem("newDesc"));
+};
+
+  

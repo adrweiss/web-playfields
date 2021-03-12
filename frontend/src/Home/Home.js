@@ -5,7 +5,7 @@ import Welcome from './Welcome'
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
 
-import { getCurrentUser } from "../services/auth.service"
+import { getCurrentUser, getTempDescription } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
 import TextField from '@material-ui/core/TextField';
@@ -195,6 +195,16 @@ function Home() {
   const deleteDescription = (descId, posNum) => {
     removeMessage()
     clearTimeout(timerId)
+    
+    let tempDesc = getTempDescription()
+    let searchEnt
+
+    if (tempDesc !== null) {
+      searchEnt = tempDesc.find(element => element.newId === descId)
+      if (searchEnt && searchEnt.regId !== null) {
+        descId = searchEnt.regId
+      }
+    }
 
     let toRemove = descriptionText
     if (Number.isInteger(descId)) {
@@ -209,6 +219,9 @@ function Home() {
       });
 
       setDescriptionText(sorted)
+      setMessageDesc("Description was deleted.");
+      setTimerId(setTimeout(removeMessage, 10000));
+
       return
     }
     HomeService.deleteDescription(descId).then((response) => {
@@ -238,6 +251,15 @@ function Home() {
       "body": "",
       "newItem": true
     }
+
+    let tempDesc = []
+    if (getTempDescription() !== null) {
+      tempDesc = [...getTempDescription(), { "newId": idCounter, "regId": null }]
+      localStorage.setItem("newDesc", JSON.stringify(tempDesc));
+    } else {
+      localStorage.setItem("newDesc", JSON.stringify([{ "newId": idCounter, "regId": null }]));
+    }
+
     setIdCounter(idCounter + 1)
 
     let combined = descriptionText
@@ -257,7 +279,7 @@ function Home() {
     setDescriptionText(sorted)
   };
 
-  const moveUp = (descId, posNum, newItem) => {
+  const moveUp = (posNum) => {
     let combined = descriptionText
 
     combined[posNum - 1].serial_number = posNum + 1
@@ -267,9 +289,28 @@ function Home() {
       return a.serial_number - b.serial_number;
     });
 
-    if (newItem) { return setDescriptionText(sorted) }
+    let tempDesc = getTempDescription()
+    let descIdOne = combined[posNum]._id
+    let descIdTwo = combined[posNum - 1]._id
+    let searchEnt
 
-    HomeService.setPosition(descId, combined[posNum - 1]._id).then((response) => {
+    if (tempDesc !== null) {
+      searchEnt = tempDesc.find(element => element.newId === descIdOne)
+      if (searchEnt && searchEnt.regId !== null) {
+        descIdOne = searchEnt.regId
+      }
+    }
+
+    if (tempDesc !== null) {
+      searchEnt = tempDesc.find(element => element.newId === descIdTwo)
+      if (searchEnt && searchEnt.regId !== null) {
+        descIdTwo = searchEnt.regId
+      }
+    }
+
+    if (Number.isInteger(descIdOne) || Number.isInteger(descIdTwo)) { return setDescriptionText(sorted) }
+
+    HomeService.setPosition(descIdOne, descIdTwo).then((response) => {
       console.log(response.data.message);
       setDescriptionText(sorted)
     },
@@ -285,7 +326,7 @@ function Home() {
       })
   }
 
-  const moveDown = (descId, posNum, newItem) => {
+  const moveDown = (posNum) => {
     let combined = descriptionText
 
     combined[posNum + 1].serial_number = posNum + 1
@@ -295,9 +336,28 @@ function Home() {
       return a.serial_number - b.serial_number;
     });
 
-    if (newItem) { return setDescriptionText(sorted) }
+    let tempDesc = getTempDescription()
+    let descIdOne = combined[posNum]._id
+    let descIdTwo = combined[posNum + 1]._id
+    let searchEnt
 
-    HomeService.setPosition(combined[posNum + 1]._id, descId).then((response) => {
+    if (tempDesc !== null) {
+      searchEnt = tempDesc.find(element => element.newId === descIdOne)
+      if (searchEnt && searchEnt.regId !== null) {
+        descIdOne = searchEnt.regId
+      }
+    }
+
+    if (tempDesc !== null) {
+      searchEnt = tempDesc.find(element => element.newId === descIdTwo)
+      if (searchEnt && searchEnt.regId !== null) {
+        descIdTwo = searchEnt.regId
+      }
+    }
+
+    if (Number.isInteger(descIdOne) || Number.isInteger(descIdTwo)) { return setDescriptionText(sorted) }
+
+    HomeService.setPosition(descIdTwo, descIdOne).then((response) => {
       console.log(response.data.message);
       setDescriptionText(sorted)
     },
@@ -423,7 +483,7 @@ function Home() {
                       </div>
                       {i > 0 && (
                         <div >
-                          <IconButton onClick={(event) => moveUp(item._id, i, item.newItem)}>
+                          <IconButton onClick={(event) => moveUp(i)}>
                             <Tooltip title="Move up" aria-label="move__up">
                               <ExpandLessIcon fontSize='small' />
                             </Tooltip>
@@ -432,7 +492,7 @@ function Home() {
                       )}
                       {i < descriptionText?.length - 1 && (
                         <div>
-                          <IconButton onClick={(event) => moveDown(item._id, i, item.newItem)}>
+                          <IconButton onClick={(event) => moveDown(i)}>
                             <Tooltip title="Move down" aria-label="move__down">
                               <ExpandMoreIcon fontSize='small' />
                             </Tooltip>

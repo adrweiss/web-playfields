@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './Welcome.css'
 
-import { getCurrentUser } from "../services/auth.service"
+import { getCurrentUser, getTempDescription } from "../services/auth.service"
 import HomeService from "../services/home.service.js"
 
 import EditIcon from '@material-ui/icons/Edit';
@@ -59,10 +59,11 @@ function Welcome({ id, title, body, visible, newItem, serial_number }) {
     setDispBody(editedBody)
     setEdited(!edited)
 
-    HomeService.addDescription(editedTitle, editedBody, serial_number, visibleStatus).then((response) => {
-      console.log(response.data.message)
-      window.location.reload()
-
+    HomeService.addDescription(editedTitle, editedBody, serial_number, visibleStatus).then((response) => {        
+      let tempDesc = getTempDescription()
+      tempDesc = tempDesc.filter(element => element.newId !== id)
+      tempDesc = [...tempDesc, { "newId": id, "regId":  response.data.id}]
+      localStorage.setItem("newDesc", JSON.stringify(tempDesc));      
     },
       (error) => {
         const _content =

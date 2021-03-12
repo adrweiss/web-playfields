@@ -315,11 +315,11 @@ function writeDescriptionEntity(req, res, next) {
           body: req.body.body,
           serial_number: req.body.serial_number,
           visible: req.body.visible
-        }, (err, data) => {
+        }, (err, data) => {        
           if (err) {
             return res.status(500).send(err)
           } else {
-            return res.status(200).send({ message: "Successfull created." })
+            return res.status(200).send({id: data._id})
           }
         })
       }
