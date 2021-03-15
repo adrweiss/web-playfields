@@ -27,7 +27,7 @@
 }
 
 .connect__four__message__container {
-    height: 50px;
+    height: 75px;
 }
 
 .connect__four__message__box {
@@ -43,4 +43,8 @@
 .connect__four__message__box>div {
     display: flex;
     align-items: center;
+}
+
+.connect__four__description {
+    width: 80%;
 }

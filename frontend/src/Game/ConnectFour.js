@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './ConnectFour.css'
 
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -57,16 +58,20 @@ function ConnectFour() {
       })
     )
 
-    setAvailableMoves(
-      availableMoves.map((avl, index) => {
-        return (avl === id ? (id + 7) : avl)
-      })
-    )
+    let tempAvlMov = availableMoves.map((avl, index) => {
+      return (avl === id ? (id + 7) : avl)
+    })
+    setAvailableMoves(tempAvlMov)
 
     checkVertical(id, playerStatus);
     checkHorizontal(id, playerStatus);
     leftDiagonal(id, playerStatus);
     rightDiagonal(id, playerStatus);
+    
+    if (player) {
+      console.log(tempAvlMov)
+      
+    }
   }
 
   function checkVertical(id, playerStatus) {
@@ -205,430 +210,441 @@ function ConnectFour() {
   }
 
   return (
-    <div className="connect__four__box">
-      <div>
-        <div>
-          <div className="connect__four__message__container">
-            {messageMove && (
-              <div className="connect__four__message__box">
-                {messageMove}
-              </div>
-            )}
+    <div>
+      <Grid container spacing={3}>
+        <Grid item sm={4}>
+          <div className="connect__four__box">
+            <div>
+              <div>
+                <div className="connect__four__message__container">
+                  {messageMove && (
+                    <div className="connect__four__message__box">
+                      {messageMove}
+                    </div>
+                  )}
 
-            {messageWin && (
-              <div className="connect__four__message__box">
-                <div>
-                  {player ? <RadioButtonUncheckedIcon /> : <ClearIcon />}
+                  {messageWin && (
+                    <div className="connect__four__message__box">
+                      <div>
+                        {player ? <RadioButtonUncheckedIcon /> : <ClearIcon />}
+                      </div>
+                      <div>
+                        {messageWin}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  {messageWin}
-                </div>
+
+                <table border="2">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[35] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(35)} />)}
+                            {status[35] === 1 && (<ClearIcon />)}
+                            {status[35] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[36] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(36)} />)}
+                            {status[36] === 1 && (<ClearIcon />)}
+                            {status[36] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[37] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(37)} />)}
+                            {status[37] === 1 && (<ClearIcon />)}
+                            {status[37] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[38] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(38)} />)}
+                            {status[38] === 1 && (<ClearIcon />)}
+                            {status[38] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[39] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(39)} />)}
+                            {status[39] === 1 && (<ClearIcon />)}
+                            {status[39] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[40] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(40)} />)}
+                            {status[40] === 1 && (<ClearIcon />)}
+                            {status[40] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[41] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(41)} />)}
+                            {status[41] === 1 && (<ClearIcon />)}
+                            {status[41] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[28] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(28)} />)}
+                            {status[28] === 1 && (<ClearIcon />)}
+                            {status[28] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[29] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(29)} />)}
+                            {status[29] === 1 && (<ClearIcon />)}
+                            {status[29] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[30] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(30)} />)}
+                            {status[30] === 1 && (<ClearIcon />)}
+                            {status[30] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[31] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(31)} />)}
+                            {status[31] === 1 && (<ClearIcon />)}
+                            {status[31] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[32] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(32)} />)}
+                            {status[32] === 1 && (<ClearIcon />)}
+                            {status[32] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[33] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(33)} />)}
+                            {status[33] === 1 && (<ClearIcon />)}
+                            {status[33] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[34] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(34)} />)}
+                            {status[34] === 1 && (<ClearIcon />)}
+                            {status[34] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[21] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(21)} />)}
+                            {status[21] === 1 && (<ClearIcon />)}
+                            {status[21] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[22] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(22)} />)}
+                            {status[22] === 1 && (<ClearIcon />)}
+                            {status[22] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[23] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(23)} />)}
+                            {status[23] === 1 && (<ClearIcon />)}
+                            {status[23] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[24] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(24)} />)}
+                            {status[24] === 1 && (<ClearIcon />)}
+                            {status[24] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[25] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(25)} />)}
+                            {status[25] === 1 && (<ClearIcon />)}
+                            {status[25] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[26] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(26)} />)}
+                            {status[26] === 1 && (<ClearIcon />)}
+                            {status[26] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[27] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(27)} />)}
+                            {status[27] === 1 && (<ClearIcon />)}
+                            {status[27] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[14] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(14)} />)}
+                            {status[14] === 1 && (<ClearIcon />)}
+                            {status[14] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[15] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(15)} />)}
+                            {status[15] === 1 && (<ClearIcon />)}
+                            {status[15] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[16] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(16)} />)}
+                            {status[16] === 1 && (<ClearIcon />)}
+                            {status[16] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[17] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(17)} />)}
+                            {status[17] === 1 && (<ClearIcon />)}
+                            {status[17] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[18] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(18)} />)}
+                            {status[18] === 1 && (<ClearIcon />)}
+                            {status[18] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[19] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(19)} />)}
+                            {status[19] === 1 && (<ClearIcon />)}
+                            {status[19] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[20] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(20)} />)}
+                            {status[20] === 1 && (<ClearIcon />)}
+                            {status[20] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[7] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(7)} />)}
+                            {status[7] === 1 && (<ClearIcon />)}
+                            {status[7] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[8] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(8)} />)}
+                            {status[8] === 1 && (<ClearIcon />)}
+                            {status[8] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[9] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(9)} />)}
+                            {status[9] === 1 && (<ClearIcon />)}
+                            {status[9] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[10] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(10)} />)}
+                            {status[10] === 1 && (<ClearIcon />)}
+                            {status[10] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[11] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(11)} />)}
+                            {status[11] === 1 && (<ClearIcon />)}
+                            {status[11] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[12] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(12)} />)}
+                            {status[12] === 1 && (<ClearIcon />)}
+                            {status[12] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[13] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(13)} />)}
+                            {status[13] === 1 && (<ClearIcon />)}
+                            {status[13] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[0] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(0)} />)}
+                            {status[0] === 1 && (<ClearIcon />)}
+                            {status[0] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[1] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(1)} />)}
+                            {status[1] === 1 && (<ClearIcon />)}
+                            {status[1] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[2] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(2)} />)}
+                            {status[2] === 1 && (<ClearIcon />)}
+                            {status[2] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[3] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(3)} />)}
+                            {status[3] === 1 && (<ClearIcon />)}
+                            {status[3] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[4] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(4)} />)}
+                            {status[4] === 1 && (<ClearIcon />)}
+                            {status[4] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[5] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(5)} />)}
+                            {status[5] === 1 && (<ClearIcon />)}
+                            {status[5] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="connect__four__cell">
+                          <div>
+                            {(status[6] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(6)} />)}
+                            {status[6] === 1 && (<ClearIcon />)}
+                            {status[6] === 2 && (<RadioButtonUncheckedIcon />)}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            )}
+
+              <div className="connect__four__Reset__Button">
+                <Button className="connect__four__Reset__Button" variant="contained" color="primary" disableElevation onClick={handleResetGame}>Reset Game</Button>
+              </div>
+            </div>
           </div>
-
-          <table border="2">
-            <tbody>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[35] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(35)} />)}
-                      {status[35] === 1 && (<ClearIcon />)}
-                      {status[35] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[36] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(36)} />)}
-                      {status[36] === 1 && (<ClearIcon />)}
-                      {status[36] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[37] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(37)} />)}
-                      {status[37] === 1 && (<ClearIcon />)}
-                      {status[37] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[38] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(38)} />)}
-                      {status[38] === 1 && (<ClearIcon />)}
-                      {status[38] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[39] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(39)} />)}
-                      {status[39] === 1 && (<ClearIcon />)}
-                      {status[39] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[40] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(40)} />)}
-                      {status[40] === 1 && (<ClearIcon />)}
-                      {status[40] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[41] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(41)} />)}
-                      {status[41] === 1 && (<ClearIcon />)}
-                      {status[41] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[28] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(28)} />)}
-                      {status[28] === 1 && (<ClearIcon />)}
-                      {status[28] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[29] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(29)} />)}
-                      {status[29] === 1 && (<ClearIcon />)}
-                      {status[29] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[30] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(30)} />)}
-                      {status[30] === 1 && (<ClearIcon />)}
-                      {status[30] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[31] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(31)} />)}
-                      {status[31] === 1 && (<ClearIcon />)}
-                      {status[31] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[32] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(32)} />)}
-                      {status[32] === 1 && (<ClearIcon />)}
-                      {status[32] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[33] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(33)} />)}
-                      {status[33] === 1 && (<ClearIcon />)}
-                      {status[33] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[34] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(34)} />)}
-                      {status[34] === 1 && (<ClearIcon />)}
-                      {status[34] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[21] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(21)} />)}
-                      {status[21] === 1 && (<ClearIcon />)}
-                      {status[21] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[22] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(22)} />)}
-                      {status[22] === 1 && (<ClearIcon />)}
-                      {status[22] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[23] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(23)} />)}
-                      {status[23] === 1 && (<ClearIcon />)}
-                      {status[23] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[24] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(24)} />)}
-                      {status[24] === 1 && (<ClearIcon />)}
-                      {status[24] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[25] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(25)} />)}
-                      {status[25] === 1 && (<ClearIcon />)}
-                      {status[25] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[26] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(26)} />)}
-                      {status[26] === 1 && (<ClearIcon />)}
-                      {status[26] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[27] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(27)} />)}
-                      {status[27] === 1 && (<ClearIcon />)}
-                      {status[27] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[14] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(14)} />)}
-                      {status[14] === 1 && (<ClearIcon />)}
-                      {status[14] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[15] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(15)} />)}
-                      {status[15] === 1 && (<ClearIcon />)}
-                      {status[15] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[16] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(16)} />)}
-                      {status[16] === 1 && (<ClearIcon />)}
-                      {status[16] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[17] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(17)} />)}
-                      {status[17] === 1 && (<ClearIcon />)}
-                      {status[17] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[18] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(18)} />)}
-                      {status[18] === 1 && (<ClearIcon />)}
-                      {status[18] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[19] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(19)} />)}
-                      {status[19] === 1 && (<ClearIcon />)}
-                      {status[19] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[20] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(20)} />)}
-                      {status[20] === 1 && (<ClearIcon />)}
-                      {status[20] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[7] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(7)} />)}
-                      {status[7] === 1 && (<ClearIcon />)}
-                      {status[7] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[8] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(8)} />)}
-                      {status[8] === 1 && (<ClearIcon />)}
-                      {status[8] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[9] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(9)} />)}
-                      {status[9] === 1 && (<ClearIcon />)}
-                      {status[9] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[10] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(10)} />)}
-                      {status[10] === 1 && (<ClearIcon />)}
-                      {status[10] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[11] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(11)} />)}
-                      {status[11] === 1 && (<ClearIcon />)}
-                      {status[11] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[12] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(12)} />)}
-                      {status[12] === 1 && (<ClearIcon />)}
-                      {status[12] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[13] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(13)} />)}
-                      {status[13] === 1 && (<ClearIcon />)}
-                      {status[13] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[0] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(0)} />)}
-                      {status[0] === 1 && (<ClearIcon />)}
-                      {status[0] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[1] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(1)} />)}
-                      {status[1] === 1 && (<ClearIcon />)}
-                      {status[1] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[2] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(2)} />)}
-                      {status[2] === 1 && (<ClearIcon />)}
-                      {status[2] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[3] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(3)} />)}
-                      {status[3] === 1 && (<ClearIcon />)}
-                      {status[3] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[4] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(4)} />)}
-                      {status[4] === 1 && (<ClearIcon />)}
-                      {status[4] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[5] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(5)} />)}
-                      {status[5] === 1 && (<ClearIcon />)}
-                      {status[5] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="connect__four__cell">
-                    <div>
-                      {(status[6] === 0 && !wonStatus) && (<IconButton className="connect__four__iconbutton__style" onClick={(event) => handleChangeCellState(6)} />)}
-                      {status[6] === 1 && (<ClearIcon />)}
-                      {status[6] === 2 && (<RadioButtonUncheckedIcon />)}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="connect__four__Reset__Button">
-          <Button className="connect__four__Reset__Button" variant="contained" color="primary" disableElevation onClick={handleResetGame}>
-            Reset Game
-          </Button>
-        </div>
-      </div>
+        </Grid>
+        <Grid item sm={8}>
+          <div className="connect__four__description">
+            <h2>Description</h2>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
+          </div>
+        </Grid>
+      </Grid>
     </div >
   )
 }
