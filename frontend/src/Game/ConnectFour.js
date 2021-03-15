@@ -58,19 +58,20 @@ function ConnectFour() {
       })
     )
 
-    let tempAvlMov = availableMoves.map((avl, index) => {
-      return (avl === id ? (id + 7) : avl)
-    })
-    setAvailableMoves(tempAvlMov)
+    setAvailableMoves(
+      availableMoves.map((avl, index) => {
+        return (avl === id ? (id + 7) : avl)
+      })
+    )
 
     checkVertical(id, playerStatus);
     checkHorizontal(id, playerStatus);
     leftDiagonal(id, playerStatus);
     rightDiagonal(id, playerStatus);
-    
+
     if (player) {
-      console.log(tempAvlMov)
-      
+      //var item = tempAvlMov[Math.floor(Math.random() * tempAvlMov.length)];
+      //handleChangeCellStateSeconGamer(item, tempAvlMov)
     }
   }
 
@@ -640,7 +641,7 @@ function ConnectFour() {
         <Grid item sm={8}>
           <div className="connect__four__description">
             <h2>Description</h2>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
             Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
           </div>
         </Grid>
