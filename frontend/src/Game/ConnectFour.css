@@ -1,0 +1,27 @@
+.connect__four__box {
+    justify-content: center;
+    display: flex;
+}
+
+.connect__four__cell {
+    display: flex;
+    height: 50px;
+    width: 50px;
+}
+
+.connect__four__cell>div {
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.connect__four__iconbutton__style {
+    height: 50px;
+    width: 50px;
+}
+
+.connect__four__Reset__Button {
+    margin: auto;
+    margin-top: 10px;
+    width: 250px;
+}
