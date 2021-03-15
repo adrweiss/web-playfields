@@ -5,7 +5,7 @@ import ConnectFour from './ConnectFour'
 function Game() {
   return (
     <div>
-      <h1>This is the place for the game side.</h1>
+      <h1>Connect Four</h1>
       <ConnectFour />
     </div>
   )
