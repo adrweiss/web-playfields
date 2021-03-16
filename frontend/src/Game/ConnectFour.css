@@ -20,10 +20,19 @@
     width: 50px;
 }
 
-.connect__four__Reset__Button {
-    margin: auto;
+.connect__four__Reset__button {
+    width: 150px;
+}
+
+.connect__four__game__mode__button {
+    margin-left: 10px;
+    width: 75px;
+}
+
+.connect__four__button__area {
     margin-top: 10px;
-    width: 250px;
+    text-align: center;
+    justify-content: center;
 }
 
 .connect__four__message__container {
@@ -47,4 +56,12 @@
 
 .connect__four__description {
     width: 80%;
+}
+
+.connect__four__results {
+    margin-top: 10px;
+}
+
+span+span {
+    margin-left: 10px;
 }

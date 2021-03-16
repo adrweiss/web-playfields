@@ -11,6 +11,7 @@ function ConnectFour() {
   const [status, setStatus] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [availableMoves, setAvailableMoves] = useState([0, 1, 2, 3, 4, 5, 6])
   const [player, setPlayer] = useState(true)
+  const [playVariant, setPlayVariant] = useState(true)
   const [wonStatus, setWonStatus] = useState(false)
   const [messageMove, setMessageMove] = useState("");
   const [messageWin, setMessageWin] = useState("");
@@ -20,13 +21,15 @@ function ConnectFour() {
   const [winCounterO, setWinCounterO] = useState(0);
   const [winCounterTie, setWinCounterTie] = useState(0);
 
-
-
   let playerStatus;
   let winCounter;
   var min, max;
   let won = [];
   var i;
+
+  const handleGameMode = () => {
+    setPlayVariant(!playVariant)
+  }
 
   function removeMessage() {
     setMessageMove("")
@@ -88,12 +91,19 @@ function ConnectFour() {
     setStatus(statusActual)
     setPlayer(playerActual)
 
-    if (!playerActual && !won.includes(true)) {
+    if (playVariant && !playerActual && !won.includes(true)) {
       handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
+    }
+    console.log(won.includes(true))
+    if (won.includes(true) && playerActual) {
+      setWinCounterX(winCounterX + 1)
+    } else if (won.includes(true) && !playerActual) {
+      setWinCounterO(winCounterO + 1)
     }
 
     if (availableMovesActual.length === 0) {
       setMessageWin("No more moves available!");
+      setWinCounterTie(winCounterTie + 1)
     }
   }
 
@@ -658,9 +668,14 @@ function ConnectFour() {
                   </tbody>
                 </table>
               </div>
-
-              <div className="connect__four__Reset__Button">
-                <Button className="connect__four__Reset__Button" variant="contained" color="primary" disableElevation onClick={handleResetGame}>Reset Game</Button>
+              <div className="connect__four__button__area">
+                <span>
+                  <Button className="connect__four__Reset__button" variant="contained" color="primary" onClick={handleResetGame}>Reset Game</Button>
+                </span>
+                <span>
+                  {playVariant && (<Button className="connect__four__game__mode__button" variant="contained" color="primary" onClick={handleGameMode}>AI</Button>)}
+                  {!playVariant && (<Button className="connect__four__game__mode__button" variant="contained" onClick={handleGameMode}>PvP</Button>)}
+                </span>
               </div>
             </div>
           </div>
@@ -672,9 +687,9 @@ function ConnectFour() {
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
               Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
             </div>
-            <div >
-              <li >Win counter X: {winCounterX}</li> 
-              <li>Win counter O: {winCounterO}</li>
+            <div className="connect__four__results" >
+              <li>Win counter <ClearIcon fontSize="small" />: {winCounterX}</li>
+              <li>Win counter <RadioButtonUncheckedIcon fontSize="small" />: {winCounterO}</li>
               <li>Tie counter:   {winCounterTie}</li>
             </div>
           </div>
