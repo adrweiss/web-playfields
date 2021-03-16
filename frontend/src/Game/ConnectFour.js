@@ -94,10 +94,10 @@ function ConnectFour() {
     if (playVariant && !playerActual && !won.includes(true)) {
       handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
     }
-    console.log(won.includes(true))
-    if (won.includes(true) && playerActual) {
+    
+    if (won.includes(true) && !playerActual) {
       setWinCounterX(winCounterX + 1)
-    } else if (won.includes(true) && !playerActual) {
+    } else if (won.includes(true) && playerActual) {
       setWinCounterO(winCounterO + 1)
     }
 
