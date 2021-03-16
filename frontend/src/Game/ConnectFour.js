@@ -16,10 +16,17 @@ function ConnectFour() {
   const [messageWin, setMessageWin] = useState("");
   const [timerId, setTimerId] = useState();
 
+  const [winCounterX, setWinCounterX] = useState(0);
+  const [winCounterO, setWinCounterO] = useState(0);
+  const [winCounterTie, setWinCounterTie] = useState(0);
+
+
+
   let playerStatus;
   let winCounter;
-  var i;
   var min, max;
+  let won = [];
+  var i;
 
   function removeMessage() {
     setMessageMove("")
@@ -34,51 +41,66 @@ function ConnectFour() {
     removeMessage()
   }
 
-  const handleChangeCellState = (id) => {
+  const handleChangeCellState = (id, playerActual, availableMovesActual, statusActual) => {
+    if (typeof availableMovesActual === 'undefined' && typeof statusActual === 'undefined' && typeof playerActual === 'undefined') {
+      availableMovesActual = availableMoves
+      statusActual = status
+      playerActual = player
+    }
+
     removeMessage()
     clearTimeout(timerId)
 
-    if (!availableMoves.includes(id)) {
+    if (!availableMovesActual.includes(id)) {
       setMessageMove("No valid move!");
       setTimerId(setTimeout(removeMessage, 10000));
       return
     }
 
-    if (player) {
+    if (playerActual) {
       playerStatus = 1
-      setPlayer(false)
+      playerActual = false
     } else {
       playerStatus = 2
-      setPlayer(true)
+      playerActual = true
     }
 
-    setStatus(
-      status.map((status, index) => {
-        return (index === id ? playerStatus : status)
-      })
-    )
+    statusActual = statusActual.map((status, index) => {
+      return (index === id ? playerStatus : status)
+    })
 
-    setAvailableMoves(
-      availableMoves.map((avl, index) => {
+    if ((id + 7) <= 41) {
+      availableMovesActual = availableMovesActual.map((avl, index) => {
         return (avl === id ? (id + 7) : avl)
       })
-    )
+    } else {
+      availableMovesActual = availableMovesActual.filter(function (value, index, arr) {
+        return value !== id;
+      });
+    }
 
-    checkVertical(id, playerStatus);
-    checkHorizontal(id, playerStatus);
-    leftDiagonal(id, playerStatus);
-    rightDiagonal(id, playerStatus);
+    won[0] = checkVertical(id, playerStatus);
+    won[1] = checkHorizontal(id, playerStatus);
+    won[2] = leftDiagonal(id, playerStatus);
+    won[3] = rightDiagonal(id, playerStatus);
 
-    if (player) {
-      //var item = tempAvlMov[Math.floor(Math.random() * tempAvlMov.length)];
-      //handleChangeCellStateSeconGamer(item, tempAvlMov)
+    setAvailableMoves(availableMovesActual)
+    setStatus(statusActual)
+    setPlayer(playerActual)
+
+    if (!playerActual && !won.includes(true)) {
+      handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
+    }
+
+    if (availableMovesActual.length === 0) {
+      setMessageWin("No more moves available!");
     }
   }
 
   function checkVertical(id, playerStatus) {
     winCounter = 0
     if ((id - 3 * 7) < 0) {
-      return
+      return false
     }
 
     for (i = 1; i < 4; i++) {
@@ -91,7 +113,9 @@ function ConnectFour() {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
+      return true
     }
+    return false
   }
 
   function checkHorizontal(id, playerStatus) {
@@ -128,16 +152,17 @@ function ConnectFour() {
           setMessageWin("has won the game!");
           setAvailableMoves([])
           setWonStatus(true)
-          return
+          return true
         }
       }
     }
+    return false
   }
 
   function leftDiagonal(id, playerStatus) {
     winCounter = 0
     if ([4, 5, 6, 12, 13, 20, 21, 28, 29, 35, 36, 37].includes(id)) {
-      return
+      return false
     }
 
     for (i = 0; i < 4; i++) {
@@ -168,14 +193,15 @@ function ConnectFour() {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
-      return
+      return true
     }
+    return false
   }
 
   function rightDiagonal(id, playerStatus) {
     winCounter = 0
     if ([0, 1, 2, 7, 8, 14, 27, 33, 34, 39, 40, 41].includes(id)) {
-      return
+      return false
     }
 
     for (i = 0; i < 4; i++) {
@@ -206,14 +232,15 @@ function ConnectFour() {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
-      return
+      return true
     }
+    return false
   }
 
   return (
     <div>
-      <Grid container spacing={3}>
-        <Grid item sm={4}>
+      <Grid container spacing={1}>
+        <Grid item sm={6}>
           <div className="connect__four__box">
             <div>
               <div>
@@ -226,7 +253,7 @@ function ConnectFour() {
 
                   {messageWin && (
                     <div className="connect__four__message__box">
-                      <div>
+                      <div hidden={!wonStatus}>
                         {player ? <RadioButtonUncheckedIcon /> : <ClearIcon />}
                       </div>
                       <div>
@@ -638,11 +665,18 @@ function ConnectFour() {
             </div>
           </div>
         </Grid>
-        <Grid item sm={8}>
+        <Grid item sm={6}>
           <div className="connect__four__description">
             <h2>Description</h2>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
+            <div>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+              Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
+            </div>
+            <div >
+              <li >Win counter X: {winCounterX}</li> 
+              <li>Win counter O: {winCounterO}</li>
+              <li>Tie counter:   {winCounterTie}</li>
+            </div>
           </div>
         </Grid>
       </Grid>
