@@ -7,6 +7,9 @@ import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
+import { PieChart, Pie, Legend, Cell, Tooltip } from 'recharts';
+
+
 function ConnectFour() {
   const [status, setStatus] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [availableMoves, setAvailableMoves] = useState([0, 1, 2, 3, 4, 5, 6])
@@ -20,6 +23,8 @@ function ConnectFour() {
   const [winCounterX, setWinCounterX] = useState(0);
   const [winCounterO, setWinCounterO] = useState(0);
   const [winCounterTie, setWinCounterTie] = useState(0);
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   let playerStatus;
   let winCounter;
@@ -94,7 +99,7 @@ function ConnectFour() {
     if (playVariant && !playerActual && !won.includes(true)) {
       handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
     }
-    
+
     if (won.includes(true) && !playerActual) {
       setWinCounterX(winCounterX + 1)
     } else if (won.includes(true) && playerActual) {
@@ -686,11 +691,30 @@ function ConnectFour() {
             <div>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
               Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
-            </div>
-            <div className="connect__four__results" >
-              <li>Win counter <ClearIcon fontSize="small" />: {winCounterX}</li>
-              <li>Win counter <RadioButtonUncheckedIcon fontSize="small" />: {winCounterO}</li>
-              <li>Tie counter:   {winCounterTie}</li>
+            </div>            
+            <div>
+              <h3>Current Game Stats</h3>
+              <PieChart width={350} height={350}>
+                <Pie
+                  dataKey="value"
+                  isAnimationActive={false}
+                  data={[
+                    { name: 'Wins from X: ', value: winCounterX },
+                    { name: 'Wins from O: ', value: winCounterO },
+                    { name: 'Ties: ', value: winCounterTie },
+                  ]}
+                  cx={150}
+                  cy={150}
+                  outerRadius={120}
+                  label
+                >                  
+                  <Cell fill={COLORS[0]} />)                  
+                  <Cell fill={COLORS[1]} />)                  
+                  <Cell fill={COLORS[2]} />)                  
+                </Pie>
+                <Legend />
+                <Tooltip />
+              </PieChart>
             </div>
           </div>
         </Grid>
