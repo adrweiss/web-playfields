@@ -716,6 +716,8 @@ function ConnectFour() {
                 <Tooltip />
               </PieChart>
             </div>
+            <h3>History Game Stats</h3>
+            <h3>Overall Game Stats</h3>
           </div>
         </Grid>
       </Grid>
