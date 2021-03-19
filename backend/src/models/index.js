@@ -15,6 +15,7 @@ import { mongodbConfig } from '../config/mongo.db.config.js'
 import blogPost from './blog.model.js';
 import description from './description.model.js';
 import internalMessage from './internalMessages.model.js';
+import connectFourResults from './connect.four.model.js';
 
 const sequelize = new Sequelize(
   config.DB,
@@ -118,6 +119,7 @@ mongodb.mongoose = mongo
 mongodb.blogPost = blogPost
 mongodb.description = description
 mongodb.internalMessage = internalMessage
+mongodb.connectFourResults = connectFourResults
 
 function dataDevInit() {
   initialLoad.role(db.role)
