@@ -21,11 +21,12 @@ function postGameResult(req, res, next) {
 function getGameStats(req, res, next) {
   ConnectFourResults.aggregate([
     { "$match": { "userid": req.userId } },
-    { "$group": { _id: ["$algorithmen", "$gameResult"], count: { $sum: 1 } } }
+    { "$group": { _id: ["$algorithmen", "$gameResult"], count: { $sum: 1 } } },
+    { "$sort": { "_id": -1 } },
   ], (err, data) => {
     if (err) {
       return res.status(500).send(err)
-    } else {
+    } else {      
       return res.status(201).send(data)
     }
   })

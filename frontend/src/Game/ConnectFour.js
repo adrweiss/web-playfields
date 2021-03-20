@@ -12,6 +12,10 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 import { PieChart, Pie, Legend, Cell, Tooltip } from 'recharts';
 
+// Show Results for Personal stats
+// Change Optic for current game session
+// add current game results to hist data 
+// change absolut number to relativ numbers on hist data 
 
 function ConnectFour() {
   const [status, setStatus] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -22,12 +26,13 @@ function ConnectFour() {
   const [messageMove, setMessageMove] = useState("");
   const [messageWin, setMessageWin] = useState("");
   const [timerId, setTimerId] = useState();
+  const [randomStatsHist, setRandomStatsHist] = useState();
+  const [pvpStatsHist, setPvpStatsHist] = useState();
 
   const [winCounterX, setWinCounterX] = useState(0);
   const [winCounterO, setWinCounterO] = useState(0);
   const [winCounterTie, setWinCounterTie] = useState(0);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
   const currentUser = getCurrentUser();
 
   let variant;
@@ -53,21 +58,22 @@ function ConnectFour() {
 
           console.log(_content);
         })
-    } else {
-      GameCfService.getStats().then((response) => {
-        console.log(response.data);
-      },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          console.log(_content);
-        })
     }
+    GameCfService.getStats().then((response) => {
+      setRandomStatsHist(response.data.filter(element => element._id.includes("Random")))
+      setPvpStatsHist(response.data.filter(element => element._id.includes("PvP")))
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+      })
+
   }, []);
 
   const handleGameMode = () => {
@@ -76,6 +82,7 @@ function ConnectFour() {
     } else if (playVariant === 1) {
       setPlayVariant(0)
     }
+    handleResetGame()
   }
 
   function removeMessage() {
@@ -318,7 +325,7 @@ function ConnectFour() {
   return (
     <div>
       <Grid container spacing={1}>
-        <Grid item sm={6}>
+        <Grid item sm={4}>
           <div className="connect__four__box">
             <div>
               <div>
@@ -748,39 +755,97 @@ function ConnectFour() {
             </div>
           </div>
         </Grid>
-        <Grid item sm={6}>
+        <Grid item sm={8}>
           <div className="connect__four__description">
             <h2>Description</h2>
             <div>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
               Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
             </div>
-            <div>
-              <h3>Current Game Stats</h3>
-              <PieChart width={350} height={350}>
-                <Pie
-                  dataKey="value"
-                  isAnimationActive={false}
-                  data={[
-                    { name: 'Wins from X: ', value: winCounterX },
-                    { name: 'Wins from O: ', value: winCounterO },
-                    { name: 'Ties: ', value: winCounterTie },
-                  ]}
-                  cx={150}
-                  cy={150}
-                  outerRadius={120}
-                  label
-                >
-                  <Cell fill={COLORS[0]} />)
-                  <Cell fill={COLORS[1]} />)
-                  <Cell fill={COLORS[2]} />)
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </div>
-            <h3>History Game Stats</h3>
-            <h3>Overall Game Stats</h3>
+            {(winCounterO > 0 || winCounterX > 0 || winCounterTie > 0) && (
+              <div>
+                <h3>Current Game Stats</h3>
+                <PieChart width={350} height={350}>
+                  <Pie
+                    dataKey="value"
+                    isAnimationActive={false}
+                    data={[
+                      { name: 'Wins from X: ', value: winCounterX },
+                      { name: 'Wins from O: ', value: winCounterO },
+                      { name: 'Ties: ', value: winCounterTie },
+                    ]}
+                    cx={150}
+                    cy={150}
+                    outerRadius={120}
+                    label
+                  >
+                    <Cell fill={'#0088FE'} />)
+                    <Cell fill={'#00C49F'} />)
+                    <Cell fill={'#FFBB28'} />)
+                  </Pie>
+                  <Legend />
+                  <Tooltip />
+                </PieChart>
+              </div>
+            )}
+            <Grid container spacing={1}>
+              <Grid item sm={6}>
+                {randomStatsHist && (
+                  <div>
+                    <h3>Overall Random Stats</h3>
+                    <PieChart width={350} height={350}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by: " + randomStatsHist[0]?._id[1], value: randomStatsHist[0]?.count },
+                          { name: randomStatsHist[1]?._id[1], value: randomStatsHist[1]?.count },
+                          { name: "Wons by: " + randomStatsHist[2]?._id[1], value: randomStatsHist[2]?.count },
+                        ]}
+                        cx={150}
+                        cy={150}
+                        outerRadius={120}
+                        label
+                      >
+                        <Cell fill={'#0088FE'} />)
+                  <Cell fill={'#00C49F'} />)
+                  <Cell fill={'#FFBB28'} />)
+                  </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+              <Grid item sm={6}>
+                {pvpStatsHist && (
+                  <div>
+                    <h3>Overall PvP Stats</h3>
+                    <PieChart width={350} height={350}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by: " + pvpStatsHist[0]?._id[1], value: pvpStatsHist[0]?.count },
+                          { name: pvpStatsHist[1]?._id[1], value: pvpStatsHist[1]?.count },
+                          { name: "Wons by: " + pvpStatsHist[2]?._id[1], value: pvpStatsHist[2]?.count },
+                        ]}
+                        cx={150}
+                        cy={150}
+                        outerRadius={120}
+                        label
+                      >
+                        <Cell fill={'#0088FE'} />)
+                  <Cell fill={'#00C49F'} />)
+                  <Cell fill={'#FFBB28'} />)
+                  </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+            </Grid>
           </div>
         </Grid>
       </Grid>
