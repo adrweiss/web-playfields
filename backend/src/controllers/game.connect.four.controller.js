@@ -1,33 +1,31 @@
 import { db, mongodb } from '../models/index.js'
 import { format } from 'date-fns';
 
+const ConnectFourResults = mongodb.connectFourResults;
+
 function postGameResult(req, res, next) {
-  /*
-  req.body.userId
-  req.body.algorithmen
-  req.body.gameResult
-  req.body.game
-  */
-
-  console.log(req.body)
-
-  /*
   
-  ----
 
-  Date
-  Train
-
-  */
-  res.status(200).send({message: "test Post"})
+  ConnectFourResults.create({
+    algorithmen: req.body.algorithmen, 
+    gameResult: req.body.gameResult, 
+    game: req.body.game,
+    userid: req.userId
+  }, (err, data) => {
+    if (err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(201).send({ message: "Successfull saved." })
+    }
+  })  
 }
 
 function getGameStats(req, res, next) {
-  res.status(200).send({message: "test Get Stats"})
+  res.status(200).send({ message: "test Get Stats" })
 }
 
 const gameCfController = {
-  postGameResult, 
+  postGameResult,
   getGameStats
 };
 

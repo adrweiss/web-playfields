@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
-import './ConnectFour.css'
+import React, { useState } from 'react';
+import './ConnectFour.css';
+import { getCurrentUser } from "../services/auth.service";
+import GameCfService from "../services/game.cf.service";
+
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -24,12 +27,15 @@ function ConnectFour() {
   const [winCounterO, setWinCounterO] = useState(0);
   const [winCounterTie, setWinCounterTie] = useState(0);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+  const currentUser = getCurrentUser();
 
+  let variant;
   let playerStatus;
   let winCounter;
   var min, max;
   let won = [];
+  let skip;
   var i;
 
   const handleGameMode = () => {
@@ -97,18 +103,39 @@ function ConnectFour() {
     setPlayer(playerActual)
 
     if (playVariant && !playerActual && !won.includes(true)) {
-      handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
+      skip = handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
     }
 
-    if (won.includes(true) && !playerActual) {
+    if (!skip && won.includes(true) && playVariant) {
+      variant = "Random"
+    } else if (won.includes(true) && !playVariant) {
+      variant = "PvP"
+    }
+
+    if (!currentUser && !skip && won.includes(true) && !playerActual) {
       setWinCounterX(winCounterX + 1)
-    } else if (won.includes(true) && playerActual) {
+      GameCfService.saveGame(variant, "X", statusActual)
+    } else if (!currentUser && !skip && won.includes(true) && playerActual) {
       setWinCounterO(winCounterO + 1)
-    }
-
-    if (availableMovesActual.length === 0) {
+      GameCfService.saveGame(variant, "O", statusActual)
+    } else if (!currentUser && !skip && availableMovesActual.length === 0) {
       setMessageWin("No more moves available!");
       setWinCounterTie(winCounterTie + 1)
+      GameCfService.saveGame(variant, "Tie", statusActual)
+    } else if (currentUser && !skip && won.includes(true) && !playerActual) {
+      setWinCounterX(winCounterX + 1)
+      GameCfService.saveGamePersonal(variant, "X", statusActual)
+    } else if (currentUser && !skip && won.includes(true) && playerActual) {
+      setWinCounterO(winCounterO + 1)
+      GameCfService.saveGamePersonal(variant, "O", statusActual)
+    } else if (currentUser && !skip && availableMovesActual.length === 0) {
+      setMessageWin("No more moves available!");
+      setWinCounterTie(winCounterTie + 1)
+      GameCfService.saveGamePersonal(variant, "Tie", statusActual)
+    }
+
+    if (won.includes(true)) {
+      return true
     }
   }
 
@@ -691,7 +718,7 @@ function ConnectFour() {
             <div>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
               Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
-            </div>            
+            </div>
             <div>
               <h3>Current Game Stats</h3>
               <PieChart width={350} height={350}>
@@ -707,10 +734,10 @@ function ConnectFour() {
                   cy={150}
                   outerRadius={120}
                   label
-                >                  
-                  <Cell fill={COLORS[0]} />)                  
-                  <Cell fill={COLORS[1]} />)                  
-                  <Cell fill={COLORS[2]} />)                  
+                >
+                  <Cell fill={COLORS[0]} />)
+                  <Cell fill={COLORS[1]} />)
+                  <Cell fill={COLORS[2]} />)
                 </Pie>
                 <Legend />
                 <Tooltip />

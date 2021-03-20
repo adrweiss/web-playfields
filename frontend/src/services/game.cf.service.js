@@ -1,27 +1,25 @@
 import axios from '../config/axios';
-//import authHeader from "./auth-header";
+import authHeader from "./auth-header";
 
-const saveGame = (userId, algorithmen, gameResult, game) => {
+const saveGame = (algorithmen, gameResult, game) => {
   return axios.post("/game/cf/result", {
-    userId,
     algorithmen,
     gameResult,
     game
   });
 };
 
-const saveGame = (userId, algorithmen, gameResult, game) => {
-  return axios.post("/api/game/personal/cf/result", {
-    userId,
+const saveGamePersonal = (algorithmen, gameResult, game) => {
+  return axios.post("/game/personal/cf/result", {
     algorithmen,
     gameResult,
     game
-  });
+  }, { headers: authHeader() });
 };
 
 const GameCfService = {
   saveGame,
-
+  saveGamePersonal,
 }
 
 export default GameCfService;

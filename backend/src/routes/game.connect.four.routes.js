@@ -17,7 +17,7 @@ export function gameCfRoutes(app) {
 
   app.post(
     "/api/game/personal/cf/result",
-    authJwt.verifyToken,
+    [authJwt.verifyToken],
     gameCfController.postGameResult,
   );
   
@@ -28,7 +28,7 @@ export function gameCfRoutes(app) {
 
   app.get(
     "/api/game/personal/cf/stats",
-    authJwt.verifyToken,
+    [authJwt.verifyToken],
     gameCfController.getGameStats,
   );
 };
