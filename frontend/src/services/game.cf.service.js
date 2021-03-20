@@ -17,9 +17,19 @@ const saveGamePersonal = (algorithmen, gameResult, game) => {
   }, { headers: authHeader() });
 };
 
+const getStats = () => {
+  return axios.get("/game/cf/stats");
+};
+
+const getPersonalStats = () => {
+  return axios.get("game/personal/cf/stats", { headers: authHeader() });
+}
+
 const GameCfService = {
   saveGame,
   saveGamePersonal,
+  getStats,
+  getPersonalStats,
 }
 
 export default GameCfService;

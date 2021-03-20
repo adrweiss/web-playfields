@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ConnectFour.css';
 import { getCurrentUser } from "../services/auth.service";
 import GameCfService from "../services/game.cf.service";
@@ -17,7 +17,7 @@ function ConnectFour() {
   const [status, setStatus] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [availableMoves, setAvailableMoves] = useState([0, 1, 2, 3, 4, 5, 6])
   const [player, setPlayer] = useState(true)
-  const [playVariant, setPlayVariant] = useState(true)
+  const [playVariant, setPlayVariant] = useState(0)
   const [wonStatus, setWonStatus] = useState(false)
   const [messageMove, setMessageMove] = useState("");
   const [messageWin, setMessageWin] = useState("");
@@ -38,8 +38,44 @@ function ConnectFour() {
   let skip;
   var i;
 
+  useEffect(() => {
+    if (getCurrentUser()) {
+      GameCfService.getPersonalStats().then((response) => {
+        console.log(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    } else {
+      GameCfService.getStats().then((response) => {
+        console.log(response.data);
+      },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          console.log(_content);
+        })
+    }
+  }, []);
+
   const handleGameMode = () => {
-    setPlayVariant(!playVariant)
+    if (playVariant === 0) {
+      setPlayVariant(1)
+    } else if (playVariant === 1) {
+      setPlayVariant(0)
+    }
   }
 
   function removeMessage() {
@@ -102,13 +138,13 @@ function ConnectFour() {
     setStatus(statusActual)
     setPlayer(playerActual)
 
-    if (playVariant && !playerActual && !won.includes(true)) {
+    if (playVariant === 0 && !playerActual && !won.includes(true)) {
       skip = handleChangeCellState(availableMovesActual[Math.floor(Math.random() * availableMovesActual.length)], playerActual, availableMovesActual, statusActual)
     }
 
-    if (!skip && won.includes(true) && playVariant) {
+    if (!skip && playVariant === 0) {
       variant = "Random"
-    } else if (won.includes(true) && !playVariant) {
+    } else if (!skip && playVariant === 1) {
       variant = "PvP"
     }
 
@@ -151,7 +187,7 @@ function ConnectFour() {
       }
     }
 
-    if (winCounter === 3) {
+    if (winCounter >= 3) {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
@@ -190,7 +226,7 @@ function ConnectFour() {
           winCounter = 0
         }
 
-        if (winCounter === 4) {
+        if (winCounter >= 4) {
           setMessageWin("has won the game!");
           setAvailableMoves([])
           setWonStatus(true)
@@ -231,7 +267,7 @@ function ConnectFour() {
       }
     }
 
-    if (winCounter === 4) {
+    if (winCounter >= 4) {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
@@ -270,7 +306,7 @@ function ConnectFour() {
       }
     }
 
-    if (winCounter === 4) {
+    if (winCounter >= 4) {
       setMessageWin("has won the game!");
       setAvailableMoves([])
       setWonStatus(true)
@@ -705,8 +741,8 @@ function ConnectFour() {
                   <Button className="connect__four__Reset__button" variant="contained" color="primary" onClick={handleResetGame}>Reset Game</Button>
                 </span>
                 <span>
-                  {playVariant && (<Button className="connect__four__game__mode__button" variant="contained" color="primary" onClick={handleGameMode}>AI</Button>)}
-                  {!playVariant && (<Button className="connect__four__game__mode__button" variant="contained" onClick={handleGameMode}>PvP</Button>)}
+                  {(playVariant === 0) && (<Button className="connect__four__game__mode__button" variant="contained" color="primary" onClick={handleGameMode}>AI</Button>)}
+                  {(playVariant === 1) && (<Button className="connect__four__game__mode__button" variant="contained" onClick={handleGameMode}>PvP</Button>)}
                 </span>
               </div>
             </div>
