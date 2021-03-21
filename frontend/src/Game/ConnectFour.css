@@ -65,3 +65,12 @@
 span+span {
     margin-left: 10px;
 }
+
+.connect__four__stats__headline {
+    text-align: center;
+    width: 280px;
+}
+
+.test {
+    border: solid green;
+}

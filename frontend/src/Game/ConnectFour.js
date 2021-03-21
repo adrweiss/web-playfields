@@ -12,10 +12,19 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 import { PieChart, Pie, Legend, Cell, Tooltip } from 'recharts';
 
-// Show Results for Personal stats
-// Change Optic for current game session
-// add current game results to hist data 
-// change absolut number to relativ numbers on hist data 
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 
 function ConnectFour() {
   const [status, setStatus] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -28,10 +37,17 @@ function ConnectFour() {
   const [timerId, setTimerId] = useState();
   const [randomStatsHist, setRandomStatsHist] = useState();
   const [pvpStatsHist, setPvpStatsHist] = useState();
+  const [randomStatsHistPersonal, setRandomStatsHistPersonal] = useState();
+  const [pvpStatsHistPersonal, setPvpStatsHistPersonal] = useState();
 
-  const [winCounterX, setWinCounterX] = useState(0);
-  const [winCounterO, setWinCounterO] = useState(0);
-  const [winCounterTie, setWinCounterTie] = useState(0);
+
+  const [winCounterRandomX, setWinCounterRandomX] = useState(0);
+  const [winCounterRandomO, setWinCounterRandomO] = useState(0);
+  const [winCounterRandomTie, setWinCounterRandomTie] = useState(0);
+
+  const [winCounterPvpX, setWinCounterPvpX] = useState(0);
+  const [winCounterPvpO, setWinCounterPvpO] = useState(0);
+  const [winCounterPvpTie, setWinCounterPvpTie] = useState(0);
 
   const currentUser = getCurrentUser();
 
@@ -46,7 +62,8 @@ function ConnectFour() {
   useEffect(() => {
     if (getCurrentUser()) {
       GameCfService.getPersonalStats().then((response) => {
-        console.log(response.data);
+        setRandomStatsHistPersonal(response.data.filter(element => element._id.includes("Random")))
+        setPvpStatsHistPersonal(response.data.filter(element => element._id.includes("PvP")))
       },
         (error) => {
           const _content =
@@ -156,24 +173,48 @@ function ConnectFour() {
     }
 
     if (!currentUser && !skip && won.includes(true) && !playerActual) {
-      setWinCounterX(winCounterX + 1)
+      if (playVariant === 0) {
+        setWinCounterRandomX(winCounterRandomX + 1)
+      } else if (playVariant === 1) {
+        setWinCounterPvpX(winCounterPvpX + 1)
+      }
       GameCfService.saveGame(variant, "X", statusActual)
     } else if (!currentUser && !skip && won.includes(true) && playerActual) {
-      setWinCounterO(winCounterO + 1)
+      if (playVariant === 0) {
+        setWinCounterRandomO(winCounterRandomO + 1)
+      } else if (playVariant === 1){
+        setWinCounterPvpO(winCounterPvpO + 1)
+      }
       GameCfService.saveGame(variant, "O", statusActual)
-    } else if (!currentUser && !skip && availableMovesActual.length === 0) {
+    } else if (!currentUser && !skip && availableMovesActual.length === 0) {      
+      if (playVariant === 0) {
+        setWinCounterRandomTie(winCounterRandomTie + 1)
+      } else if (playVariant === 1){
+        setWinCounterPvpTie(winCounterPvpTie + 1)
+      }      
       setMessageWin("No more moves available!");
-      setWinCounterTie(winCounterTie + 1)
       GameCfService.saveGame(variant, "Tie", statusActual)
     } else if (currentUser && !skip && won.includes(true) && !playerActual) {
-      setWinCounterX(winCounterX + 1)
+      if (playVariant === 0) {
+        setWinCounterRandomX(winCounterRandomX + 1)
+      } else if (playVariant === 1){
+        setWinCounterPvpX(winCounterPvpX + 1)
+      }
       GameCfService.saveGamePersonal(variant, "X", statusActual)
     } else if (currentUser && !skip && won.includes(true) && playerActual) {
-      setWinCounterO(winCounterO + 1)
+      if (playVariant === 0) {
+        setWinCounterRandomO(winCounterRandomO + 1)
+      } else if (playVariant === 1) {
+        setWinCounterPvpO(winCounterPvpO + 1)
+      }
       GameCfService.saveGamePersonal(variant, "O", statusActual)
-    } else if (currentUser && !skip && availableMovesActual.length === 0) {
+    } else if (currentUser && !skip && availableMovesActual.length === 0) {      
+      if (playVariant === 0) {
+        setWinCounterRandomTie(winCounterRandomTie + 1)
+      } else if (playVariant === 1){
+        setWinCounterPvpTie(winCounterPvpTie + 1)
+      }
       setMessageWin("No more moves available!");
-      setWinCounterTie(winCounterTie + 1)
       GameCfService.saveGamePersonal(variant, "Tie", statusActual)
     }
 
@@ -762,55 +803,30 @@ function ConnectFour() {
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
               Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
             </div>
-            {(winCounterO > 0 || winCounterX > 0 || winCounterTie > 0) && (
-              <div>
-                <h3>Current Game Stats</h3>
-                <PieChart width={350} height={350}>
-                  <Pie
-                    dataKey="value"
-                    isAnimationActive={false}
-                    data={[
-                      { name: 'Wins from X: ', value: winCounterX },
-                      { name: 'Wins from O: ', value: winCounterO },
-                      { name: 'Ties: ', value: winCounterTie },
-                    ]}
-                    cx={150}
-                    cy={150}
-                    outerRadius={120}
-                    label
-                  >
-                    <Cell fill={'#0088FE'} />)
-                    <Cell fill={'#00C49F'} />)
-                    <Cell fill={'#FFBB28'} />)
-                  </Pie>
-                  <Legend />
-                  <Tooltip />
-                </PieChart>
-              </div>
-            )}
             <Grid container spacing={1}>
               <Grid item sm={6}>
-                {randomStatsHist && (
+                {((winCounterRandomX + winCounterRandomO + winCounterRandomTie) > 0) && (
                   <div>
-                    <h3>Overall Random Stats</h3>
-                    <PieChart width={350} height={350}>
+                    <h3 className="connect__four__stats__headline">Current Random Game Stats</h3>
+                    <PieChart width={280} height={320}>
                       <Pie
                         dataKey="value"
                         isAnimationActive={false}
                         data={[
-                          { name: "Wons by: " + randomStatsHist[0]?._id[1], value: randomStatsHist[0]?.count },
-                          { name: randomStatsHist[1]?._id[1], value: randomStatsHist[1]?.count },
-                          { name: "Wons by: " + randomStatsHist[2]?._id[1], value: randomStatsHist[2]?.count },
+                          { name: 'Wons by X', value: winCounterRandomX },
+                          { name: 'Ties', value: winCounterRandomTie },
+                          { name: 'Wons by O', value: winCounterRandomO },
                         ]}
-                        cx={150}
-                        cy={150}
-                        outerRadius={120}
-                        label
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        label={renderCustomizedLabel}
+                        labelLine={false}
                       >
                         <Cell fill={'#0088FE'} />)
-                  <Cell fill={'#00C49F'} />)
-                  <Cell fill={'#FFBB28'} />)
-                  </Pie>
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
                       <Legend />
                       <Tooltip />
                     </PieChart>
@@ -818,27 +834,149 @@ function ConnectFour() {
                 )}
               </Grid>
               <Grid item sm={6}>
-                {pvpStatsHist && (
+                {((winCounterPvpX + winCounterPvpO + winCounterPvpTie) > 0) && (
                   <div>
-                    <h3>Overall PvP Stats</h3>
-                    <PieChart width={350} height={350}>
+                    <h3 className="connect__four__stats__headline">Current PvP Game Stats</h3>
+                    <PieChart width={280} height={320}>
                       <Pie
                         dataKey="value"
                         isAnimationActive={false}
                         data={[
-                          { name: "Wons by: " + pvpStatsHist[0]?._id[1], value: pvpStatsHist[0]?.count },
-                          { name: pvpStatsHist[1]?._id[1], value: pvpStatsHist[1]?.count },
-                          { name: "Wons by: " + pvpStatsHist[2]?._id[1], value: pvpStatsHist[2]?.count },
+                          { name: 'Wons by X', value: winCounterPvpX },
+                          { name: 'Ties', value: winCounterPvpTie },
+                          { name: 'Wons by O', value: winCounterPvpO },
                         ]}
-                        cx={150}
-                        cy={150}
-                        outerRadius={120}
-                        label
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        label={renderCustomizedLabel}
+                        labelLine={false}
                       >
                         <Cell fill={'#0088FE'} />)
-                  <Cell fill={'#00C49F'} />)
-                  <Cell fill={'#FFBB28'} />)
-                  </Pie>
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item sm={6}>
+                {(randomStatsHistPersonal && randomStatsHistPersonal.length > 0) && (
+                  <div>
+                    <h3 className="connect__four__stats__headline">Personal Random Stats</h3>
+                    <PieChart width={280} height={320}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by X", value: randomStatsHistPersonal?.filter(element => element._id.includes("X"))[0]?.count + winCounterRandomX},
+                          { name: "Ties", value: randomStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count  + winCounterRandomTie},
+                          { name: "Wons by O", value: randomStatsHistPersonal?.filter(element => element._id.includes("O"))[0]?.count + winCounterRandomO },
+                        ]}
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        label={renderCustomizedLabel}
+                        labelLine={false}
+
+                      >
+                        <Cell fill={'#0088FE'} />)
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+              <Grid item sm={6}>
+                {(pvpStatsHistPersonal && pvpStatsHistPersonal.length > 0) && (
+                  <div>
+                    <h3 className="connect__four__stats__headline">Personal PvP Stats</h3>
+                    <PieChart width={280} height={320}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by X", value: pvpStatsHistPersonal?.filter(element => element._id.includes("X"))[0]?.count + winCounterPvpX },
+                          { name: "Ties", value: pvpStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpTie},
+                          { name: "Wons by O", value: pvpStatsHistPersonal?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpO},
+                        ]}
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                      >
+                        <Cell fill={'#0088FE'} />)
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item sm={6}>
+                {(randomStatsHist && randomStatsHist.length > 0) && (
+                  <div>
+                    <h3 className="connect__four__stats__headline">Overall Random Stats</h3>
+                    <PieChart width={280} height={320}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by X", value: randomStatsHist?.filter(element => element._id.includes("X"))[0]?.count + winCounterRandomX },
+                          { name: "Ties", value: randomStatsHist?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterRandomTie },
+                          { name: "Wons by O", value: randomStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterRandomO},
+                        ]}
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                      >
+                        <Cell fill={'#0088FE'} />)
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
+                      <Legend />
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                )}
+              </Grid>
+              <Grid item sm={6}>
+                {(pvpStatsHist && pvpStatsHist.length > 0) && (
+                  <div>
+                    <h3 className="connect__four__stats__headline">Overall PvP Stats</h3>
+                    <PieChart width={280} height={320}>
+                      <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={[
+                          { name: "Wons by X", value: pvpStatsHist?.filter(element => element._id.includes("X"))[0]?.count + winCounterPvpX },
+                          { name: "Ties", value: pvpStatsHist?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpO},
+                          { name: "Wons by O", value: pvpStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpTie},
+                        ]}
+                        cx={140}
+                        cy={140}
+                        outerRadius={130}
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                      >
+                        <Cell fill={'#0088FE'} />)
+                        <Cell fill={'#00C49F'} />)
+                        <Cell fill={'#FFBB28'} />)
+                      </Pie>
                       <Legend />
                       <Tooltip />
                     </PieChart>
