@@ -1,156 +1,135 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import './NewUsr.css';
-import { register } from "../services/auth.service"
-import { useHistory } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-
+// React
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+// CSS
+import "./NewUsr.css";
+// Material UI
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+// Self written
+import { register } from "../services/auth.service";
+import CheckPasswords from "../helpers/CheckPasswords";
+import validyChecks from "../helpers/validyChecks";
 
 function NewUsr() {
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
 
-  const [username, setUsername] = useState(false);
-  const [email, setEmail] = useState(false);
-  const [password, setPassword] = useState(false);
-  const [passwordRepeat, setPasswordRepeat] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const history = useHistory();
 
   function removeMessage() {
-    setMessage("")
-  }
-
-  const PasswordCheckResult = {
-    GENERAL_ERROR : 0,
-    APPROVED : 1,
-    LENGTH_TOO_SHORT : 2,
-    MISSING_UPPERCASE : 3,
-    MISSING_LOWERCASE : 4,
-    MISSING_SPECIAL_CHAR : 5,
-    MISSING_NUMBER : 6,
-    PASSWORDS_DO_NOT_MATCH : 7
-  }
-
-  function CheckPasswords(password, passwordRepeat)
-  {
-    var lowerCaseLetters = /[a-z]/g;
-    var upperCaseLetters = /[A-Z]/g;
-    var numbers = /[0-9]/g;
-    var specialCharacters = /[!@#\$%\^\&*\)\(+=._-]/g;
-    var minLength = 8;
-    if(password.value !== passwordRepeat.value) return PasswordCheckResult.PASSWORDS_DO_NOT_MATCH;
-    if(password.value.length < minLength) return PasswordCheckResult.LENGTH_TOO_SHORT;
-    if(!password.value.match(lowerCaseLetters)) return PasswordCheckResult.MISSING_LOWERCASE;
-    if(!password.value.match(upperCaseLetters)) return PasswordCheckResult.MISSING_UPPERCASE;
-    if(!password.value.match(specialCharacters)) return PasswordCheckResult.MISSING_SPECIAL_CHAR;
-    if(!password.value.match(numbers)) return PasswordCheckResult.MISSING_NUMBER;
-    return PasswordCheckResult.APPROVED;
+    setMessage("");
   }
 
   const handleClick = () => {
-    removeMessage()
-    clearTimeout(timerId)
+    removeMessage();
+    clearTimeout(timerId);
 
-    var passwordCheckResult = CheckPasswords(password, passwordRepeat)
-    if (passwordCheckResult === PasswordCheckResult.APPROVED) {
-      register(username.value, email.value, password.value).then(
-        (response) => {
-          console.log(response.data.message)
-          //setMessage(response.data.message);
-          history.push('/login')
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          setMessage(resMessage);
-          setTimerId(setTimeout(removeMessage, 10000));
-        }
-      )
-    } else {
-      switch(passwordCheckResult)
-      {
-        case PasswordCheckResult.PASSWORDS_DO_NOT_MATCH: 
-        setMessage('The given passwords do not match.');
-        break;
-        case PasswordCheckResult.LENGTH_TOO_SHORT: 
-        setMessage('The password is too short.');
-        break;
-        case PasswordCheckResult.MISSING_LOWERCASE: 
-        setMessage('The password should contain at least one lowercase letter.');
-        break;
-        case PasswordCheckResult.MISSING_UPPERCASE: 
-        setMessage('The password should contain at least one uppercase letter.');
-        break;
-        case PasswordCheckResult.MISSING_NUMBER: 
-        setMessage('The password should contain at least one number.');
-        break;
-        case PasswordCheckResult.MISSING_SPECIAL_CHAR: 
-        setMessage('The password should contain at least one special character.');
-        break;
-        default: 
-        setMessage('An Error occured. Please try again later.');
-        break;
+    register(username, email, password).then(
+      (response) => {
+        console.log(response.data.message);
+        //setMessage(response.data.message);
+        history.push("/login");
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
+        setTimerId(setTimeout(removeMessage, 10000));
       }
-      //setMessage('The passwords do not match.');
-      setTimerId(setTimeout(removeMessage, 10000));
-    }
-  }
+    );
+    setTimerId(setTimeout(removeMessage, 10000));
+  };
+
+  // Handles
+  const handleSetUsername = (event) => {
+    setUsername(event.target.value);
+  };
+  const handleSetEmail = (event) => {
+    setEmail(event.target.value);
+  };
+  const handleSetPassword = (event) => {
+    setPassword(event.target.value);
+  };
+  const handleSetPasswordRepeat = (event) => {
+    setPasswordRepeat(event.target.value);
+  };
 
   return (
-    <div className='create__container'>
+    <div className="create__container">
       <h1>Create New User</h1>
 
-      <div className='create__new__user'>
-        {message && (
-          <div className="response">
-            {message}
-          </div>
+      <div className="create__new__user">
+        {message && <div className="response">{message}</div>}
+        <TextField
+          className="input__create__user"
+          label="Username"
+          variant="outlined"
+          margin="normal"
+          value={username}
+          onChange={handleSetUsername}
+        />
+
+        <TextField
+          className="input__create__user"
+          label="E-Mail"
+          variant="outlined"
+          margin="normal"
+          value={email}
+          onChange={handleSetEmail}
+        />
+
+        {password && (
+          <CheckPasswords password={password} passwordRepeat={passwordRepeat} />
         )}
 
         <TextField
           className="input__create__user"
-          label="Username "
-          inputRef={element => setUsername(element)}
-          variant="outlined"
-          margin="normal"
-        />
-        
-        <TextField
-          className="input__create__user"
-          label="E-Mail "
-          inputRef={element => setEmail(element)}
-          variant="outlined"
-          margin="normal"
-        />
-     
-        <TextField
-          className="input__create__user"
           label="Password"
           type="password"
-          margin="normal"
-          inputRef={element => setPassword(element)}
           variant="outlined"
+          margin="normal"
+          value={password}
+          onChange={handleSetPassword}
         />
-        
+
         <TextField
           className="input__create__user"
-          label="Password repeat"
+          label="Repeat Password"
           type="password"
-          margin="normal"
-          inputRef={element => setPasswordRepeat(element)}
           variant="outlined"
+          margin="normal"
+          value={passwordRepeat}
+          onChange={handleSetPasswordRepeat}
         />
-        
-        <Button variant="contained" color="primary" onClick={handleClick}>
+
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={
+            !(
+              validyChecks.checkPasswordLength(password) &&
+              validyChecks.checkPasswordEqual(password, passwordRepeat) &&
+              validyChecks.checkPasswordLowercase(password) &&
+              validyChecks.checkPasswordUppercase(password) &&
+              validyChecks.checkPasswordNumber(password)
+            )
+          }
+          onClick={handleClick}
+        >
           Create
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export default NewUsr
+export default NewUsr;
