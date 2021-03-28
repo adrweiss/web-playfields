@@ -304,7 +304,7 @@ function ConnectFour() {
     }
 
     for (i = 1; i < 4; i++) {
-      if ((!(id + (i * 8) < 0) && playerStatus === status[id + (i * 8)])) {
+      if ((!(id + (i * 8) > 41) && playerStatus === status[id + (i * 8)])) {
         winCounter += 1
       } else {
         break;
@@ -343,7 +343,7 @@ function ConnectFour() {
     }
 
     for (i = 1; i < 4; i++) {
-      if ((!(id + (i * 6) < 0) && playerStatus === status[id + (i * 6)])) {
+      if ((!(id + (i * 6) > 41) && playerStatus === status[id + (i * 6)])) {
         winCounter += 1
       } else {
         break;

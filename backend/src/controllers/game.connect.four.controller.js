@@ -20,7 +20,7 @@ function postGameResult(req, res, next) {
 
 function getGameStats(req, res, next) {
   ConnectFourResults.aggregate([
-    { "$match": { "userid": req.userId } },
+    { "$match": { $and: [{ "userid": req.userId }, { type: 0 }]}},
     { "$group": { _id: ["$algorithmen", "$gameResult"], count: { $sum: 1 } } },
     { "$sort": { "_id": -1 } },
   ], (err, data) => {

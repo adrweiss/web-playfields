@@ -6,7 +6,9 @@ const connectFourResults = mongoose.Schema({
   algorithmen: String, 
   gameResult: String,
   game: [Number],  
-  train: {type: Boolean, default: false},
+  type: {type: Number, default: 0},
+  positiveGame: {type: Number, default: null},
+  negativeGame: {type: Number, default: null},
 })
 
 export default mongoose.model('connectFourResults', connectFourResults);
