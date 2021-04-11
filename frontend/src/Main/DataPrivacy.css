@@ -1,0 +1,24 @@
+.data__privacy__base__container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.data__privacy__base__language {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.data__privacy__language__slider {
+    display: flex;
+    margin: 0 auto;
+}
+
+.data__privacy__note {
+    border: solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.data__privacy__note>h3 {
+    color: red
+}

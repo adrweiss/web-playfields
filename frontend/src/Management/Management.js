@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
+import Modal from 'react-modal';
 import './Management.css'
+
 import Grid from '@material-ui/core/Grid';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -7,20 +10,38 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { useHistory } from 'react-router-dom';
+import Button from '@material-ui/core/Button'
+
 import UserOverview from './User.Management';
 import RolesOverview from './Roles.Management';
 import LoginManagement from './Login.Management';
 import DeleteManagement from './Delete.Management';
+import HomeManagement from './Home.Management';
+
 import { getCurrentUser } from "../services/auth.service";
-import Button from '@material-ui/core/Button'
 import ManagementService from '../services/mgt.service'
 
+Modal.setAppElement('body')
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    overlay: { zIndex: 9999 }
+  }
+};
 
 function Management() {
   const [open, setOpen] = useState(false);
+  const [jenkinsStatusData, setJenkinsStatusData] = useState();
+  const [triggerBuildModal, setTriggerBuildModal] = useState(false);
   const [subPage, setSubPage] = useState(0);
+  const [message, setMessage] = useState("");
+  const [timerId, setTimerId] = useState();
   const anchorRef = useRef(null);
   const history = useHistory();
   const currentUser = getCurrentUser();
@@ -53,8 +74,25 @@ function Management() {
       anchorRef.current.focus();
     }
 
+    ManagementService.getBuildStatus().then((response) => {
+      setJenkinsStatusData(response.data);
+    },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        console.log(_content);
+      })
+  
     prevOpen.current = open;
   }, [open]);
+
+  const handleclickChangeHome = () => {
+    setSubPage(0)
+  }
 
   const handleclickChangeSubpageUsr = (page) => {
     if (subPage === 1) {
@@ -91,8 +129,13 @@ function Management() {
   }
 
   const triggerBuild = () => {
+    handleTriggerModal()
+    removeMessage()
+    clearTimeout(timerId)
+
     ManagementService.triggerBuild().then((response) => {
-      console.log(response.data.message);
+      setMessage(response.data.message);
+      setTimerId(setTimeout(removeMessage, 10000));
     },
       (error) => {
         const _content =
@@ -102,17 +145,31 @@ function Management() {
           error.message ||
           error.toString();
 
-        console.log(_content);
+        setMessage(_content);
+        setTimerId(setTimeout(removeMessage, 10000));
       })
   }
 
+  const handleTriggerModal = () => {
+    setTriggerBuildModal(!triggerBuildModal)
+  }
+
+  function removeMessage() {
+    setMessage("")
+  }
 
   return (
     <div>
       <h1>The side for the admin to controll access.</h1>
-      <Grid container spacing={3}>
+      {message && (
+        <div className="response">
+          {message}
+        </div>
+      )}
+      <Grid container spacing={1}>
         <Grid item sm={2}>
           <MenuList>
+            <MenuItem onClick={handleclickChangeHome}>Home</MenuItem>
             {(currentUser?.rights.includes('READ_USER_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
             {(currentUser?.rights.includes('READ_ROLE_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
@@ -123,6 +180,12 @@ function Management() {
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true">Views</MenuItem>)}
+            {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
+              <MenuItem onClick={handleTriggerModal}>
+                <div className="trigger__build__button" >
+                  Trigger build process
+                </div>
+              </MenuItem>)}
           </MenuList>
 
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
@@ -146,37 +209,59 @@ function Management() {
           </Popper>
         </Grid>
         <Grid item sm={10}>
-          {subPage === 0 && (
-            <div>
-              <div className="startpage">
-                This is the Management Overview. From this start side you have access to all the relevant administration stuff. It is possible that you don't have access to everything. This depends on your personal rights.
-              </div>
-              {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
-                <div className="startpage">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={triggerBuild}>
-                    Trigger build process
-                </Button>
-                </div>
-              )}
-            </div>
-          )}
-          {subPage === 1 && (
-            <UserOverview />
-          )}
-          {subPage === 2 && (
-            <RolesOverview />
-          )}
-          {subPage === 3 && (
-            <LoginManagement />
-          )}
-          {subPage === 4 && (
-            <DeleteManagement />
-          )}
+          <div className="management__container">
+            {subPage === 0 && (
+              <HomeManagement />
+            )}
+            {subPage === 1 && (
+              <UserOverview />
+            )}
+            {subPage === 2 && (
+              <RolesOverview />
+            )}
+            {subPage === 3 && (
+              <LoginManagement />
+            )}
+            {subPage === 4 && (
+              <DeleteManagement />
+            )}
+          </div>
         </Grid>
       </Grid>
+      <Modal
+        isOpen={triggerBuildModal}
+        onRequestClose={handleTriggerModal}
+        style={customStyles}
+        contentLabel="Trigger__Build"
+      >
+        <div className='modal__trigger__build'>
+          <h3>Trigger build process</h3>
+          <p>Are you sure that you want to trigger the build process?</p>
+
+
+          <table border="1" cellPadding="5" cellSpacing="5">
+            <thead>
+              <tr>
+                <th>Pipeline Name</th>
+                <th>Last Run</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jenkinsStatusData?.map((item, i) => (
+                <tr key={i}>
+                  <td>{item[0]}</td>
+                  <td>{item[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+
+          <div />
+          <Button variant="contained" onClick={triggerBuild} color="primary">Trigger</Button>
+          <Button variant="contained" onClick={handleTriggerModal}>Cancel</Button>
+        </div>
+      </Modal>
     </div>
   )
 }

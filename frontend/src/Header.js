@@ -15,11 +15,11 @@ function Header() {
   const history = useHistory();
   var currentUser =getCurrentUser();
 
+
   if (currentUser?.expire <= Math.floor(new Date().getTime() / 1000)) {
     logout()
     currentUser = getCurrentUser();
   } 
-
 
   const handleClickLogout = () => {
     logout()

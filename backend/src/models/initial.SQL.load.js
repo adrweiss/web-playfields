@@ -386,6 +386,94 @@ function right(Right, Role) {
     }
   })
 
+  //----------------------------
+  Right.findOne({
+    where: { name: 'READ_BUG_REPORTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_BUG_REPORTS",
+        description: "You can handle the reported bugs.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_BUG_REPORTS" right.')
+      });
+    } else {
+      console.log('right "READ_BUG_REPORTS" already exists.')
+    }
+  })
+
+  //----------------------------
+  Right.findOne({
+    where: { name: 'READ_POST_REPORTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_POST_REPORTS",
+        description: "You can handle the reported posts.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_POST_REPORTS" right.')
+      });
+    } else {
+      console.log('right "READ_POST_REPORTS" already exists.')
+    }
+  })
+
+  //----------------------------
+  Right.findOne({
+    where: { name: 'READ_CONTACT_REQUESTS' }
+  }).then(right => {
+    if (!right) {
+      Right.create({
+        name: "READ_CONTACT_REQUESTS",
+        description: "You can handle the contact requests.",
+      }).then(right => {
+        Role.findOne({
+          where: { name: 'MANAGER' }
+        }).then(role => {
+          right.setRoles(role)
+        })
+      }).catch(function (err) {
+        console.log('Error creating "READ_CONTACT_REQUESTS" right.')
+      });
+    } else {
+      console.log('right "READ_CONTACT_REQUESTS" already exists.')
+    }
+  })
+
+    //----------------------------
+    Right.findOne({
+      where: { name: 'EDIT_DISCRIPTION_HOME' }
+    }).then(right => {
+      if (!right) {
+        Right.create({
+          name: "EDIT_DISCRIPTION_HOME",
+          description: "You can edit the description on the home page.",
+        }).then(right => {
+          Role.findOne({
+            where: { name: 'MANAGER' }
+          }).then(role => {
+            right.setRoles(role)
+          })
+        }).catch(function (err) {
+          console.log('Error creating "EDIT_DISCRIPTION_HOME" right.')
+        });
+      } else {
+        console.log('right "EDIT_DISCRIPTION_HOME" already exists.')
+      }
+    })
+
   return right
 }
 
