@@ -1,6 +1,8 @@
 import { db } from "../models/index.js";
 import { authConfig } from "../config/auth.config.js";
 import { helper } from "../middleware/index.js";
+import {validyChecks} from "../middleware/validyChecks.js";
+
 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -19,9 +21,6 @@ const expireInSec = 86400; // 24 hours
 
 export function signup(req, res) {
   // Save User to Database
-  var lowerCaseLetters = /[a-z]/g;
-  var upperCaseLetters = /[A-Z]/g;
-  var numbers = /[0-9]/g;
 
   if(!req.body.username){
     return res.status(400).send({ message: "Username is empty." });
@@ -31,24 +30,9 @@ export function signup(req, res) {
     return res.status(400).send({ message: "Email is empty." });
   }
 
-  if (req.body.password.length < 7) {
-    return res.status(400).send({ message: "Password is not long enough." });
-  }
-
-  if (!req.body.password.match(lowerCaseLetters)) {
-    return res
-      .status(400)
-      .send({ message: "Password must contain lowercase letter." });
-  }
-
-  if (!req.body.password.match(upperCaseLetters)) {
-    return res
-      .status(400)
-      .send({ message: "Password must contain uppercase letter." });
-  }
-
-  if (!req.body.password.match(numbers)) {
-    return res.status(400).send({ message: "Password must contain number." });
+  if (!validyChecks.combinedCheck(req.body.password)) {
+    res.status(400).send({ message: "Password doesn't match password rules." });
+    return;
   }
   User.create({
     username: req.body.username,

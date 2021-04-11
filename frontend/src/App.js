@@ -32,7 +32,7 @@ function App() {
             <Header />
             <NewUsr />
           </Route>
-          <Route path="/user/forgott">
+          <Route path="/user/forgot">
             <Header />
             <ForgottPassword />
           </Route>
