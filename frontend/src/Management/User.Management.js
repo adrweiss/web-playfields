@@ -466,6 +466,7 @@ function UserOverview() {
           )}
           <h3>Change password</h3>
           <p>Change password from user {selectedUser && (selectedUser[1])}.</p>
+          <p><strong>NOTE:</strong> Password rules do not apply here.</p>
           <TextField
             className="input__password__modal"
             label="Password"

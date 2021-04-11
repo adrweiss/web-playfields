@@ -4,7 +4,7 @@ import './Unauthorized.css'
 function Unauthorized() {
   return (
     <div className='notauthorized'>
-      <p>Your are not authorized to enter this page without login and necessery roles andrights! </p>
+      <p>You are not authorized to enter this page without login and necessery roles and rights! </p>
     </div>
   )
 }

@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import Modal from 'react-modal';
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
 
-import Button from '@material-ui/core/Button';
-import './User.css'
-import DeleteIcon from '@material-ui/icons/Delete';
-import Grid from '@material-ui/core/Grid';
-import { useHistory } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
+import "./User.css";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Grid from "@material-ui/core/Grid";
+import { useHistory } from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
 
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
 
 import { logout, getCurrentUser } from "../services/auth.service";
 import UserService from "../services/user.service";
+import CheckPasswords from "../helpers/CheckPasswords";
+import validyChecks from "../helpers/validyChecks";
 
-Modal.setAppElement('body')
+Modal.setAppElement("body");
 
 const customStyles = {
   content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    overlay: { zIndex: 9999 }
-  }
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    overlay: { zIndex: 9999 },
+  },
 };
 
 function User() {
@@ -42,36 +44,45 @@ function User() {
 
   const [hideRoleInfo, setHideRoleInfo] = useState(true);
   const [modalDelete, setModalDelete] = useState(false);
-  const [username, setUsername] = useState('');
-  const [passwordOld, setPasswordOld] = useState('');
-  const [passwordNew, setPasswordNew] = useState('');
-  const [passwordNewAgain, setPasswordNewAgain] = useState('');
-  
+  const [username, setUsername] = useState("");
+  const [passwordOld, setPasswordOld] = useState("");
+  const [passwordNew, setPasswordNew] = useState("");
+  const [passwordNewAgain, setPasswordNewAgain] = useState("");
+
   const history = useHistory();
   const currentUser = getCurrentUser();
 
-  var sizeRightSection = 6
+  var sizeRightSection = 6;
 
-  if (!(currentUser?.rights.includes('READ_USER_VIEW') || currentUser?.rights.includes('ADMIN'))) {
-    history.push('/unauthorized')
+  if (
+    !(
+      currentUser?.rights.includes("READ_USER_VIEW") ||
+      currentUser?.rights.includes("ADMIN")
+    )
+  ) {
+    history.push("/unauthorized");
   }
 
   const [currUsername, setCurrUsername] = useState(currentUser?.username);
 
-  if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
-    sizeRightSection = 4
+  if (
+    currentUser?.rights.includes("WRITE_OWN_USR_SETTINGS") ||
+    currentUser?.rights.includes("ADMIN")
+  ) {
+    sizeRightSection = 4;
   }
 
   function removeMessage() {
-    setMessagePW("")
-    setMessageUN("")
+    setMessagePW("");
+    setMessageUN("");
   }
 
   useEffect(() => {
-    UserService.getRolesRights().then((response) => {
-      setRoles(response.data)
-      setRole(response.data[0])
-    },
+    UserService.getRolesRights().then(
+      (response) => {
+        setRoles(response.data);
+        setRole(response.data[0]);
+      },
       (error) => {
         const _content =
           (error.response &&
@@ -81,45 +92,56 @@ function User() {
           error.toString();
 
         console.log(_content);
-      })
-  }, [])
+      }
+    );
+  }, []);
 
   const handleCellClick = (event, role_id) => {
     if (role_id === role.role_id) {
-      setHideRoleInfo(!hideRoleInfo)
+      setHideRoleInfo(!hideRoleInfo);
       if (hideRoleInfo) {
-        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
-          setSize(4)
+        if (
+          currentUser?.rights.includes("WRITE_OWN_USR_SETTINGS") ||
+          currentUser?.rights.includes("ADMIN")
+        ) {
+          setSize(4);
         } else {
-          setSize(6)
+          setSize(6);
         }
       } else {
-        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
-          setSize(8)
+        if (
+          currentUser?.rights.includes("WRITE_OWN_USR_SETTINGS") ||
+          currentUser?.rights.includes("ADMIN")
+        ) {
+          setSize(8);
         } else {
-          setSize(12)
+          setSize(12);
         }
       }
     } else {
       if (hideRoleInfo) {
-        setHideRoleInfo(false)
-        if (currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN')) {
-          setSize(4)
+        setHideRoleInfo(false);
+        if (
+          currentUser?.rights.includes("WRITE_OWN_USR_SETTINGS") ||
+          currentUser?.rights.includes("ADMIN")
+        ) {
+          setSize(4);
         } else {
-          setSize(6)
+          setSize(6);
         }
       }
     }
 
-    setRole(roles.find(role => role.role_id === role_id))
-  }
+    setRole(roles.find((role) => role.role_id === role_id));
+  };
 
   const handleClickDeleteUsr = () => {
-    UserService.deleteUsr().then((response) => {
-      console.log(response.data)
-      logout()
-      history.push('/');
-    },
+    UserService.deleteUsr().then(
+      (response) => {
+        console.log(response.data);
+        logout();
+        history.push("/");
+      },
       (error) => {
         const _content =
           (error.response &&
@@ -130,21 +152,22 @@ function User() {
 
         console.log(_content);
       }
-    )
-  }
+    );
+  };
 
   const handleClickChangeUsername = () => {
-    removeMessage()
-    clearTimeout(timerId)
+    removeMessage();
+    clearTimeout(timerId);
 
-    UserService.changeUsername(username).then((response) => {
-      setMessageUN(response.data.message);
-      currentUser.username = username;
-      localStorage.setItem("user", JSON.stringify(currentUser));
-      setCurrUsername(username)
-      setTimerId(setTimeout(removeMessage, 10000));
-      setUsername('');
-    },
+    UserService.changeUsername(username).then(
+      (response) => {
+        setMessageUN(response.data.message);
+        currentUser.username = username;
+        localStorage.setItem("user", JSON.stringify(currentUser));
+        setCurrUsername(username);
+        setTimerId(setTimeout(removeMessage, 10000));
+        setUsername("");
+      },
       (error) => {
         const _content =
           (error.response &&
@@ -155,21 +178,22 @@ function User() {
         setMessageUN(_content);
         setTimerId(setTimeout(removeMessage, 10000));
       }
-    )
-  }
+    );
+  };
 
   const handleClickChangePassword = () => {
-    removeMessage()
-    clearTimeout(timerId)
+    removeMessage();
+    clearTimeout(timerId);
 
     if (passwordNew === passwordNewAgain) {
-      UserService.changePassword(passwordOld, passwordNew).then((response) => {
-        setMessagePW(response.data.message)
-        setTimerId(setTimeout(removeMessage, 10000));
-        setPasswordOld('');
-        setPasswordNew('');
-        setPasswordNewAgain('');
-      },
+      UserService.changePassword(passwordOld, passwordNew).then(
+        (response) => {
+          setMessagePW(response.data.message);
+          setTimerId(setTimeout(removeMessage, 10000));
+          setPasswordOld("");
+          setPasswordNew("");
+          setPasswordNewAgain("");
+        },
         (error) => {
           const _content =
             (error.response &&
@@ -181,16 +205,16 @@ function User() {
           setMessagePW(_content);
           setTimerId(setTimeout(removeMessage, 10000));
         }
-      )
+      );
     } else {
-      setMessagePW('The passwords does not match.')
+      setMessagePW("The passwords does not match.");
       setTimerId(setTimeout(removeMessage, 10000));
     }
-  }
+  };
 
   const modaldeleteUser = () => {
-    setModalDelete(!modalDelete)
-  }
+    setModalDelete(!modalDelete);
+  };
 
   const handleChangeUsername = (event) => {
     setUsername(event.target.value);
@@ -216,11 +240,7 @@ function User() {
             <p>Here you can change your username. It is necessary that your username is unique.</p>
 
             <div className="change__nickname">
-              {messageUN && (
-                <div className="response">
-                  {messageUN}
-                </div>
-              )}
+              {messageUN && <div className="response">{messageUN}</div>}
 
               <TextField
                 className="input__user__self_service"
@@ -231,7 +251,12 @@ function User() {
                 onChange={handleChangeUsername}
               />
 
-              <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
+              <Button
+                variant="contained"
+                color="primary"
+                disableElevation
+                onClick={handleClickChangeUsername}
+              >
                 Accept
               </Button>
             </div>
@@ -239,13 +264,8 @@ function User() {
             
             <p>Here you can change your current password.</p>
 
-            <div className='change__password__section'>
-
-              {messagePW && (
-                <div className="response">
-                  {messagePW}
-                </div>
-              )}
+            <div className="change__password__section">
+              {messagePW && <div className="response">{messagePW}</div>}
 
               <TextField
                 className="input__user__self_service"
@@ -256,7 +276,12 @@ function User() {
                 value={passwordOld}
                 onChange={handleChangePasswordOld}
               />
-
+              {passwordNew && (
+                <CheckPasswords
+                  password={passwordNew}
+                  passwordRepeat={passwordNewAgain}
+                />
+              )}
               <TextField
                 className="input__user__self_service"
                 label="New Password"
@@ -277,22 +302,42 @@ function User() {
                 onChange={handleChangePasswordNewAgain}
               />
 
-              <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={
+                  !(
+                    validyChecks.checkPasswordLength(passwordNew) &&
+                    validyChecks.checkPasswordEqual(passwordNew, passwordNewAgain) &&
+                    validyChecks.checkPasswordLowercase(passwordNew) &&
+                    validyChecks.checkPasswordUppercase(passwordNew) &&
+                    validyChecks.checkPasswordNumber(passwordNew)
+                  )
+                }
+                disableElevation
+                onClick={handleClickChangePassword}
+              >
                 Accept new password
               </Button>
             </div>
             <div className="middleline"></div>
-            <div className='delete__profile'>
-              <Button variant="contained" color="secondary" disabled={currentUser?.rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
+            <div className="delete__profile">
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={currentUser?.rights.includes("ADMIN")}
+                startIcon={<DeleteIcon />}
+                onClick={modaldeleteUser}
+              >
                 Delete Profile
               </Button>
             </div>
           </div>
         </Grid>
         <Grid item sm={size}>
-          <div className='table__container'>
+          <div className="table__container">
             <h2>List of assigned roles</h2>
-            <TableContainer className='tableContainer'>
+            <TableContainer className="tableContainer">
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -310,7 +355,9 @@ function User() {
                     >
                       <TableCell align="left">{role.role_name}</TableCell>
                       <TableCell align="left">{role.assignment_date}</TableCell>
-                      <TableCell align="left">{role.role_description}</TableCell>
+                      <TableCell align="left">
+                        {role.role_description}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -319,9 +366,9 @@ function User() {
           </div>
         </Grid>
         <Grid item sm={sizeRightSection} hidden={hideRoleInfo}>
-          <div className='table__container' >
+          <div className="table__container">
             <h2>List of assigned rights for "{role?.role_name}"</h2>
-            <TableContainer className='tableContainer'>
+            <TableContainer className="tableContainer">
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
@@ -333,7 +380,9 @@ function User() {
                   {role.rights?.map((right) => (
                     <TableRow key={right.right_id}>
                       <TableCell align="left">{right.right_name}</TableCell>
-                      <TableCell align="left">{right.right_description}</TableCell>
+                      <TableCell align="left">
+                        {right.right_description}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -348,16 +397,24 @@ function User() {
         style={customStyles}
         contentLabel="Delete_User"
       >
-        <div className='modal__delete'>
+        <div className="modal__delete">
           <h3>Delete User</h3>
           <p>Are you sure that you want to delete your user?</p>
           <div />
-          <Button variant="contained" onClick={handleClickDeleteUsr} color="secondary">Delete</Button>
-          <Button variant="contained" onClick={modaldeleteUser}>Close</Button>
+          <Button
+            variant="contained"
+            onClick={handleClickDeleteUsr}
+            color="secondary"
+          >
+            Delete
+          </Button>
+          <Button variant="contained" onClick={modaldeleteUser}>
+            Close
+          </Button>
         </div>
       </Modal>
     </div>
-  )
+  );
 }
 
-export default User
+export default User;

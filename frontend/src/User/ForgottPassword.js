@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
-import './ForgottPassword.css'
-import queryString from 'query-string';
+import React, { useState } from "react";
+import "./ForgottPassword.css";
+import queryString from "query-string";
 import UserService from "../services/user.service";
 
-import { useHistory } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import { useHistory } from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+
+import CheckPasswords from "../helpers/CheckPasswords";
+import validyChecks from "../helpers/validyChecks";
 
 function ForgottPassword() {
-  const [password, setPassword] = useState(false);
-  const [passwordRepeat, setPasswordRepeat] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
 
-  var urlParam = queryString.parse(window.location.search)
+  var urlParam = queryString.parse(window.location.search);
+
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
+  };
+  const handleChangePasswordRepeat = (event) => {
+    setPasswordRepeat(event.target.value);
+  };
 
   const handleForgottPassword = () => {
-    if (password.value === passwordRepeat.value) {
-      UserService.setPassword(urlParam.fp, password.value).then(
+    if (password === passwordRepeat) {
+      UserService.setPassword(urlParam.fp, password).then(
         (response) => {
-          console.log(response.data.message)
-          history.push('/login')
+          console.log(response.data.message);
+          history.push("/login");
         },
         (error) => {
           const resMessage =
@@ -32,19 +42,18 @@ function ForgottPassword() {
 
           setMessage(resMessage);
         }
-      )
+      );
     }
   };
 
   return (
-    <div className='reset'>
+    <div className="reset">
       <h1>Reset your password</h1>
-      <div className='reset__password'>
+      <div className="reset__password">
+        {message && <div className="response">{message}</div>}
 
-        {message && (
-          <div className="response">
-            {message}
-          </div>
+        {password && (
+          <CheckPasswords password={password} passwordRepeat={passwordRepeat} />
         )}
 
         <TextField
@@ -53,7 +62,8 @@ function ForgottPassword() {
           type="password"
           margin="normal"
           variant="outlined"
-          inputRef={element => setPassword(element)}
+          value={password}
+          onChange={handleChangePassword}
         />
 
         <TextField
@@ -62,15 +72,30 @@ function ForgottPassword() {
           type="password"
           margin="normal"
           variant="outlined"
-          inputRef={element => setPasswordRepeat(element)}
+          value={passwordRepeat}
+          onChange={handleChangePasswordRepeat}
         />
 
-        <Button className='input__reset__password' variant="contained" color="primary" onClick={handleForgottPassword}>
-          Create
+        <Button
+          className="input__reset__password"
+          variant="contained"
+          color="primary"
+          disabled={
+            !(
+              validyChecks.checkPasswordLength(password) &&
+              validyChecks.checkPasswordEqual(password, passwordRepeat) &&
+              validyChecks.checkPasswordLowercase(password) &&
+              validyChecks.checkPasswordUppercase(password) &&
+              validyChecks.checkPasswordNumber(password)
+            )
+          }
+          onClick={handleForgottPassword}
+        >
+          Change password
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export default ForgottPassword
+export default ForgottPassword;

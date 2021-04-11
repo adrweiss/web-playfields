@@ -1,104 +1,135 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import './NewUsr.css';
-import { register } from "../services/auth.service"
-import { useHistory } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-
+// React
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+// CSS
+import "./NewUsr.css";
+// Material UI
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+// Self written
+import { register } from "../services/auth.service";
+import CheckPasswords from "../helpers/CheckPasswords";
+import validyChecks from "../helpers/validyChecks";
 
 function NewUsr() {
   const [message, setMessage] = useState("");
   const [timerId, setTimerId] = useState();
 
-  const [username, setUsername] = useState(false);
-  const [email, setEmail] = useState(false);
-  const [password, setPassword] = useState(false);
-  const [passwordRepeat, setPasswordRepeat] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const history = useHistory();
 
   function removeMessage() {
-    setMessage("")
+    setMessage("");
   }
 
   const handleClick = () => {
-    removeMessage()
-    clearTimeout(timerId)
+    removeMessage();
+    clearTimeout(timerId);
 
-    if (password.value === passwordRepeat.value) {
-      register(username.value, email.value, password.value).then(
-        (response) => {
-          console.log(response.data.message)
-          //setMessage(response.data.message);
-          history.push('/login')
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          setMessage(resMessage);
-          setTimerId(setTimeout(removeMessage, 10000));
-        }
-      )
-    } else {
-      setMessage('The passwords does not match.');
-      setTimerId(setTimeout(removeMessage, 10000));
-    }
-  }
+    register(username, email, password).then(
+      (response) => {
+        console.log(response.data.message);
+        //setMessage(response.data.message);
+        history.push("/login");
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
+        setTimerId(setTimeout(removeMessage, 10000));
+      }
+    );
+    setTimerId(setTimeout(removeMessage, 10000));
+  };
+
+  // Handles
+  const handleSetUsername = (event) => {
+    setUsername(event.target.value);
+  };
+  const handleSetEmail = (event) => {
+    setEmail(event.target.value);
+  };
+  const handleSetPassword = (event) => {
+    setPassword(event.target.value);
+  };
+  const handleSetPasswordRepeat = (event) => {
+    setPasswordRepeat(event.target.value);
+  };
 
   return (
-    <div className='create__container'>
+    <div className="create__container">
       <h1>Create New User</h1>
 
-      <div className='create__new__user'>
-        {message && (
-          <div className="response">
-            {message}
-          </div>
+      <div className="create__new__user">
+        {message && <div className="response">{message}</div>}
+        <TextField
+          className="input__create__user"
+          label="Username"
+          variant="outlined"
+          margin="normal"
+          value={username}
+          onChange={handleSetUsername}
+        />
+
+        <TextField
+          className="input__create__user"
+          label="E-Mail"
+          variant="outlined"
+          margin="normal"
+          value={email}
+          onChange={handleSetEmail}
+        />
+
+        {password && (
+          <CheckPasswords password={password} passwordRepeat={passwordRepeat} />
         )}
 
         <TextField
           className="input__create__user"
-          label="Username "
-          inputRef={element => setUsername(element)}
-          variant="outlined"
-          margin="normal"
-        />
-        
-        <TextField
-          className="input__create__user"
-          label="E-Mail "
-          inputRef={element => setEmail(element)}
-          variant="outlined"
-          margin="normal"
-        />
-     
-        <TextField
-          className="input__create__user"
           label="Password"
           type="password"
-          margin="normal"
-          inputRef={element => setPassword(element)}
           variant="outlined"
+          margin="normal"
+          value={password}
+          onChange={handleSetPassword}
         />
-        
+
         <TextField
           className="input__create__user"
-          label="Password repeat"
+          label="Repeat Password"
           type="password"
-          margin="normal"
-          inputRef={element => setPasswordRepeat(element)}
           variant="outlined"
+          margin="normal"
+          value={passwordRepeat}
+          onChange={handleSetPasswordRepeat}
         />
-        
-        <Button variant="contained" color="primary" onClick={handleClick}>
+
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={
+            !(
+              validyChecks.checkPasswordLength(password) &&
+              validyChecks.checkPasswordEqual(password, passwordRepeat) &&
+              validyChecks.checkPasswordLowercase(password) &&
+              validyChecks.checkPasswordUppercase(password) &&
+              validyChecks.checkPasswordNumber(password)
+            )
+          }
+          onClick={handleClick}
+        >
           Create
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
-export default NewUsr
+export default NewUsr;
