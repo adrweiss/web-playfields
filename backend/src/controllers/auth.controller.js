@@ -146,12 +146,6 @@ export function signin(req, res) {
     });
 }
 
-export function forgottPassword(req, res) {
-  console.log(req.body);
-
-  res.status(200).send({ message: "forgott password" });
-}
-
 export function validateAccount(req, res) {
   Validate.findOne({
     where: {

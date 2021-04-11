@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./ForgottPassword.css";
+import "./ForgotPassword.css";
 import queryString from "query-string";
 import UserService from "../services/user.service";
 
@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import CheckPasswords from "../helpers/CheckPasswords";
 import validyChecks from "../helpers/validyChecks";
 
-function ForgottPassword() {
+function ForgotPassword() {
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [message, setMessage] = useState("");
@@ -50,6 +50,7 @@ function ForgottPassword() {
     <div className="reset">
       <h1>Reset your password</h1>
       <div className="reset__password">
+        
         {message && <div className="response">{message}</div>}
 
         {password && (
@@ -93,9 +94,10 @@ function ForgottPassword() {
         >
           Change password
         </Button>
+        
       </div>
     </div>
   );
 }
 
-export default ForgottPassword;
+export default ForgotPassword;
