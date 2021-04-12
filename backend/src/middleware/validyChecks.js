@@ -1,45 +1,50 @@
 const checkPasswordLength = (password) => {
-  if (password.length > 7) {
-    return true;
-  } else {
-    return false;
+  if (password.length <= 7) {
+    return "Password is to short. ";
   }
 };
 
 const checkPasswordLowercase = (password) => {
   var lowerCaseLetters = /[a-z]/g;
-  if (password.match(lowerCaseLetters)) {
-    return true;
-  } else {
-    return false;
+  if (!password.match(lowerCaseLetters)) {
+    return "Password has no lower case. ";
   }
 };
 
 const checkPasswordUppercase = (password) => {
   var upperCaseLetters = /[A-Z]/g;
-  if (password.match(upperCaseLetters)) {
-    return true;
-  } else {
-    return false;
+  if (!password.match(upperCaseLetters)) {
+    return "Password has no upper case. ";
   }
 };
 
 const checkPasswordNumber = (password) => {
   var numbers = /[0-9]/g;
-  if (password.match(numbers)) {
-    return true;
-  } else {
-    return false;
+  if (!password.match(numbers)) {
+    return "Password has no digit. ";
   }
 };
 
 const combinedCheck = (password) => {
-  return (
-    checkPasswordLength(password) &&
-    checkPasswordLowercase(password) &&
-    checkPasswordUppercase(password) &&
-    checkPasswordNumber(password)
-  );
+  var message = ""
+
+  if (checkPasswordLength(password)) {
+    message += checkPasswordLength(password)
+  }
+
+  if (checkPasswordLowercase(password)) {
+    message += checkPasswordLowercase(password)
+  }
+
+  if (checkPasswordUppercase(password)) {
+    message += checkPasswordUppercase(password)
+  }
+
+  if (checkPasswordNumber(password)) {
+    message += checkPasswordNumber(password)
+  }
+  
+  return message;
 };
 
 const validyChecks = {
@@ -50,4 +55,4 @@ const validyChecks = {
   combinedCheck,
 };
 
-export {validyChecks};
+export { validyChecks };

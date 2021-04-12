@@ -30,8 +30,9 @@ export function signup(req, res) {
     return res.status(400).send({ message: "Email is empty." });
   }
 
-  if (!validyChecks.combinedCheck(req.body.password)) {
-    res.status(400).send({ message: "Password doesn't match password rules." });
+  var checkResult = validyChecks.combinedCheck(req.body.password)
+  if (checkResult) {    
+    res.status(400).send({ message: checkResult });
     return;
   }
   User.create({
