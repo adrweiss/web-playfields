@@ -116,7 +116,7 @@ function Footer() {
       </Button>
 
       <Button style={{ textTransform: 'none' }}>
-        <Link to="/dataprivacy" className='footer__entity'>
+        <Link to="/privacy" className='footer__entity'>
           {'Data Privacy'}
         </Link>
       </Button>

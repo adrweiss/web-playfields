@@ -100,7 +100,7 @@ function DataPrivacy() {
               <span >Telephone: Telephone number</span><br/>
               <span >Fax: Fax number</span><br/>
               */}
-            <span >E-Mail: <a href="mailto:playfield.dev@gmail.com">playfield.dev@gmail.com</a><br /></span></p>
+            <span >E-Mail: <a href="mailto:service@playfields.de">service@playfields.de</a><br /></span></p>
           {/*
             <p>The controller's data protection officer is:</p> 
             <p><span >Maxie Musterfrau&nbsp;</span></p> 
@@ -243,7 +243,7 @@ function DataPrivacy() {
               Telefon: Telefonnummer<br/>
               Telefax: Faxnummer<br/>
               */}
-              E-Mail: <a href="mailto:playfield.dev@gmail.com">playfield.dev@gmail.com</a><br />
+              E-Mail: <a href="mailto:service@playfields.de">service@playfields.de</a><br />
             </span>
           </p>
           {/* 

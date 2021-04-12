@@ -83,7 +83,7 @@ function Impressum() {
           </p>
           <h2>Contact Information</h2>
           Adrian Weiss<br />
-          E-Mail: <a href="mailto:playfield.dev@gmail.com">playfield.dev@gmail.com</a><br />
+          E-Mail: <a href="mailto:service@playfields.de">service@playfields.de</a><br />
           Internet address: <a href="playfields.de" target="_blank">playfields.de</a><br />
           {/*
           <h2>Graphics and Image Sources</h2>
@@ -132,7 +132,7 @@ function Impressum() {
           <h2>Kontakt</h2>
           <p>
             Adrian Weiss<br />
-          E-Mail: <a href="mailto:playfield.dev@gmail.com">playfield.dev@gmail.com</a><br />
+          E-Mail: <a href="mailto:service@playfields.de">service@playfields.de</a><br />
           Internetaddresse: <a href="playfields.de" target="_blank">playfields.de</a><br />
           </p>
           {/* 
