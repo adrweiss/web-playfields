@@ -65,13 +65,27 @@ function Login() {
 
   function closeModal() {
     setIsOpen(false);
+  }
 
+  const handleSendForgottenRequest = () => {
     removeMessage()
     clearTimeout(timerId)
     UserService.resetPassword(forgottPassword).then(() => {
       setMessage("Email with a password reset link is sent.");
       setTimerId(setTimeout(removeMessage, 10000));
-    })
+    },(error) => {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      setMessage(resMessage);
+      setTimerId(setTimeout(removeMessage, 10000));
+    });
+
+    closeModal()
   }
 
   const handleForgottPassword = (event) => {
@@ -139,7 +153,7 @@ function Login() {
               value={forgottPassword}
               onChange={handleForgottPassword}
             />
-            <Button variant="contained" color="primary" disableElevation onClick={closeModal}>
+            <Button variant="contained" color="primary" disableElevation onClick={handleSendForgottenRequest}>
               Send
             </Button>
           </div>

@@ -172,14 +172,15 @@ const resetPassword = (req, res, next) => {
         expire: Math.floor(Date.now() / 1000) + 86400,
         used: false,
       }).then((valid) => {
-        var urlStr = url + "/user/forgott?fp=" + keyString;
+        var urlStr = url + "/user/forgot?fp=" + keyString;
         var subject = "Link to reset your password.";
         helper.sendMailWithContent(urlStr, req.body.email, subject);
 
         valid.setUser(user);
       });
-    }
-    return res.status(200).send();
+      return res.status(200).send();
+    } 
+    res.status(400).send({ message: "No user found in database." }); 
   });
 };
 
