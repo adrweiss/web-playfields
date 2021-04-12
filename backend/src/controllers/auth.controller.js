@@ -32,9 +32,9 @@ export function signup(req, res) {
 
   var checkResult = validyChecks.combinedCheck(req.body.password)
   if (checkResult) {    
-    res.status(400).send({ message: checkResult });
-    return;
+    return res.status(400).send({ message: checkResult });    
   }
+  
   User.create({
     username: req.body.username,
     email: req.body.email,

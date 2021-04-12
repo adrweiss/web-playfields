@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 
-import {validyChecks} from "../middleware/validyChecks.js";
+import { validyChecks } from "../middleware/validyChecks.js";
 
 const User = db.user;
 const Right = db.right;
@@ -104,10 +104,11 @@ const changeUserName = (req, res, next) => {
 };
 
 const changeUserPassword = (req, res, next) => {
-  if (!validyChecks.combinedCheck(req.body.password_new)) {
-    res.status(400).send({ message: "Password doesn't match password rules." });
-    return;
+  var checkResult = validyChecks.combinedCheck(req.body.password)
+  if (checkResult) {
+    return res.status(400).send({ message: checkResult });
   }
+
   User.findByPk(req.userId).then((user) => {
     // Check if record exists in db
     if (user) {
@@ -183,11 +184,12 @@ const resetPassword = (req, res, next) => {
 };
 
 const sendNewPassword = (req, res, next) => {
-  if (!validyChecks.combinedCheck(req.body.password)) {
-    res.status(400).send({ message: "Password doesn't match password rules." });
-    return;
+  var checkResult = validyChecks.combinedCheck(req.body.password)
+  if (checkResult) {
+    return res.status(400).send({ message: checkResult });
   }
-  if (typeof req.body.key !== "string"){
+
+  if (typeof req.body.key !== "string") {
     res.status(400).send({ message: "Key is empty." });
     return;
   }

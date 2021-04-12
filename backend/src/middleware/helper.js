@@ -38,6 +38,7 @@ function sendMailWithContent(url, mail, subject) {
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
+      console.log(error)
       console.log('Not able to send mail.')
     } else {
       console.log('Able to send mail.')
