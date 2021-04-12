@@ -21,13 +21,14 @@ function addDeletedUserToLogs(mail, username) {
 
 function sendMailWithContent(url, mail, subject) {
   var transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.strato.de",
+    port: 465,
+    secure: true, // true for 465, false for other ports
     auth: {
       user: process.env.EMAILUSER,
       pass: process.env.EMAILPASS
-    }
+    },
   });
-
 
   var mailOptions = {
     from: "Playfields",
