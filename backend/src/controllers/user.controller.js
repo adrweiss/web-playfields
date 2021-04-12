@@ -104,7 +104,7 @@ const changeUserName = (req, res, next) => {
 };
 
 const changeUserPassword = (req, res, next) => {
-  var checkResult = validyChecks.combinedCheck(req.body.password)
+  var checkResult = validyChecks.combinedCheck(req.body.password_new)
   if (checkResult) {
     return res.status(400).send({ message: checkResult });
   }

@@ -36,7 +36,7 @@ function verifyToken(req, res, next) {
 // check if user is blocked
 function chkBlocked(userId) {
   User.findByPk(userId).then(user => {
-    if (user.blocked) {
+    if (user !== null && user.blocked) {
       return true;
     }
     return false;
