@@ -46,7 +46,7 @@ function User() {
   const [passwordOld, setPasswordOld] = useState('');
   const [passwordNew, setPasswordNew] = useState('');
   const [passwordNewAgain, setPasswordNewAgain] = useState('');
-  
+
   const history = useHistory();
   const currentUser = getCurrentUser();
 
@@ -211,134 +211,145 @@ function User() {
       <Grid container spacing={1}>
         <Grid item sm={4} hidden={!(currentUser?.rights.includes('WRITE_OWN_USR_SETTINGS') || currentUser?.rights.includes('ADMIN'))}>
           <div className="container__user">
-            <h2>Change your user settings</h2>
+            <div className="container__user__settings">
+              <h2>Change your user settings</h2>
+              <div className="middleline" />
 
-            <p>Here you can change your username. It is necessary that your username is unique.</p>
+              <p>Here you can change your username. It is necessary that your username is unique.</p>
 
-            <div className="change__nickname">
-              {messageUN && (
-                <div className="response">
-                  {messageUN}
-                </div>
-              )}
+              <div className="change__nickname">
+                {messageUN && (
+                  <div className="response">
+                    {messageUN}
+                  </div>
+                )}
 
-              <TextField
-                className="input__user__self_service"
-                label="New username"
-                variant="outlined"
-                margin="normal"
-                value={username}
-                onChange={handleChangeUsername}
-              />
+                <TextField
+                  className="input__user__self_service"
+                  label="New username"
+                  variant="outlined"
+                  margin="normal"
+                  value={username}
+                  onChange={handleChangeUsername}
+                />
 
-              <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
-                Accept
+                <Button variant="contained" color="primary" disableElevation onClick={handleClickChangeUsername}>
+                  Accept
               </Button>
-            </div>
-            <div className="middleline"></div>
-            
-            <p>Here you can change your current password.</p>
+              </div>
+              <div className="middleline" />
 
-            <div className='change__password__section'>
+              <p>Here you can change your current password.</p>
 
-              {messagePW && (
-                <div className="response">
-                  {messagePW}
-                </div>
-              )}
+              <div className='change__password__section'>
 
-              <TextField
-                className="input__user__self_service"
-                label="Old Password"
-                type="password"
-                margin="normal"
-                variant="outlined"
-                value={passwordOld}
-                onChange={handleChangePasswordOld}
-              />
+                {messagePW && (
+                  <div className="response">
+                    {messagePW}
+                  </div>
+                )}
 
-              <TextField
-                className="input__user__self_service"
-                label="New Password"
-                type="password"
-                margin="normal"
-                variant="outlined"
-                value={passwordNew}
-                onChange={handleChangePasswordNew}
-              />
+                <TextField
+                  className="input__user__self_service"
+                  label="Old Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  value={passwordOld}
+                  onChange={handleChangePasswordOld}
+                />
 
-              <TextField
-                className="input__user__self_service"
-                label="New Password Again"
-                type="password"
-                margin="normal"
-                variant="outlined"
-                value={passwordNewAgain}
-                onChange={handleChangePasswordNewAgain}
-              />
+                <TextField
+                  className="input__user__self_service"
+                  label="New Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  value={passwordNew}
+                  onChange={handleChangePasswordNew}
+                />
 
-              <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
-                Accept new password
+                <TextField
+                  className="input__user__self_service"
+                  label="New Password Again"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  value={passwordNewAgain}
+                  onChange={handleChangePasswordNewAgain}
+                />
+
+                <Button variant="contained" color="primary" disableElevation onClick={handleClickChangePassword}>
+                  Accept new password
               </Button>
-            </div>
-            <div className="middleline"></div>
-            <div className='delete__profile'>
-              <Button variant="contained" color="secondary" disabled={currentUser?.rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
-                Delete Profile
+              </div>
+
+              <div className="middleline" />
+
+              <div className='delete__profile'>
+                <Button variant="contained" color="secondary" disabled={currentUser?.rights.includes('ADMIN')} startIcon={<DeleteIcon />} onClick={modaldeleteUser}>
+                  Delete Profile
               </Button>
+              </div>
             </div>
           </div>
         </Grid>
         <Grid item sm={size}>
-          <div className='table__container'>
-            <h2>List of assigned roles</h2>
-            <TableContainer className='tableContainer'>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Roles</TableCell>
-                    <TableCell align="left">Date</TableCell>
-                    <TableCell align="left">Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {roles?.map((role) => (
-                    <TableRow
-                      hover
-                      key={role.role_id}
-                      onClick={(event) => handleCellClick(event, role.role_id)}
-                    >
-                      <TableCell align="left">{role.role_name}</TableCell>
-                      <TableCell align="left">{role.assignment_date}</TableCell>
-                      <TableCell align="left">{role.role_description}</TableCell>
+          <div className="container__user">
+            <div className="table__container">
+              <h2>List of assigned roles</h2>
+              <div className="middleline" />
+              <TableContainer className='tableContainer'>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Roles</TableCell>
+                      <TableCell align="left">Date</TableCell>
+                      <TableCell align="left">Description</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {roles?.map((role) => (
+                      <TableRow
+                        hover
+                        key={role.role_id}
+                        onClick={(event) => handleCellClick(event, role.role_id)}
+                      >
+                        <TableCell align="left">{role.role_name}</TableCell>
+                        <TableCell align="left">{role.assignment_date}</TableCell>
+                        <TableCell align="left">{role.role_description}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
         </Grid>
         <Grid item sm={sizeRightSection} hidden={hideRoleInfo}>
-          <div className='table__container' >
-            <h2>List of assigned rights for "{role?.role_name}"</h2>
-            <TableContainer className='tableContainer'>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Rights</TableCell>
-                    <TableCell align="left">Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {role.rights?.map((right) => (
-                    <TableRow key={right.right_id}>
-                      <TableCell align="left">{right.right_name}</TableCell>
-                      <TableCell align="left">{right.right_description}</TableCell>
+          <div className="container__user">
+            <div className="table__container">
+              <h2>List of assigned rights for "{role?.role_name}"</h2>
+              <div className="middleline" />
+              <TableContainer className='tableContainer'>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Rights</TableCell>
+                      <TableCell align="left">Description</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {role.rights?.map((right) => (
+                      <TableRow key={right.right_id}>
+                        <TableCell align="left">{right.right_name}</TableCell>
+                        <TableCell align="left">{right.right_description}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
         </Grid>
       </Grid>

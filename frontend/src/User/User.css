@@ -1,14 +1,16 @@
 .container__user {
-    float: right;
     height: 100%;
     border: 1px solid;
     max-width: 100%;
     border-radius: 10px;
+}
+
+.container__user__settings {
+    padding: 5px;
     justify-content: center;
 }
 
-.container__user>h2 {
-    border-bottom: 1px solid black;
+.container__user__settings>h2 {
     text-align: center;
 }
 
@@ -38,7 +40,7 @@
     width: 100%;
 }
 
-.container__user>p {
+.container__user__settings>p {
     padding: 5px;
     text-align: center;
 }
@@ -62,14 +64,11 @@
 }
 
 .table__container {
-    border-radius: 10px;
-    height: 100%;
-    border: 1px solid;
+    padding: 5px;
 }
 
 .table__container>h2 {
     text-align: center;
-    border-bottom: 1px solid black;
 }
 
 .tableContainer {
