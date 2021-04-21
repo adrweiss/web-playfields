@@ -86,7 +86,7 @@ function Management() {
           error.toString();
         console.log(_content);
       })
-  
+
     prevOpen.current = open;
   }, [open]);
 
@@ -169,15 +169,16 @@ function Management() {
       <Grid container spacing={1}>
         <Grid item sm={2}>
           <MenuList>
-            <MenuItem onClick={handleclickChangeHome}>Home</MenuItem>
+            <MenuItem onClick={handleclickChangeHome} selected={subPage===0}>Home</MenuItem>
             {(currentUser?.rights.includes('READ_USER_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
-              <MenuItem onClick={handleclickChangeSubpageUsr} >User</MenuItem>)}
+              <MenuItem onClick={handleclickChangeSubpageUsr} selected={subPage===1} >User</MenuItem>)}
             {(currentUser?.rights.includes('READ_ROLE_MANAGEMENT') || currentUser?.rights.includes('ADMIN')) && (
-              <MenuItem onClick={handleclickChangeSubpageRole}>Roles</MenuItem>)}
+              <MenuItem onClick={handleclickChangeSubpageRole} selected={subPage===2}>Roles</MenuItem>)}
             {(currentUser?.rights.includes('READ_VIEW_LOGIN') || currentUser?.rights.includes('READ_VIEW_DELETE') || currentUser?.rights.includes('ADMIN')) && (
               <MenuItem
                 onClick={handleToggle}
                 ref={anchorRef}
+                selected={subPage===3 || subPage === 4}
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true">Views</MenuItem>)}
             {(currentUser?.rights.includes('TRIGGER_BUILD') || currentUser?.rights.includes('ADMIN')) && (
@@ -198,9 +199,9 @@ function Management() {
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                       {(currentUser?.rights.includes('READ_VIEW_LOGIN') || currentUser?.rights.includes('ADMIN')) && (
-                        <MenuItem onClick={handleclickChangeSubpageLogin}>Log-In</MenuItem>)}
+                        <MenuItem selected={subPage===3} onClick={handleclickChangeSubpageLogin}>Log-In</MenuItem>)}
                       {(currentUser?.rights.includes('READ_VIEW_DELETE') || currentUser?.rights.includes('ADMIN')) && (
-                        <MenuItem onClick={handleclickChangeSubpageDelete}>Delete</MenuItem>)}
+                        <MenuItem selected={subPage===4} onClick={handleclickChangeSubpageDelete}>Delete</MenuItem>)}
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
