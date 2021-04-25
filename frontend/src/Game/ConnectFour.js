@@ -3,7 +3,8 @@ import './ConnectFour.css';
 import { getCurrentUser } from "../services/auth.service";
 import GameCfService from "../services/game.cf.service";
 
-
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -182,22 +183,22 @@ function ConnectFour() {
     } else if (!currentUser && !skip && won.includes(true) && playerActual) {
       if (playVariant === 0) {
         setWinCounterRandomO(winCounterRandomO + 1)
-      } else if (playVariant === 1){
+      } else if (playVariant === 1) {
         setWinCounterPvpO(winCounterPvpO + 1)
       }
       GameCfService.saveGame(variant, "O", statusActual)
-    } else if (!currentUser && !skip && availableMovesActual.length === 0) {      
+    } else if (!currentUser && !skip && availableMovesActual.length === 0) {
       if (playVariant === 0) {
         setWinCounterRandomTie(winCounterRandomTie + 1)
-      } else if (playVariant === 1){
+      } else if (playVariant === 1) {
         setWinCounterPvpTie(winCounterPvpTie + 1)
-      }      
+      }
       setMessageWin("No more moves available!");
       GameCfService.saveGame(variant, "Tie", statusActual)
     } else if (currentUser && !skip && won.includes(true) && !playerActual) {
       if (playVariant === 0) {
         setWinCounterRandomX(winCounterRandomX + 1)
-      } else if (playVariant === 1){
+      } else if (playVariant === 1) {
         setWinCounterPvpX(winCounterPvpX + 1)
       }
       GameCfService.saveGamePersonal(variant, "X", statusActual)
@@ -208,10 +209,10 @@ function ConnectFour() {
         setWinCounterPvpO(winCounterPvpO + 1)
       }
       GameCfService.saveGamePersonal(variant, "O", statusActual)
-    } else if (currentUser && !skip && availableMovesActual.length === 0) {      
+    } else if (currentUser && !skip && availableMovesActual.length === 0) {
       if (playVariant === 0) {
         setWinCounterRandomTie(winCounterRandomTie + 1)
-      } else if (playVariant === 1){
+      } else if (playVariant === 1) {
         setWinCounterPvpTie(winCounterPvpTie + 1)
       }
       setMessageWin("No more moves available!");
@@ -366,7 +367,15 @@ function ConnectFour() {
   return (
     <div>
       <Grid container spacing={1}>
-        <Grid item sm={4}>
+        <Grid item lg={1}>          
+          <MenuList>
+            <MenuItem>PVP one Screen</MenuItem>
+            <MenuItem>PVP Remote</MenuItem>
+            <MenuItem>AI Random</MenuItem>
+            <MenuItem>AI Reinforcement</MenuItem>            
+          </MenuList>          
+        </Grid>
+        <Grid item lg={4}>
           <div className="connect__four__box">
             <div>
               <div>
@@ -796,7 +805,7 @@ function ConnectFour() {
             </div>
           </div>
         </Grid>
-        <Grid item sm={8}>
+        <Grid item lg={7}>
           <div className="connect__four__description">
             <h2>Description</h2>
             <div>
@@ -873,8 +882,8 @@ function ConnectFour() {
                         dataKey="value"
                         isAnimationActive={false}
                         data={[
-                          { name: "Wons by X", value: randomStatsHistPersonal?.filter(element => element._id.includes("X"))[0]?.count + winCounterRandomX},
-                          { name: "Ties", value: randomStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count  + winCounterRandomTie},
+                          { name: "Wons by X", value: randomStatsHistPersonal?.filter(element => element._id.includes("X"))[0]?.count + winCounterRandomX },
+                          { name: "Ties", value: randomStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterRandomTie },
                           { name: "Wons by O", value: randomStatsHistPersonal?.filter(element => element._id.includes("O"))[0]?.count + winCounterRandomO },
                         ]}
                         cx={140}
@@ -904,8 +913,8 @@ function ConnectFour() {
                         isAnimationActive={false}
                         data={[
                           { name: "Wons by X", value: pvpStatsHistPersonal?.filter(element => element._id.includes("X"))[0]?.count + winCounterPvpX },
-                          { name: "Ties", value: pvpStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpTie},
-                          { name: "Wons by O", value: pvpStatsHistPersonal?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpO},
+                          { name: "Ties", value: pvpStatsHistPersonal?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpTie },
+                          { name: "Wons by O", value: pvpStatsHistPersonal?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpO },
                         ]}
                         cx={140}
                         cy={140}
@@ -936,7 +945,7 @@ function ConnectFour() {
                         data={[
                           { name: "Wons by X", value: randomStatsHist?.filter(element => element._id.includes("X"))[0]?.count + winCounterRandomX },
                           { name: "Ties", value: randomStatsHist?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterRandomTie },
-                          { name: "Wons by O", value: randomStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterRandomO},
+                          { name: "Wons by O", value: randomStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterRandomO },
                         ]}
                         cx={140}
                         cy={140}
@@ -964,8 +973,8 @@ function ConnectFour() {
                         isAnimationActive={false}
                         data={[
                           { name: "Wons by X", value: pvpStatsHist?.filter(element => element._id.includes("X"))[0]?.count + winCounterPvpX },
-                          { name: "Ties", value: pvpStatsHist?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpO},
-                          { name: "Wons by O", value: pvpStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpTie},
+                          { name: "Ties", value: pvpStatsHist?.filter(element => element._id.includes("Tie"))[0]?.count + winCounterPvpO },
+                          { name: "Wons by O", value: pvpStatsHist?.filter(element => element._id.includes("O"))[0]?.count + winCounterPvpTie },
                         ]}
                         cx={140}
                         cy={140}
