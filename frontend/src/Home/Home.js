@@ -375,7 +375,7 @@ function Home() {
 
   return (
     <div>
-      <h1>Welcome to&nbsp;<i>Playfields</i></h1>
+      <h1>Welcome to&nbsp;<i>Playfields</i></h1> 
       <Grid container spacing={3}>
         <Grid item sm={6}>
           <div className='posts'>

@@ -803,6 +803,10 @@ function ConnectFour() {
         </Grid>
         <Grid item lg={4}>
           <h3>User-List</h3>
+          <div className="connect__four__available__player">          
+            #1 Player
+            #2 Player 
+          </div>
         </Grid>
         <div className="container__connect__four__game__stats">
           <Statistics />
